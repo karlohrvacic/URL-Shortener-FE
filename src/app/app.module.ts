@@ -6,17 +6,23 @@ import { AppComponent } from './app.component';
 import { UrlComponent } from './url/url.component';
 import { UrlRedirectComponent } from './url-redirect/url-redirect.component';
 import {ToastrModule} from "ngx-toastr";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { NavbarComponent } from './shared/navbar/navbar.component';
+import {AuthInterceptor} from "./shared/auth.interceptor";
+import { LoginComponent } from './dashboard/login/login.component';
+import { RegisterComponent } from './dashboard/register/register.component';
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [
     AppComponent,
     UrlComponent,
     UrlRedirectComponent,
-    NavbarComponent
+    NavbarComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -24,6 +30,7 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    CommonModule,
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-left',
       progressBar: true,
@@ -32,7 +39,8 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
       preventDuplicates: true
     }),
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

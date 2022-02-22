@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {User} from "../models/user";
-import {Subject} from "rxjs";
+import {User} from "../models/User";
+import {Observable, Subject} from "rxjs";
 import {DataService} from "./data.service";
 import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
@@ -25,7 +25,7 @@ export class AuthService {
         this.authChange.next(false);
         this.router.navigate(['/login']);
       }
-      if (this.user?.isAdmin){
+      if (this.user?.authorities.find(a => a.name == 'ADMIN')){
         this.router.navigate(['/admin']);
 
       } else {
@@ -51,7 +51,7 @@ export class AuthService {
             localStorage.setItem('token', this.token);
             this.authChange.next(true);
             this.toastr.success(`Welcome back ${this.user.name}`)
-            if (this.user.isAdmin) {
+            if (this.user.authorities.find(a => a.name == 'ADMIN')) {
               this.router.navigate(['/admin']);
             } else {
               this.router.navigate(['/']);
@@ -65,7 +65,7 @@ export class AuthService {
       )
   }
 
-  register(user: { name: string, surname: string, email: string, password: string, oib: string, level: 0 }) {
+  register(user: User) {
     this.dataService.register(user)
       // @ts-ignore
       .subscribe((res: {
@@ -85,7 +85,7 @@ export class AuthService {
       });
   }
 
-  // @ts-ignore
+  //@ts-ignore
   getUser() {
     if (this.user){
       return {...this.user};
@@ -97,7 +97,7 @@ export class AuthService {
           user?: User,
         }
       }) => {
-        if (res.status == 200) {
+        if (res.status == 200 && res.body.user) {
           return res.body.user;
         } else return null;
       })
@@ -125,7 +125,7 @@ export class AuthService {
   }
 
   logout() {
-    if (this.user?.level == 0){
+    if (this.user?.authorities.find(a => a.name != 'ADMIN')){
       this.toastr.success(`Thanks for banking with us ${this.user.name}.\nGoodbye!`)
     }
     this.user = undefined;

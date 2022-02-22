@@ -15,6 +15,7 @@ export class UrlRedirectComponent implements OnInit {
   constructor(private route: ActivatedRoute, private urlService: UrlService) { }
 
   ngOnInit(): void {
+    console.log("Redirecting...")
     this.shortUrl = this.route.snapshot.params['shortUrl'];
     if (this.shortUrl) {
       this.urlService.redirectToUrlByShortUrl(this.shortUrl);

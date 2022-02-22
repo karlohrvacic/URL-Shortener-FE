@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ToastrService} from "ngx-toastr";
 import {DataService} from "./data.service";
-import {Url} from "../models/url";
+import {Url} from "../models/Url";
 import {Router} from "@angular/router";
 
 @Injectable({

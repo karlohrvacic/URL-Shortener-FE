@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Subscription} from "rxjs";
-import {User} from "../models/user";
+import {User} from "../models/User";
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-navbar',
@@ -11,11 +12,11 @@ import {AuthService} from "../services/auth.service";
 })
 export class NavbarComponent implements OnInit {
 
-  user : User = null!;
+  user : User | null = null;
   authenticated : boolean = false;
   authChangeSubscription : Subscription | undefined;
 
-  constructor(private router : Router, private auth : AuthService) {
+  constructor(private router : Router, private auth : AuthService, public location: Location) {
   }
 
   ngOnInit(): void {
@@ -23,6 +24,7 @@ export class NavbarComponent implements OnInit {
       .subscribe(authenticated => {
         this.authenticated = authenticated;
         if (this.authenticated) {
+          // @ts-ignore
           this.user = this.auth.getUser();
         }
       });
