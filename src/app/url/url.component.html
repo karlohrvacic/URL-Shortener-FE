@@ -1,1 +1,29 @@
-<p>url works!</p>
+<div class="container-fluid main">
+  <div class="bg"></div>
+  <div class="bg bg2"></div>
+  <div class="bg bg3"></div>
+  <div class="row col-8 col-sm-12 col-lg-8 infobox p-2">
+    <div class="container">
+      <h2>Shorten your URL</h2>
+
+      <form [formGroup]="shortenerForm" (ngSubmit)="submit()" >
+
+          <mat-form-field appearance="standard">
+            <mat-label>Url for shortening</mat-label>
+            <input matInput formControlName="longUrl" placeholder="https://karlo.codes">
+            <mat-hint>Enter valid URL</mat-hint>
+          </mat-form-field>
+
+        <mat-form-field *ngIf="authenticated" appearance="standard">
+          <mat-label>Url for shortening</mat-label>
+          <input matInput formControlName="shortUrl" placeholder="karlo">
+          <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+          <mat-hint>Enter short URL of your choosing</mat-hint>
+        </mat-form-field>
+        <div class="example-button-row">
+          <button type="submit" [disabled]="shortenerForm.invalid" mat-flat-button color="primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

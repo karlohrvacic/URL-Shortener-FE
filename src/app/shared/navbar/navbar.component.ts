@@ -16,11 +16,10 @@ export class NavbarComponent implements OnInit {
   authenticated : boolean = false;
   authChangeSubscription : Subscription | undefined;
 
-  constructor(private router : Router, private auth : AuthService, public location: Location) {
-  }
+  constructor(private router : Router, private authService : AuthService, public location: Location) { }
 
   ngOnInit(): void {
-    this.authChangeSubscription = this.auth.authChange
+    this.authChangeSubscription = this.authService.authChange
       .subscribe(authenticated => {
         this.authenticated = authenticated;
         if (this.authenticated) {
@@ -35,7 +34,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(){
-    this.auth.logout();
+    this.authService.logout();
   }
 
   ngOnDestroy(){
