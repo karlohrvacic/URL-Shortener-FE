@@ -50,3 +50,7 @@ iframe#random-article{
   border-radius: 25px;
   z-index: 5;
 }
+
+mat-form-field {
+  padding: 10px;
+}

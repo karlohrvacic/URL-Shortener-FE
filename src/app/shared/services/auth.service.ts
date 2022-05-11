@@ -105,7 +105,7 @@ export class AuthService {
   }
 
   updateUser(user : User) {
-    this.dataService.editUser(user)
+    this.dataService.editUser({email: user.email, name: user.name})
       // @ts-ignore
       .subscribe((res: {
           status: number,
@@ -126,7 +126,7 @@ export class AuthService {
 
   logout() {
     if (this.user?.authorities.find(a => a.name != 'ADMIN')){
-      this.toastr.success(`Thanks for banking with us ${this.user.name}.\nGoodbye!`)
+      this.toastr.success(`Goodbye!`)
     }
     this.user = undefined;
     this.token = null;

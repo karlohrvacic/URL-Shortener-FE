@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {UrlComponent} from "./url/url.component";
-import {UrlRedirectComponent} from "./url-redirect/url-redirect.component";
 import {DashboardRoutingModule} from "./dashboard/dashboard-routing.module";
+import {LoginComponent} from "./dashboard/login/login.component";
+import {RegisterComponent} from "./dashboard/register/register.component";
 
 const routes: Routes = [
   {path:'dashboard', loadChildren: () => DashboardRoutingModule},
+  {path:'login', component : LoginComponent},
+  {path:'register', component : RegisterComponent},
   {path:'', component : UrlComponent},
-  {path:':shortUrl', component : UrlRedirectComponent},
 ];
 
 @NgModule({

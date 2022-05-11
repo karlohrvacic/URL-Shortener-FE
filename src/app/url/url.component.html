@@ -6,11 +6,18 @@
     <div class="container">
       <h2>Shorten your URL</h2>
 
+      <div *ngIf="url != null" id="answer" class="input-group d-flex justify-content-center mb-0">
+        <fieldset>
+          <input type="text" id="link" class="form-control" [value]="urlForClipboard" aria-describedby="button-addon2" autocomplete="off" readonly="readonly">
+        </fieldset>
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="copyToClipboard()">Copy!</button>
+      </div>
+
       <form [formGroup]="shortenerForm" (ngSubmit)="submit()" >
 
           <mat-form-field appearance="standard">
             <mat-label>Url for shortening</mat-label>
-            <input matInput formControlName="longUrl" placeholder="https://karlo.codes">
+            <input matInput formControlName="longUrl" placeholder="https://oncut.me">
             <mat-hint>Enter valid URL</mat-hint>
           </mat-form-field>
 

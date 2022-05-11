@@ -4,7 +4,6 @@ import {environment} from "../../../environments/environment";
 import {Url} from "../models/Url";
 import {User} from "../models/User";
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -12,46 +11,109 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  private apiUrl : string = environment.API_URL + '/api/';
+  private apiUrl : string = environment.API_URL + '/api/v1/';
 
-  addUrl(url : Url){
-    return this.http.post(this.apiUrl + 'v1/url/', url, {
+  createUrlWithoutApiKey(url : Url){
+    return this.http.post(this.apiUrl + 'url/new/', url, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  createUrlWithApiKey(url : Url, apiKey : String){
+    return this.http.post(this.apiUrl + 'url/new/' + apiKey, url, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
   getUrlByShortUrl(shortUrl : String){
-    return this.http.get(this.apiUrl + 'v1/url/redirect/' + shortUrl, {
+    return this.http.get(this.apiUrl + 'url/redirect/' + shortUrl, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
-  login(credentials: { email: string, password: string }) {
-    return this.http.post(this.apiUrl + 'v1/auth/login', credentials, {
+  getAllMyUrls(url : Url, apiKey : String){
+    return this.http.post(this.apiUrl + 'url/new/' + apiKey, url, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  login(loginDto: { email: string, password: string }) {
+    return this.http.post(this.apiUrl + 'auth/login', loginDto, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
   register(user : User) {
-    return this.http.post(this.apiUrl + 'v1/auth/register', user, {
+    return this.http.post(this.apiUrl + 'auth/register', user, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
 
   }
 
-  editUser(user: User) {
-    return this.http.put(this.apiUrl + 'v1/user', user, {
+  getAllUsers() {
+    return this.http.get(this.apiUrl + 'user/all', {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  deleteUser(id : Number) {
+    return this.http.delete(this.apiUrl + 'user' + id, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  editUser(userUpdateDto: { name: String, email: String }) {
+    return this.http.put(this.apiUrl + 'user', userUpdateDto, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
   whoAmI() {
-    return this.http.get(this.apiUrl + 'v2/user/whoAmI', {
+    return this.http.get(this.apiUrl + 'user/whoAmI', {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  createApiKey(){
+    return this.http.get(this.apiUrl + 'key/new', {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  getAllMyApiKeys(){
+    return this.http.get(this.apiUrl + 'key/my', {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  getAllApiKeys(){
+    return this.http.get(this.apiUrl + 'key', {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  editApiKey(apiKeyUpdateDto: { id: number, apiCallsLimit: number, apiCallsUsed: number, expirationDate: Date}) {
+    return this.http.put(this.apiUrl + 'key', apiKeyUpdateDto, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  revokeApiKey(id: number){
+    return this.http.get(this.apiUrl + 'key/revoke/' + id, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
