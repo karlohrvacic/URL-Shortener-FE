@@ -56,7 +56,6 @@ export class AuthService {
                 this.user = res.body;
                 this.authChange.next(true);
                 this.toastr.success(`Welcome back ${this.user.name}`)
-                console.log(this.user.authorities)
                 if (this.user.authorities.find(a => a.name == 'ADMIN')) {
                   this.router.navigate(['/admin']);
                 } else {
