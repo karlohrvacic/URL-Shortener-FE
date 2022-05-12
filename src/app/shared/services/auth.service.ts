@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {User} from "../models/User";
-import {Observable, Subject} from "rxjs";
+import {map, Observable, Subject} from "rxjs";
 import {DataService} from "./data.service";
 import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
@@ -41,21 +41,30 @@ export class AuthService {
       .subscribe((res: {
           status: number,
           body: {
-            user: User,
             token?: string
           }
         }) => {
-          if (res.status === 200 && res.body.token && res.body.user) {
-            this.user = res.body.user;
+          if (res.status === 200 && res.body.token) {
             this.token = res.body.token
-            localStorage.setItem('token', this.token);
-            this.authChange.next(true);
-            this.toastr.success(`Welcome back ${this.user.name}`)
-            if (this.user.authorities.find(a => a.name == 'ADMIN')) {
-              this.router.navigate(['/admin']);
-            } else {
-              this.router.navigate(['/']);
-            }
+            localStorage.setItem('auth-token', this.token);
+            //@ts-ignore
+            this.whoAmI().subscribe((res: {
+              status?: number,
+              body: User
+            }) => {
+              if (res.status == 200 && res.body) {
+                this.user = res.body;
+                this.authChange.next(true);
+                this.toastr.success(`Welcome back ${this.user.name}`)
+                console.log(this.user.authorities)
+                if (this.user.authorities.find(a => a.name == 'ADMIN')) {
+                  this.router.navigate(['/admin']);
+                } else {
+                  this.router.navigate(['/dashboard']);
+                }
+                return res.body;
+              }
+            })
           }
         }, e => {
           if (e.error.message) {
@@ -76,7 +85,7 @@ export class AuthService {
       }) => {
         if (res.status === 200) {
           this.toastr.success("Successful registration!");
-          this.router.navigate(['/login']);
+          this.router.navigate(['/dashboard/login']);
         }
       }, e => {
         if (e.error.message) {
@@ -93,12 +102,10 @@ export class AuthService {
       //@ts-ignore
       this.auth.whoAmI().subscribe((res: {
         status?: number,
-        body: {
-          user?: User,
-        }
+        body: User
       }) => {
-        if (res.status == 200 && res.body.user) {
-          return res.body.user;
+        if (res.status == 200 && res.body) {
+          return res.body;
         } else return null;
       })
     } else return null;
@@ -109,9 +116,7 @@ export class AuthService {
       // @ts-ignore
       .subscribe((res: {
           status: number,
-          body: {
-            user: User,
-          }
+          body: User
         }) => {
           if (res.status === 200) {
             this.logout();
@@ -130,15 +135,15 @@ export class AuthService {
     }
     this.user = undefined;
     this.token = null;
-    localStorage.removeItem('token');
+    localStorage.removeItem('auth-token');
     this.authChange.next(false);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/dashboard/login']);
   }
 
   getToken() {
     if (this.token) return this.token; else {
-      if (localStorage.getItem('token')) {
-        this.token = localStorage.getItem('token');
+      if (localStorage.getItem('auth-token')) {
+        this.token = localStorage.getItem('auth-token');
         return this.token;
       } else return false;
     }
@@ -155,11 +160,10 @@ export class AuthService {
         // @ts-ignore
         .pipe(map((res: {
           status?: number,
-          body: {
-            user?: User,
-          } }) => {
+          body: User
+        }) => {
           if (res.status == 200) {
-            this.user = res.body.user;
+            this.user = res.body;
             this.authChange.next(true);
           }
           return res;

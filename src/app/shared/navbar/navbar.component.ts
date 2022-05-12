@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
         this.authenticated = authenticated;
         if (this.authenticated) {
           // @ts-ignore
-          this.user = this.auth.getUser();
+          this.user = this.authService.getUser();
         }
       });
   }

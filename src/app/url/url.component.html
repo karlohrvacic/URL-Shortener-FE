@@ -22,13 +22,13 @@
           </mat-form-field>
 
         <mat-form-field *ngIf="authenticated" appearance="standard">
-          <mat-label>Url for shortening</mat-label>
+          <mat-label>Short URL</mat-label>
           <input matInput formControlName="shortUrl" placeholder="karlo">
           <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
           <mat-hint>Enter short URL of your choosing</mat-hint>
         </mat-form-field>
         <div class="example-button-row">
-          <button type="submit" [disabled]="shortenerForm.invalid" mat-flat-button color="primary">Submit</button>
+          <button type="submit" [disabled]="shortenerForm.invalid" mat-flat-button color="primary">Cut it!</button>
         </div>
       </form>
     </div>

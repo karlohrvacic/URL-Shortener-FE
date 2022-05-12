@@ -28,6 +28,7 @@ export class UrlComponent implements OnInit {
               private toastr : ToastrService) { }
 
   ngOnInit(): void {
+    this.authenticated = this.authService.isAuthenticated()
 
     this.authChangeSubscription = this.authService.authChange
       .subscribe(authenticated => {

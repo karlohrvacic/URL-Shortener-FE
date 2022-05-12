@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AuthService} from "../../shared/services/auth.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-register',
@@ -7,9 +10,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  registerForm! : FormGroup;
+
+  constructor(private auth : AuthService, private toastr : ToastrService) { }
 
   ngOnInit(): void {
+    this.registerForm = new FormGroup({
+      'email' : new FormControl(null, [Validators.required, Validators.email]),
+      'name' : new FormControl(null, [Validators.required]),
+      'password' : new FormControl(null, [Validators.required, Validators.minLength(8)]),
+      'password-repeat' : new FormControl(null, [Validators.required, Validators.minLength(8)])
+    });
+  }
+
+  register(){
+    this.toastr.error("App is currently in invite only mode")
+    if (this.registerForm.value['password'] === this.registerForm.value['password-repeat'] ){
+      this.registerForm.removeControl('password-repeat');
+      this.auth.register(this.registerForm.value);
+    }
+    else {
+      this.registerForm.addControl('password-repeat',new FormControl( '',[Validators.required]));
+      this.toastr.error('Passwords must match!');
+    }
   }
 
 }

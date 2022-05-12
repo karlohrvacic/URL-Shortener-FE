@@ -3,14 +3,10 @@
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
       <ul class="navbar-nav me-auto" *ngIf="authenticated">
         <ng-container *ngIf="0 == 0">
-          <li class="nav-item" [ngClass]="getClass('/')"><a class="nav-link" [routerLink]="['']">App</a></li>
-          <li class="nav-item" [ngClass]="getClass('/atm')"><a class="nav-link" [routerLink]="['dashboard/atm']">ATM</a></li>
-          <li class="nav-item" [ngClass]="getClass('/transfers')"><a class="nav-link" [routerLink]="['dashboard/transfers']">Transfer Money</a></li>
+          <li class="nav-item" [ngClass]="getClass('/')"><a class="nav-link" [routerLink]="[location.path() == '/dashboard' ? '/' : 'dashboard']">{{ location.path() == '/dashboard' ? 'App' : 'Dashboard' }}</a></li>
+          <li class="nav-item" [ngClass]="getClass('/urls')"><a class="nav-link" [routerLink]="['dashboard/urls']">My URLs</a></li>
+          <li class="nav-item" [ngClass]="getClass('/apis')"><a class="nav-link" [routerLink]="['dashboard/apis']">My API Keys</a></li>
           <li class="nav-item" [ngClass]="getClass('/profile')"><a class="nav-link" [routerLink]="['dashboard/profile']">My profile</a></li>
-        </ng-container>
-        <ng-container *ngIf="0 == 0">
-          <li class="nav-item" [ngClass]="getClass('/admin')"><a class="nav-link" [routerLink]="['dashboard/admin']">Home</a></li>
-
         </ng-container>
       </ul>
     </div>

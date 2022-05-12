@@ -28,8 +28,8 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   getToken() {
-    if (localStorage.getItem('token')) {
-      return localStorage.getItem('token');
+    if (localStorage.getItem('auth-token')) {
+      return localStorage.getItem('auth-token');
     } else return undefined;
   }
 }
