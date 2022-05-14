@@ -11,7 +11,13 @@ import {Subject} from "rxjs";
 export class UrlService {
 
   url : Url = null!;
-  urlChange: Subject<boolean> = new Subject<boolean>();
+  urlChange: Subject<Url> = new Subject<Url>();
+
+  urls : Url[] = null!;
+  urlsChange: Subject<Url[]> = new Subject<Url[]>();
+
+  allUrls : Url[] = null!;
+  allUrlsChange: Subject<Url[]> = new Subject<Url[]>();
 
   constructor(private dataService : DataService, private toastr : ToastrService, private router: Router) { }
 
@@ -19,13 +25,52 @@ export class UrlService {
     this.dataService.createUrlWithoutApiKey(url)
       //@ts-ignore
       .subscribe((res : {
-        body : Url
+        status?: number,
+        body : Url,
       }) => {
         if (res) {
           this.toastr.success("URL successfully shortened!");
           this.url = res.body;
-          this.urlChange.next(true);
+          this.urlChange.next(this.url);
           return this.url;
+        }
+      }, e => {
+        if (e) {
+          this.toastr.error(e.error.message);
+        }
+      });
+    return null;
+  }
+
+  getMyUrls() : Url | null {
+    this.dataService.getMyUrls()
+      //@ts-ignore
+      .subscribe((res : {
+        status?: number,
+        body : Url[],
+      }) => {
+        if (res) {
+          this.urls = res.body;
+          this.urlsChange.next(this.urls);
+        }
+      }, e => {
+        if (e) {
+          this.toastr.error(e.error.message);
+        }
+      });
+    return null;
+  }
+
+  getAllUrls() : Url | null {
+    this.dataService.getAllUrls()
+      //@ts-ignore
+      .subscribe((res : {
+        status?: number,
+        body : Url[],
+      }) => {
+        if (res) {
+          this.allUrls = res.body;
+          this.allUrlsChange.next(this.allUrls);
         }
       }, e => {
         if (e) {

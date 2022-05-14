@@ -1,4 +1,5 @@
 export interface Authorities {
   id: Number;
-  name: String
+  name: String;
+  active: Boolean;
 }

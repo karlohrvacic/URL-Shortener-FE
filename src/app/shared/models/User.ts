@@ -8,9 +8,11 @@ export interface User {
   email: String;
   password: String;
   apiKeys: ApiKey[];
-  apiKeySlot: Number;
+  apiKeySlots: Number;
   urls: Url[];
   authorities: Authorities[];
   createDate: Date;
   lastLogin: Date;
+  active: Boolean;
 }
+

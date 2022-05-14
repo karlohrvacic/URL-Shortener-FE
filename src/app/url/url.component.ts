@@ -19,7 +19,7 @@ export class UrlComponent implements OnInit {
   url!: Url | null;
   authenticated : boolean = false;
   authChangeSubscription : Subscription | undefined;
-  urlSubitedSubscription : Subscription | undefined;
+  urlSubmittedSubscription : Subscription | undefined;
   urlForClipboard!: string;
 
   reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
@@ -29,13 +29,12 @@ export class UrlComponent implements OnInit {
 
   ngOnInit(): void {
     this.authenticated = this.authService.isAuthenticated()
-
     this.authChangeSubscription = this.authService.authChange
       .subscribe(authenticated => {
         this.authenticated = authenticated;
       });
 
-    this.urlSubitedSubscription = this.urlService.urlChange
+    this.urlSubmittedSubscription = this.urlService.urlChange
       .subscribe(() => {
         this.url = this.urlService.url
         this.urlForClipboard = environment.API_URL + "/" + this.url.shortUrl;
@@ -44,7 +43,8 @@ export class UrlComponent implements OnInit {
 
     this.shortenerForm = new FormGroup({
       'longUrl' : new FormControl(null, [Validators.required, Validators.pattern(this.reg)]),
-      'shortUrl' : new FormControl(null)
+      'shortUrl' : new FormControl(null),
+      'visitLimit' : new FormControl(null, [Validators.min(1)])
     });
   }
 

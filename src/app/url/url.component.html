@@ -21,14 +21,22 @@
             <mat-hint>Enter valid URL</mat-hint>
           </mat-form-field>
 
-        <mat-form-field *ngIf="authenticated" appearance="standard">
-          <mat-label>Short URL</mat-label>
-          <input matInput formControlName="shortUrl" placeholder="karlo">
-          <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-          <mat-hint>Enter short URL of your choosing</mat-hint>
-        </mat-form-field>
+        <div *ngIf="authenticated">
+          <mat-form-field  appearance="standard">
+            <mat-label>Short URL</mat-label>
+            <input matInput formControlName="shortUrl" placeholder="karlo">
+            <mat-hint>Enter short URL of your choosing</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field  appearance="standard">
+            <mat-label>Number of visits:</mat-label>
+            <input type="number" matInput formControlName="visitLimit" placeholder="1">
+            <mat-hint>Enter visit limit after which short url becomes invalid</mat-hint>
+          </mat-form-field>
+        </div>
+
         <div class="example-button-row">
-          <button type="submit" [disabled]="shortenerForm.invalid" mat-flat-button color="primary">Cut it!</button>
+          <button type="submit" [disabled]="shortenerForm.invalid" class="m-2" mat-flat-button color="primary">Cut it!</button>
         </div>
       </form>
     </div>

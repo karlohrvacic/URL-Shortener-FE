@@ -110,8 +110,8 @@ export class AuthService {
     } else return null;
   }
 
-  updateUser(user : User) {
-    this.dataService.editUser({email: user.email, name: user.name})
+  updateUser(userUpdateDto: {id: Number, name: String, email: String, apiKeySlots: Number, active: Boolean}) {
+    this.dataService.editUser(userUpdateDto)
       // @ts-ignore
       .subscribe((res: {
           status: number,
