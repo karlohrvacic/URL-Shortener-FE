@@ -19,7 +19,13 @@ export class UrlService {
   allUrls : Url[] = null!;
   allUrlsChange: Subject<Url[]> = new Subject<Url[]>();
 
-  constructor(private dataService : DataService, private toastr : ToastrService, private router: Router) { }
+  constructor(private dataService : DataService, private toastr : ToastrService, private router: Router) {
+    this.init()
+  }
+
+  init() {
+    this.getMyUrls();
+  }
 
   addUrl(url : Url) : Url | null {
     this.dataService.createUrlWithoutApiKey(url)

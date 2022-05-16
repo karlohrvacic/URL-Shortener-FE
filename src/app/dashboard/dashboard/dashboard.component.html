@@ -1,0 +1,23 @@
+<div class="container-fluid">
+  <div *ngIf="!apiKeys && !urls" class="spinner-border text-dark" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <div *ngIf="apiKeys && urls">
+    <h1>Your statistics</h1>
+    <table class="table table-striped">
+      <thead>
+      <th scope="col">Allowed active API keys/Currently active</th>
+      <th scope="col">API key number/Active/Inactive</th>
+      <th scope="col">Number of urls/Active/Inactive</th>
+      <th scope="col">Url total clicks</th>
+      </thead>
+      <tbody>
+      <td>{{user!.apiKeySlots || "Infinite" }} / {{apiKeys | apiKeysAllowedActive}}</td>
+      <td>{{apiKeys | apiKeyStats}}</td>
+      <td>{{urls | urlStats}}</td>
+      <td>{{urls | urlsTotalClicks}}</td>
+      </tbody>
+    </table>
+  </div>
+</div>
+

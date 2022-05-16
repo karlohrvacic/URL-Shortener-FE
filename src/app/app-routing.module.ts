@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {UrlComponent} from "./url/url.component";
 import {DashboardRoutingModule} from "./dashboard/dashboard-routing.module";
-import {LoginComponent} from "./dashboard/login/login.component";
-import {RegisterComponent} from "./dashboard/register/register.component";
+import {LoginComponent} from "./login/login.component";
+import {RegisterComponent} from "./register/register.component";
+import {UserGuard} from "./shared/guards/user.guard";
 
 const routes: Routes = [
-  {path:'dashboard', loadChildren: () => DashboardRoutingModule},
   {path:'login', component : LoginComponent},
   {path:'register', component : RegisterComponent},
+  {path:'dashboard', loadChildren: () => DashboardRoutingModule, canActivate : [UserGuard]},
   {path:'', component : UrlComponent},
 ];
 

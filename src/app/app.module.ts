@@ -10,8 +10,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NavbarComponent} from './shared/navbar/navbar.component';
 import {AuthInterceptor} from "./shared/auth.interceptor";
-import {LoginComponent} from './dashboard/login/login.component';
-import {RegisterComponent} from './dashboard/register/register.component';
+import {LoginComponent} from './login/login.component';
+import {RegisterComponent} from './register/register.component';
 import {CommonModule} from "@angular/common";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
@@ -19,6 +19,15 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {ClipboardModule} from "ngx-clipboard";
+import {DashboardModule} from "./dashboard/dashboard.module";
+import {DashboardComponent} from "./dashboard/dashboard/dashboard.component";
+import {DashboardRoutingModule} from "./dashboard/dashboard-routing.module";
+import { ApiKeyStatsPipe } from './shared/pipes/dashboard/api-key-stats.pipe';
+import { UrlStatsPipe } from './shared/pipes/dashboard/url-stats.pipe';
+import { UrlStatsActivityPipe } from './shared/pipes/dashboard/url-stats-activity.pipe';
+import { UrlsTotalClicksPipe } from './shared/pipes/dashboard/urls-total-clicks.pipe';
+import { ApiKeysAllowedActivePipe } from './shared/pipes/dashboard/api-keys-allowed-active.pipe';
+import { ApiKeysComponent } from './dashboard/api-keys/api-keys.component';
 
 @NgModule({
   declarations: [
@@ -26,31 +35,45 @@ import {ClipboardModule} from "ngx-clipboard";
     UrlComponent,
     NavbarComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ApiKeyStatsPipe,
+    UrlStatsPipe,
+    UrlStatsActivityPipe,
+    UrlsTotalClicksPipe,
+    ApiKeysAllowedActivePipe,
+    ApiKeysComponent,
   ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        CommonModule,
-        ToastrModule.forRoot({
-            positionClass: 'toast-bottom-left',
-            progressBar: true,
-            closeButton: true,
-            maxOpened: 5,
-            preventDuplicates: true
-        }),
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatButtonModule,
-        FormsModule,
-        MatProgressSpinnerModule,
-        ClipboardModule,
-    ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true}],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    CommonModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-left',
+      progressBar: true,
+      closeButton: true,
+      maxOpened: 5,
+      preventDuplicates: true
+    }),
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatButtonModule,
+    FormsModule,
+    MatProgressSpinnerModule,
+    ClipboardModule,
+    DashboardRoutingModule
+  ],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  exports: [
+    ApiKeyStatsPipe,
+    UrlStatsPipe,
+    UrlsTotalClicksPipe,
+    UrlStatsActivityPipe,
+    ApiKeysAllowedActivePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

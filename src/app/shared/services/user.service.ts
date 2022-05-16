@@ -10,7 +10,7 @@ import {User} from "../models/User";
 export class UserService {
 
   users : User[] = null!;
-  userChange: Subject<User[]> = new Subject<User[]>();
+  usersChange: Subject<User[]> = new Subject<User[]>();
 
   constructor(private dataService : DataService, private toastr : ToastrService) { }
 
@@ -23,7 +23,7 @@ export class UserService {
       }) => {
         if (res) {
           this.users = res.body;
-          this.userChange.next(this.users);
+          this.usersChange.next(this.users);
         }
       }, e => {
         if (e) {

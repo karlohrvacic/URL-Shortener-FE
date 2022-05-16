@@ -12,7 +12,16 @@ export class ApiKeyService {
   apiKeys : ApiKey[] = null!;
   apiKeysChange: Subject<ApiKey[]> = new Subject<ApiKey[]>();
 
-  constructor(private dataService : DataService, private toastr : ToastrService) { }
+  allApiKeys : ApiKey[] = null!;
+  allApiKeysChange: Subject<ApiKey[]> = new Subject<ApiKey[]>();
+
+  constructor(private dataService : DataService, private toastr : ToastrService) {
+    this.init()
+  }
+
+  init() {
+    this.getAllMyApiKeys();
+  }
 
   getAllMyApiKeys() {
     this.dataService.getAllMyApiKeys()

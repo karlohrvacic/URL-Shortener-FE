@@ -22,7 +22,7 @@
           <li class="nav-item" (click)="logout()"><button class="btn btn-danger">Logout</button></li>
         </ng-container>
         <ng-template #notUser>
-          <li class="nav-item" [routerLink]="[ location.path() == '/dashboard/login' ? 'dashboard/register' : 'dashboard/login' ]"><button class="btn btn-secondary">{{ location.path() == '/dashboard/login' ? 'Register' : 'Login' }}</button></li>
+          <li class="nav-item" [routerLink]="[ location.path() == '/login' ? 'register' : 'login' ]"><button class="btn btn-secondary">{{ location.path() == '/login' ? 'Register' : 'Login' }}</button></li>
         </ng-template>
       </ul>
     </div>

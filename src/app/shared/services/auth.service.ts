@@ -19,20 +19,21 @@ export class AuthService {
     this.init();
   }
 
-  init(){
-    this.whoAmI().subscribe(() => {
-      if (!this.user) {
-        this.authChange.next(false);
-        this.router.navigate(['/login']);
-      }
-      if (this.user?.authorities.find(a => a.name == 'ADMIN')){
-        this.router.navigate(['/admin']);
+  init() {
+    if (this.user == null) {
+      this.whoAmI().subscribe(() => {
+        if (!this.user) {
+          this.authChange.next(false);
+          this.router.navigate(['/login']);
+        }
+        if (this.user?.authorities.find(a => a.name == 'ADMIN')){
+          this.router.navigate(['/admin']);
 
-      } else {
-        this.router.navigate(['']);
-      }
-    });
-
+        } else {
+          this.router.navigate(['']);
+        }
+      });
+    }
   }
 
   login(credentials: { email: string, password: string }) {
@@ -136,7 +137,7 @@ export class AuthService {
     this.token = null;
     localStorage.removeItem('auth-token');
     this.authChange.next(false);
-    this.router.navigate(['/dashboard/login']);
+    this.router.navigate(['/']);
   }
 
   getToken() {
