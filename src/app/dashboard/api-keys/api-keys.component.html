@@ -1,1 +1,38 @@
-<p>api-keys works!</p>
+<ng-container *ngIf="!apiKeys; else apiKeysLoaded" class="spinner-border text-dark" role="status">
+  <span class="visually-hidden">Loading...</span>
+</ng-container>
+<ng-template #apiKeysLoaded>
+  <h1>You have {{(apiKeys | getActiveElementsForApiKey).length}} active keys of allowed {{user!.apiKeySlots}}</h1>
+  <ng-container *ngIf="apiKeys.length; else noApiKeys">
+    <table class="table table-striped">
+      <thead>
+      <th scope="col">KEY</th>
+      <th scope="col">API CALLS LIMIT</th>
+      <th scope="col">API CALLS USED</th>
+      <th scope="col">CREATE DATE</th>
+      <th scope="col">EXPIRATION DATE</th>
+      <th scope="col">ACTION</th>
+      </thead>
+      <tbody>
+      <tr href *ngFor="let apiKey of (apiKeys | getActiveElementsForApiKey); let i = index;" [ngClass]="apiKey.active ? 'table-success' : 'table-danger'">
+          <td>{{apiKey.key}}</td>
+          <td>{{apiKey.apiCallsLimit}}</td>
+          <td>{{apiKey.apiCallsUsed}}</td>
+          <td>{{apiKey.createDate | date: 'yyyy-M-d HH:mm:ss'}}</td>
+          <td>{{apiKey.expirationDate | date: 'yyyy-M-d'}}</td>
+          <td>
+            <button class="btn btn-info me-1" [routerLink]="['../api-key/' + apiKey.id]">Info</button>
+            <button class="btn btn-danger" (click)="revoke(apiKey.id)" [disabled]="!apiKey.active">Revoke</button>
+          </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <ng-template #noApiKeys>
+    <h2>You have no api keys!</h2>
+  </ng-template>
+  <button type="button" class="btn btn-warning" (click)="createApiKey()"
+          [disabled]="(apiKeys | getActiveElementsForApiKey).length >= user!.apiKeySlots && user!.apiKeySlots != null">
+    Create new API key
+  </button>
+</ng-template>

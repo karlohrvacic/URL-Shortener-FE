@@ -7,9 +7,7 @@ export interface User {
   name: String;
   email: String;
   password: String;
-  apiKeys: ApiKey[];
   apiKeySlots: Number;
-  urls: Url[];
   authorities: Authorities[];
   createDate: Date;
   lastLogin: Date;

@@ -34,6 +34,13 @@ export class DataService {
     });
   }
 
+  revokeUrl(id: Number){
+    return this.http.get(this.apiUrl + 'url/revoke/' + id, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
   getMyUrls(){
     return this.http.get(this.apiUrl + 'url/my/', {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),

@@ -3,9 +3,8 @@ import {Url} from "./Url";
 
 export interface ApiKey {
   id: Number;
-  apiKey: String;
+  key: String;
   owner: User;
-  urls: Url[];
   apiCallsLimit: Number;
   apiCallsUsed: Number;
   createDate: Date;

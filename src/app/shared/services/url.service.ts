@@ -4,6 +4,7 @@ import {DataService} from "./data.service";
 import {Url} from "../models/Url";
 import {Router} from "@angular/router";
 import {Subject} from "rxjs";
+import {ApiKey} from "../models/ApiKey";
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +85,24 @@ export class UrlService {
         }
       });
     return null;
+  }
+
+  revokeUrl(id: Number) {
+    this.dataService.revokeUrl(id)
+      //@ts-ignore
+      .subscribe((res : {
+        status?: number,
+        body : Url[],
+      }) => {
+        if (res) {
+          this.toastr.success("URL successfully deactivated!");
+          return this.getMyUrls();
+        }
+      }, e => {
+        if (e) {
+          this.toastr.error(e.error.message);
+        }
+      });
   }
 
 }

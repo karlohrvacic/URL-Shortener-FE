@@ -3,6 +3,9 @@ import {DataService} from "./data.service";
 import {ToastrService} from "ngx-toastr";
 import {Subject} from "rxjs";
 import {ApiKey} from "../models/ApiKey";
+import {UserService} from "./user.service";
+import {AuthService} from "./auth.service";
+import {User} from "../models/User";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +18,7 @@ export class ApiKeyService {
   allApiKeys : ApiKey[] = null!;
   allApiKeysChange: Subject<ApiKey[]> = new Subject<ApiKey[]>();
 
-  constructor(private dataService : DataService, private toastr : ToastrService) {
+  constructor(private dataService : DataService, private toastr : ToastrService, private authService: AuthService) {
     this.init()
   }
 
@@ -68,7 +71,11 @@ export class ApiKeyService {
       })  => {
         if (res.status == 200) {
           this.toastr.success("API key added successfully");
-          this.getAllApiKeys();
+          console.log(this.authService.isCurrentUserAdmin())
+          if (this.authService.isCurrentUserAdmin()) {
+            this.getAllApiKeys();
+          }
+          this.getAllMyApiKeys()
         }
     }, e => {
         if (e) {
@@ -86,7 +93,10 @@ export class ApiKeyService {
       })  => {
         if (res.status == 200) {
           this.toastr.success("API key successfully revoked");
-          this.getAllApiKeys();
+          if (this.authService.isCurrentUserAdmin()) {
+            this.getAllApiKeys();
+          }
+          this.getAllMyApiKeys()
         }
     }, e => {
         if (e) {
@@ -104,7 +114,10 @@ export class ApiKeyService {
       })  => {
         if (res.status == 200) {
           this.toastr.success("API key successfully updated");
-          this.getAllApiKeys();
+          if (this.authService.isCurrentUserAdmin()) {
+            this.getAllApiKeys();
+          }
+          this.getAllMyApiKeys()
         }
     }, e => {
         if (e) {

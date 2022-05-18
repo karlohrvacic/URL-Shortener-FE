@@ -28,6 +28,11 @@ import { UrlStatsActivityPipe } from './shared/pipes/dashboard/url-stats-activit
 import { UrlsTotalClicksPipe } from './shared/pipes/dashboard/urls-total-clicks.pipe';
 import { ApiKeysAllowedActivePipe } from './shared/pipes/dashboard/api-keys-allowed-active.pipe';
 import { ApiKeysComponent } from './dashboard/api-keys/api-keys.component';
+import { UrlsComponent } from './dashboard/urls/urls.component';
+import { ProfileComponent } from './dashboard/profile/profile.component';
+import { GetActiveElementsForApiKeyPipe } from './shared/pipes/dashboard/get-active-elements.pipe';
+import { ApiKeyDetailsComponent } from './dashboard/api-key-details/api-key-details.component';
+import { GetActiveElementsForUrlPipe } from './shared/pipes/dashboard/get-active-elements-for-url.pipe';
 
 @NgModule({
   declarations: [
@@ -42,6 +47,11 @@ import { ApiKeysComponent } from './dashboard/api-keys/api-keys.component';
     UrlsTotalClicksPipe,
     ApiKeysAllowedActivePipe,
     ApiKeysComponent,
+    UrlsComponent,
+    ProfileComponent,
+    GetActiveElementsForApiKeyPipe,
+    ApiKeyDetailsComponent,
+    GetActiveElementsForUrlPipe,
   ],
   imports: [
     BrowserModule,

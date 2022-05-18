@@ -154,7 +154,7 @@ export class AuthService {
     return this.user !== undefined;
   }
 
-  whoAmI(){
+  whoAmI() {
     if (this.getToken()) {
       return this.dataService.whoAmI()
         // @ts-ignore
@@ -174,5 +174,13 @@ export class AuthService {
         observer.next({status:100, body : {}})
       })
     }
+  }
+
+  isCurrentUserAdmin() : Boolean {
+    if (this.getUser()) {
+      // @ts-ignore
+      return this.getUser().authorities.find(auth => auth.name == "ROLE_ADMIN") != null;
+    }
+    return false;
   }
 }

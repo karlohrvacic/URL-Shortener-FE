@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiKey} from "../../shared/models/ApiKey";
 import {Subscription} from "rxjs";
-import {Url} from "../../shared/models/Url";
-import {User} from "../../shared/models/User";
 import {ApiKeyService} from "../../shared/services/api-key.service";
 import {UrlService} from "../../shared/services/url.service";
 import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../../shared/services/auth.service";
+import {User} from "../../shared/models/User";
 
 @Component({
   selector: 'app-api-keys',
@@ -17,6 +16,7 @@ export class ApiKeysComponent implements OnInit {
 
   apiKeys!: ApiKey[];
   apiKeyChangeSubscription : Subscription | undefined;
+  user!: User | undefined;
 
   constructor(private apiKeyService: ApiKeyService, private urlService: UrlService, private toastr: ToastrService, private authService: AuthService) { }
 
@@ -26,12 +26,15 @@ export class ApiKeysComponent implements OnInit {
       .subscribe(apiKeys => {
         this.apiKeys = apiKeys
       });
-    
-    this.apiKeys = this.apiKeyService.apiKeys;
-    this.apiKeyChangeSubscription = this.apiKeyService.apiKeysChange
-      .subscribe(apiKeys => {
-        this.apiKeys = apiKeys
-      });
+    this.user = this.authService.user
+  }
+
+  revoke(id: Number) {
+    this.apiKeyService.revokeApiKey(id);
+  }
+
+  createApiKey() {
+    this.apiKeyService.generateNewApiKey();
   }
 
 }

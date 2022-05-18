@@ -1,0 +1,37 @@
+<ng-container *ngIf="!urls; else urlsLoaded" class="spinner-border text-dark" role="status">
+  <span class="visually-hidden">Loading...</span>
+</ng-container>
+<ng-template #urlsLoaded>
+  <h1>You have {{(urls | getActiveElementsForUrl).length}} active urls</h1>
+  <ng-container *ngIf="urls.length; else noUrls">
+    <table class="table table-striped">
+      <thead>
+      <th scope="col">URL</th>
+      <th scope="col">SHORT URL</th>
+      <th scope="col">VISITS</th>
+      <th scope="col">VISIT LIMIT</th>
+      <th scope="col">CREATE DATE</th>
+      <th scope="col">LAST ACCESSED</th>
+      <th scope="col">ACTIVE</th>
+      <th scope="col">ACTION</th>
+      </thead>
+      <tbody>
+      <tr href *ngFor="let url of (urls | getActiveElementsForUrl); let i = index;" [ngClass]="url.active ? 'table-success' : 'table-danger'">
+        <td>{{url.longUrl}}</td>
+        <td (click)="copyUrl(url.id)">{{url.shortUrl}}</td>
+        <td>{{url.visits}}</td>
+        <td>{{url.visitLimit}}</td>
+        <td>{{url.createDate | date: 'yyyy-M-d HH:mm:ss'}}</td>
+        <td>{{url.lastAccessed | date: 'yyyy-M-d HH:mm:ss'}}</td>
+        <td>{{url.active}}</td>
+        <td>
+          <button class="btn btn-danger" (click)="revokeUrl(url.id)" [disabled]="!url.active">Deactivate</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <ng-template #noUrls>
+    <h2>You have no api keys!</h2>
+  </ng-template>
+</ng-template>
