@@ -15,7 +15,7 @@ export class AuthService {
 
   authChange: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private dataService: DataService, private router: Router, private toastr : ToastrService) {
+  constructor(private dataService: DataService, private router: Router, private toastr: ToastrService) {
     this.init();
   }
 
@@ -171,12 +171,12 @@ export class AuthService {
     } else {
       return new Observable(observer => {
         this.authChange.next(false);
-        observer.next({status:100, body : {}})
+        observer.next({status:100, body: {}})
       })
     }
   }
 
-  isCurrentUserAdmin() : Boolean {
+  isCurrentUserAdmin(): Boolean {
     if (this.getUser()) {
       // @ts-ignore
       return this.getUser().authorities.find(auth => auth.name == "ROLE_ADMIN") != null;

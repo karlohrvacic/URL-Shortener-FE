@@ -16,10 +16,10 @@ import {UrlService} from "../../shared/services/url.service";
 export class DashboardComponent implements OnInit {
 
   apiKeys!: ApiKey[];
-  apiKeyChangeSubscription : Subscription | undefined;
+  apiKeyChangeSubscription: Subscription | undefined;
 
   urls!: Url[];
-  urlChangeSubscription : Subscription | undefined;
+  urlChangeSubscription: Subscription | undefined;
   user!: User | undefined;
 
   constructor(private apiKeyService: ApiKeyService, private urlService: UrlService, private toastr: ToastrService, private authService: AuthService) { }

@@ -11,23 +11,23 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  private apiUrl : string = environment.API_URL + '/api/v1/';
+  private apiUrl: string = environment.API_URL + '/api/v1/';
 
-  createUrlWithoutApiKey(url : Url){
+  createUrlWithoutApiKey(url: Url){
     return this.http.post(this.apiUrl + 'url/new/', url, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
-  createUrlWithApiKey(url : Url, apiKey : String){
+  createUrlWithApiKey(url: Url, apiKey: String){
     return this.http.post(this.apiUrl + 'url/new/' + apiKey, url, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
-  getUrlByShortUrl(shortUrl : String){
+  getUrlByShortUrl(shortUrl: String){
     return this.http.get(this.apiUrl + 'url/redirect/' + shortUrl, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
@@ -62,7 +62,7 @@ export class DataService {
     });
   }
 
-  register(user : User) {
+  register(user: User) {
     return this.http.post(this.apiUrl + 'auth/register', user, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
@@ -77,7 +77,7 @@ export class DataService {
     });
   }
 
-  deleteUser(id : Number) {
+  deleteUser(id: Number) {
     return this.http.delete(this.apiUrl + 'user' + id, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
@@ -86,6 +86,13 @@ export class DataService {
 
   editUser(userUpdateDto: {id: Number, name: String, email: String, apiKeySlots: Number, active: Boolean}) {
     return this.http.put(this.apiUrl + 'user', userUpdateDto, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  updatePassword(newPassword: String) {
+    return this.http.put(this.apiUrl + 'user/update-password', newPassword, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });

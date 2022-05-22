@@ -14,9 +14,9 @@ import {environment} from "../../../environments/environment";
 export class UrlsComponent implements OnInit {
 
   urls!: Url[];
-  urlChangeSubscription : Subscription | undefined;  apiKeyId!: Number;
+  urlChangeSubscription: Subscription | undefined;  apiKeyId!: Number;
 
-  constructor(private urlService: UrlService, private toastr : ToastrService, private clipboardApi: ClipboardService) { }
+  constructor(private urlService: UrlService, private toastr: ToastrService, private clipboardApi: ClipboardService) { }
 
   ngOnInit(): void {
     this.urls = this.urlService.urls;

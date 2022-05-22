@@ -7,6 +7,7 @@ import {Url} from "../shared/models/Url";
 import { ClipboardService } from 'ngx-clipboard';
 import {environment} from "../../environments/environment";
 import {ToastrService} from "ngx-toastr";
+import {ApiKeyService} from "../shared/services/api-key.service";
 
 @Component({
   selector: 'app-url',
@@ -15,17 +16,17 @@ import {ToastrService} from "ngx-toastr";
 })
 export class UrlComponent implements OnInit {
 
-  shortenerForm! : FormGroup;
+  shortenerForm!: FormGroup;
   url!: Url | null;
-  authenticated : boolean = false;
-  authChangeSubscription : Subscription | undefined;
-  urlSubmittedSubscription : Subscription | undefined;
+  authenticated: boolean = false;
+  authChangeSubscription: Subscription | undefined;
+  urlSubmittedSubscription: Subscription | undefined;
   urlForClipboard!: string;
 
   reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
 
-  constructor(private urlService : UrlService, private authService : AuthService, private clipboardApi: ClipboardService,
-              private toastr : ToastrService) { }
+  constructor(private urlService: UrlService, private authService: AuthService, private clipboardApi: ClipboardService,
+              private toastr: ToastrService, private apiKeyService: ApiKeyService) { }
 
   ngOnInit(): void {
     this.authenticated = this.authService.isAuthenticated()
@@ -39,12 +40,14 @@ export class UrlComponent implements OnInit {
         this.url = this.urlService.url
         this.urlForClipboard = environment.API_URL + "/" + this.url.shortUrl;
         this.copyToClipboard()
+        this.apiKeyService.getAllMyApiKeys()
+        this.urlService.getMyUrls()
       })
 
     this.shortenerForm = new FormGroup({
-      'longUrl' : new FormControl(null, [Validators.required, Validators.pattern(this.reg)]),
-      'shortUrl' : new FormControl(null),
-      'visitLimit' : new FormControl(null, [Validators.min(1)])
+      'longUrl': new FormControl(null, [Validators.required, Validators.pattern(this.reg)]),
+      'shortUrl': new FormControl(null),
+      'visitLimit': new FormControl(null, [Validators.min(1)])
     });
   }
 

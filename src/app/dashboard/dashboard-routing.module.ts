@@ -8,11 +8,11 @@ import {ApiKeyDetailsComponent} from "./api-key-details/api-key-details.componen
 
 
 const routes: Routes = [
-  {path:'', component : DashboardComponent},
-  {path:'api-keys', component : ApiKeysComponent},
-  {path:'api-key/:id', component : ApiKeyDetailsComponent},
-  {path:'urls', component : UrlsComponent},
-  {path:'profile', component : ProfileComponent},
+  {path:'', component: DashboardComponent},
+  {path:'api-keys', component: ApiKeysComponent},
+  {path:'api-key/:id', component: ApiKeyDetailsComponent},
+  {path:'urls', component: UrlsComponent},
+  {path:'profile', component: ProfileComponent},
 
 ];
 

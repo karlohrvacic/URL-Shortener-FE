@@ -11,16 +11,16 @@ import {ApiKey} from "../models/ApiKey";
 })
 export class UrlService {
 
-  url : Url = null!;
+  url: Url = null!;
   urlChange: Subject<Url> = new Subject<Url>();
 
-  urls : Url[] = null!;
+  urls: Url[] = null!;
   urlsChange: Subject<Url[]> = new Subject<Url[]>();
 
-  allUrls : Url[] = null!;
+  allUrls: Url[] = null!;
   allUrlsChange: Subject<Url[]> = new Subject<Url[]>();
 
-  constructor(private dataService : DataService, private toastr : ToastrService, private router: Router) {
+  constructor(private dataService: DataService, private toastr: ToastrService, private router: Router) {
     this.init()
   }
 
@@ -28,12 +28,12 @@ export class UrlService {
     this.getMyUrls();
   }
 
-  addUrl(url : Url) : Url | null {
+  addUrl(url: Url): Url | null {
     this.dataService.createUrlWithoutApiKey(url)
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : Url,
+        body: Url,
       }) => {
         if (res) {
           this.toastr.success("URL successfully shortened!");
@@ -49,12 +49,12 @@ export class UrlService {
     return null;
   }
 
-  getMyUrls() : Url | null {
+  getMyUrls(): Url | null {
     this.dataService.getMyUrls()
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : Url[],
+        body: Url[],
       }) => {
         if (res) {
           this.urls = res.body;
@@ -68,12 +68,12 @@ export class UrlService {
     return null;
   }
 
-  getAllUrls() : Url | null {
+  getAllUrls(): Url | null {
     this.dataService.getAllUrls()
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : Url[],
+        body: Url[],
       }) => {
         if (res) {
           this.allUrls = res.body;
@@ -90,9 +90,9 @@ export class UrlService {
   revokeUrl(id: Number) {
     this.dataService.revokeUrl(id)
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : Url[],
+        body: Url[],
       }) => {
         if (res) {
           this.toastr.success("URL successfully deactivated!");

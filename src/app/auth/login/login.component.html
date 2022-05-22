@@ -3,7 +3,7 @@
   <form class="signin-form" (submit)="onLogin()" [formGroup]="signinForm">
     <fieldset class="form-group">
       <label>Email</label>
-      <input type="text" class="form-control {{signinForm.get('email')?.invalid ? 'is-invalid' : 'is-valid'}}" formControlName="email" id="email" placeholder="alice@example.com">
+      <input type="text" class="form-control {{signinForm.get('email')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="email" id="email" placeholder="alice@example.com">
       <small class="invalid-feedback" *ngIf="signinForm.get('email')?.invalid && (signinForm.get('email')?.dirty || signinForm.get('email')?.touched)">
         <small *ngIf="signinForm.get('email')?.errors?.['required']">
           Email is required.
@@ -16,7 +16,7 @@
 
     <label>Password</label>
     <fieldset class="form-group">
-      <input type="password" class="form-control {{signinForm.get('password')?.invalid ? 'is-invalid' : 'is-valid'}}" formControlName="password" placeholder="********">
+      <input type="password" class="form-control {{signinForm.get('password')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="password" placeholder="********">
       <small class="invalid-feedback" *ngIf="signinForm.get('password')?.invalid && (signinForm.get('password')?.dirty || signinForm.get('email')?.touched)">
         <small *ngIf="signinForm.get('password')?.errors?.['required']">
           Password is required

@@ -9,17 +9,17 @@ import {User} from "../models/User";
 })
 export class UserService {
 
-  users : User[] = null!;
+  users: User[] = null!;
   usersChange: Subject<User[]> = new Subject<User[]>();
 
-  constructor(private dataService : DataService, private toastr : ToastrService) { }
+  constructor(private dataService: DataService, private toastr: ToastrService) { }
 
   getAllUsers() {
     this.dataService.getAllUsers()
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : User[],
+        body: User[],
       }) => {
         if (res) {
           this.users = res.body;
@@ -36,9 +36,9 @@ export class UserService {
   deactivateUser(id: Number) {
     this.dataService.deleteUser(id)
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : User,
+        body: User,
       }) => {
         if (res) {
           this.toastr.success("User has been deactivated");
@@ -55,13 +55,31 @@ export class UserService {
   editUser(userUpdateDto: {id: Number, name: String, email: String, apiKeySlots: Number, active: Boolean}) {
     this.dataService.editUser(userUpdateDto)
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : User,
+        body: User,
       }) => {
         if (res) {
           this.toastr.success("User has been edited");
           this.getAllUsers()
+        }
+      }, e => {
+        if (e) {
+          this.toastr.error(e.error.message);
+        }
+      });
+    return null;
+  }
+
+  updatePassword(newPassword: String) {
+    this.dataService.updatePassword(newPassword)
+      //@ts-ignore
+      .subscribe((res: {
+        status?: number,
+        body: User,
+      }) => {
+        if (res) {
+          this.toastr.success("Password changed successfully");
         }
       }, e => {
         if (e) {

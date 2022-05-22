@@ -5,7 +5,7 @@
 
     <label>Name</label>
     <fieldset class="form-group">
-      <input type="text" class="form-control {{registerForm.get('name')?.invalid ? 'is-invalid' : 'is-valid'}}" formControlName="name" placeholder="Alice">
+      <input type="text" class="form-control {{registerForm.get('name')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="name" placeholder="Alice">
       <small class="invalid-feedback" *ngIf="registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched)">
         <small *ngIf="registerForm.get('name')?.errors?.['required']">
           Name is required.
@@ -15,7 +15,7 @@
 
     <label>Email</label>
     <fieldset class="form-group">
-      <input type="email" class="form-control {{registerForm.get('email')?.invalid ? 'is-invalid' : 'is-valid'}}"  formControlName="email" placeholder="alice@example.com">
+      <input type="email" class="form-control {{registerForm.get('email')?.invalid ? 'is-invalid': 'is-valid'}}"  formControlName="email" placeholder="alice@example.com">
       <small class="invalid-feedback" *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)">
         <small *ngIf="registerForm.get('email')?.errors?.['required']">
           Email is required.
@@ -28,7 +28,7 @@
 
     <label>Password</label>
     <fieldset class="form-group">
-      <input type="password" class="form-control {{registerForm.get('password')?.invalid ? 'is-invalid' : 'is-valid'}}" formControlName="password" placeholder="Password">
+      <input type="password" class="form-control {{registerForm.get('password')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="password" placeholder="Password">
       <small class="invalid-feedback" *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)">
         <small *ngIf="registerForm.get('password')?.errors?.['required']">
           Password is required.
@@ -41,7 +41,7 @@
 
     <label>Repeat password</label>
     <fieldset class="form-group">
-      <input type="password" class="form-control {{registerForm.get('password-repeat')?.invalid || registerForm.get('password')?.value != registerForm.get('password-repeat')?.value ? 'is-invalid' : 'is-valid'}}" formControlName="password-repeat" placeholder="Repeat password">
+      <input type="password" class="form-control {{registerForm.get('password-repeat')?.invalid || registerForm.get('password')?.value != registerForm.get('password-repeat')?.value ? 'is-invalid': 'is-valid'}}" formControlName="password-repeat" placeholder="Repeat password">
       <small class="invalid-feedback" *ngIf="registerForm.get('password-repeat')?.invalid && (registerForm.get('password-repeat')?.dirty || registerForm.get('password-repeat')?.touched)">
         <small *ngIf="registerForm.get('password-repeat')?.errors?.['required']">
           You need to repeat password

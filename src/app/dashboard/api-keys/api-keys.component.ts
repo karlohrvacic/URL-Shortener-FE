@@ -15,7 +15,7 @@ import {User} from "../../shared/models/User";
 export class ApiKeysComponent implements OnInit {
 
   apiKeys!: ApiKey[];
-  apiKeyChangeSubscription : Subscription | undefined;
+  apiKeyChangeSubscription: Subscription | undefined;
   user!: User | undefined;
 
   constructor(private apiKeyService: ApiKeyService, private urlService: UrlService, private toastr: ToastrService, private authService: AuthService) { }

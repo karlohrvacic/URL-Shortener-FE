@@ -12,11 +12,11 @@ import {Location} from "@angular/common";
 })
 export class NavbarComponent implements OnInit {
 
-  user : User | null = null;
-  authenticated : boolean = false;
-  authChangeSubscription : Subscription | undefined;
+  user: User | null = null;
+  authenticated: boolean = false;
+  authChangeSubscription: Subscription | undefined;
 
-  constructor(private router : Router, private authService : AuthService, public location: Location) { }
+  constructor(private router: Router, private authService: AuthService, public location: Location) { }
 
   ngOnInit(): void {
     this.authChangeSubscription = this.authService.authChange
@@ -29,8 +29,8 @@ export class NavbarComponent implements OnInit {
       });
   }
 
-  getClass(a : string){
-    return this.router.url == a ? 'active' : '';
+  getClass(a: string){
+    return this.router.url == a ? 'active': '';
   }
 
   logout(){

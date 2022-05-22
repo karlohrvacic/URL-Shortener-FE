@@ -12,13 +12,13 @@ import {User} from "../models/User";
 })
 export class ApiKeyService {
 
-  apiKeys : ApiKey[] = null!;
+  apiKeys: ApiKey[] = null!;
   apiKeysChange: Subject<ApiKey[]> = new Subject<ApiKey[]>();
 
-  allApiKeys : ApiKey[] = null!;
+  allApiKeys: ApiKey[] = null!;
   allApiKeysChange: Subject<ApiKey[]> = new Subject<ApiKey[]>();
 
-  constructor(private dataService : DataService, private toastr : ToastrService, private authService: AuthService) {
+  constructor(private dataService: DataService, private toastr: ToastrService, private authService: AuthService) {
     this.init()
   }
 
@@ -29,9 +29,9 @@ export class ApiKeyService {
   getAllMyApiKeys() {
     this.dataService.getAllMyApiKeys()
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : ApiKey[]
+        body: ApiKey[]
       })  => {
         if (res.status == 200) {
           this.apiKeys = res.body;
@@ -47,9 +47,9 @@ export class ApiKeyService {
   getAllApiKeys() {
     this.dataService.getAllApiKeys()
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : ApiKey[]
+        body: ApiKey[]
       })  => {
         if (res.status == 200) {
           this.apiKeys = res.body;
@@ -65,9 +65,9 @@ export class ApiKeyService {
   generateNewApiKey() {
     this.dataService.createApiKey()
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : ApiKey
+        body: ApiKey
       })  => {
         if (res.status == 200) {
           this.toastr.success("API key added successfully");
@@ -87,9 +87,9 @@ export class ApiKeyService {
   revokeApiKey(id: Number) {
     this.dataService.revokeApiKey(id)
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : ApiKey
+        body: ApiKey
       })  => {
         if (res.status == 200) {
           this.toastr.success("API key successfully revoked");
@@ -108,9 +108,9 @@ export class ApiKeyService {
   editApiKey(apiKeyUpdateDto: { id: Number, apiCallsLimit: Number, apiCallsUsed: Number, expirationDate: Date, active: Boolean}) {
     this.dataService.editApiKey(apiKeyUpdateDto)
       //@ts-ignore
-      .subscribe((res : {
+      .subscribe((res: {
         status?: number,
-        body : ApiKey
+        body: ApiKey
       })  => {
         if (res.status == 200) {
           this.toastr.success("API key successfully updated");

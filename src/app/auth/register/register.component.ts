@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../shared/services/auth.service";
+import {AuthService} from "../../shared/services/auth.service";
 import {ToastrService} from "ngx-toastr";
 
 @Component({
@@ -10,16 +10,16 @@ import {ToastrService} from "ngx-toastr";
 })
 export class RegisterComponent implements OnInit {
 
-  registerForm! : FormGroup;
+  registerForm!: FormGroup;
 
-  constructor(private auth : AuthService, private toastr : ToastrService) { }
+  constructor(private auth: AuthService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
-      'email' : new FormControl(null, [Validators.required, Validators.email]),
-      'name' : new FormControl(null, [Validators.required]),
-      'password' : new FormControl(null, [Validators.required, Validators.minLength(8)]),
-      'password-repeat' : new FormControl(null, [Validators.required, Validators.minLength(8)])
+      'email': new FormControl(null, [Validators.required, Validators.email]),
+      'name': new FormControl(null, [Validators.required]),
+      'password': new FormControl(null, [Validators.required, Validators.minLength(8)]),
+      'password-repeat': new FormControl(null, [Validators.required, Validators.minLength(8)])
     });
   }
 

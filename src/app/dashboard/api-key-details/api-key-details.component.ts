@@ -14,9 +14,9 @@ import {UrlService} from "../../shared/services/url.service";
 })
 export class ApiKeyDetailsComponent implements OnInit {
 
-  subscription : Subscription = null!;
+  subscription: Subscription = null!;
   urls!: Url[];
-  urlChangeSubscription : Subscription | undefined;  apiKeyId!: Number;
+  urlChangeSubscription: Subscription | undefined;  apiKeyId!: Number;
   apiKey!: ApiKey;
 
   constructor(private route: ActivatedRoute, private router: Router, private apiKeyService: ApiKeyService, private location: Location, private urlService: UrlService) { }

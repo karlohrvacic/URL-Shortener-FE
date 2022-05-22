@@ -8,7 +8,7 @@
   <th scope="col">ACTION</th>
   </thead>
   <tbody>
-  <tr [ngClass]="apiKey.active ? 'table-success' : 'table-danger'">
+  <tr [ngClass]="apiKey.active ? 'table-success': 'table-danger'">
     <td>{{apiKey.key}}</td>
     <td>{{apiKey.apiCallsLimit}}</td>
     <td>{{apiKey.apiCallsUsed}}</td>
@@ -34,7 +34,7 @@
       <th scope="col">ACTION</th>
       </thead>
       <tbody>
-      <tr href *ngFor="let url of (urls | getActiveElementsForUrl); let i = index;" [ngClass]="url.active ? 'table-success' : 'table-danger'">
+      <tr href *ngFor="let url of urls; let i = index;" [ngClass]="url.active ? 'table-success': 'table-danger'">
         <td>{{url.longUrl}}</td>
         <td>{{url.shortUrl}}</td>
         <td>{{url.visits}}</td>

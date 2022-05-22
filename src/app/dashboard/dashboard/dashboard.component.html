@@ -2,7 +2,7 @@
   <div *ngIf="!apiKeys && !urls" class="spinner-border text-dark" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
-  <div *ngIf="apiKeys && urls">
+  <ng-container *ngIf="apiKeys && urls">
     <h1>Your statistics</h1>
     <table class="table table-striped">
       <thead>
@@ -18,6 +18,6 @@
       <td>{{urls | urlsTotalClicks}}</td>
       </tbody>
     </table>
-  </div>
+  </ng-container>
 </div>
 
