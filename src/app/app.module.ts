@@ -9,7 +9,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NavbarComponent} from './shared/navbar/navbar.component';
-import {AuthInterceptor} from "./shared/auth.interceptor";
+import {AuthInterceptor} from "./shared/interceptor/auth.interceptor";
 import {LoginComponent} from './auth/login/login.component';
 import {RegisterComponent} from './auth/register/register.component';
 import {CommonModule} from "@angular/common";
@@ -24,13 +24,13 @@ import {ApiKeysComponent} from './dashboard/api-keys/api-keys.component';
 import {UrlsComponent} from './dashboard/urls/urls.component';
 import {ProfileComponent} from './dashboard/profile/profile.component';
 import {ApiKeyDetailsComponent} from './dashboard/api-key-details/api-key-details.component';
-import {ApiKeyStatsPipe} from "./shared/pipe/api-key-stats.pipe";
-import {ApiKeysAllowedActivePipe} from "./shared/pipe/api-keys-allowed-active.pipe";
-import {GetElementsForApiKeyByActivePipe} from "./shared/pipe/get-elements-for-api-key-by-active.pipe";
-import {GetElementsForUrlByActivePipe} from "./shared/pipe/get-elements-for-url-by-active.pipe";
-import {UrlStatsPipe} from "./shared/pipe/url-stats.pipe";
-import {UrlStatsActivityPipe} from "./shared/pipe/url-stats-activity.pipe";
-import {UrlsTotalClicksPipe} from "./shared/pipe/urls-total-clicks.pipe";
+import {ApiKeyStatsPipe} from "./shared/pipes/dashboard/api-key-stats.pipe";
+import {ApiKeysAllowedActivePipe} from "./shared/pipes/dashboard/api-keys-allowed-active.pipe";
+import {UrlStatsPipe} from "./shared/pipes/dashboard/url-stats.pipe";
+import {UrlsTotalClicksPipe} from "./shared/pipes/dashboard/urls-total-clicks.pipe";
+import {UrlStatsActivityPipe} from "./shared/pipes/dashboard/url-stats-activity.pipe";
+import {GetElementsForApiKeyByActivePipe} from "./shared/pipes/dashboard/get-elements-for-api-key-by-active.pipe";
+import {GetElementsForUrlByActivePipe} from "./shared/pipes/dashboard/get-elements-for-url-by-active.pipe";
 
 @NgModule({
   declarations: [

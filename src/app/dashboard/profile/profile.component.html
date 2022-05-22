@@ -1,3 +1,55 @@
-<ng-container>
+<div class="container-fluid">
+  <ng-container>
+    <div class="row">
+      <div class="col">NAME</div>
+      <div class="col">EMAIL</div>
+      <div class="col">MAX ACTIVE API KEYS</div>
+    </div>
+    <div class="row">
+      <div class="col">{{user?.name}}</div>
+      <div class="col">{{user?.email}}</div>
+      <div class="col">{{user?.apiKeySlots}}</div>
+    </div>
+  </ng-container>
 
-</ng-container>
+  <ng-container>
+    <form class="register-form" (submit)="changePassword()" [formGroup]="passwordChangeForm">
+
+      <label>Old password</label>
+      <fieldset class="form-group">
+        <input type="password" class="form-control {{passwordChangeForm.get('oldPassword')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="oldPassword" placeholder="Password">
+        <small class="invalid-feedback" *ngIf="passwordChangeForm.get('oldPassword')?.invalid && (passwordChangeForm.get('oldPassword')?.dirty || passwordChangeForm.get('oldPassword')?.touched)">
+          <small *ngIf="passwordChangeForm.get('oldPassword')?.errors?.['required']">
+            Password is required.
+          </small>
+        </small>
+      </fieldset>
+
+      <label>New password</label>
+      <fieldset class="form-group">
+        <input type="password" class="form-control {{passwordChangeForm.get('newPassword')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="newPassword" placeholder="Password">
+        <small class="invalid-feedback" *ngIf="passwordChangeForm.get('newPassword')?.invalid && (passwordChangeForm.get('newPassword')?.dirty || passwordChangeForm.get('newPassword')?.touched)">
+          <small *ngIf="passwordChangeForm.get('newPassword')?.errors?.['required']">
+            Password is required.
+          </small>
+          <small *ngIf="passwordChangeForm.get('newPassword')?.errors?.['minlength']">
+            Password needs to be at least 8 characters long.
+          </small>
+        </small>
+      </fieldset>
+
+      <label>Repeat new password</label>
+      <fieldset class="form-group">
+        <input type="password" class="form-control {{passwordChangeForm.get('repeat-new-password')?.invalid || passwordChangeForm.get('password')?.value != passwordChangeForm.get('repeat-new-password')?.value ? 'is-invalid': 'is-valid'}}" formControlName="repeat-new-password" placeholder="Repeat password">
+        <small class="invalid-feedback" *ngIf="passwordChangeForm.get('repeat-new-password')?.invalid && (passwordChangeForm.get('repeat-new-password')?.dirty || passwordChangeForm.get('repeat-new-password')?.touched)">
+          <small *ngIf="passwordChangeForm.get('repeat-new-password')?.errors?.['required']">
+            You need to repeat password
+          </small>
+        </small>
+      </fieldset>
+
+      <button type="submit" [disabled]="passwordChangeForm.invalid" class="btn btn-success m-1">Change password!</button>
+    </form>
+  </ng-container>
+
+</div>

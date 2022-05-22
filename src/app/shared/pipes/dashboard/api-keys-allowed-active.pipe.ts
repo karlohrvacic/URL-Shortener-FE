@@ -6,7 +6,7 @@ import {ApiKey} from "../../models/ApiKey";
 })
 export class ApiKeysAllowedActivePipe implements PipeTransform {
 
-  transform(apiKeys: ApiKey[]): unknown {
+  transform(apiKeys: ApiKey[]): Number {
     return apiKeys.filter((e) => e.active).length;
   }
 

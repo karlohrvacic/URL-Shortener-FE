@@ -91,8 +91,8 @@ export class DataService {
     });
   }
 
-  updatePassword(newPassword: String) {
-    return this.http.put(this.apiUrl + 'user/update-password', newPassword, {
+  updatePassword(updatePasswordDto: {oldPassword: String, newPassword: String}) {
+    return this.http.put(this.apiUrl + 'user/update-password', updatePasswordDto, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });

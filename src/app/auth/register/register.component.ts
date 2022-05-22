@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  register(){
+  register() {
     this.toastr.error("App is currently in invite only mode")
   //   if (this.registerForm.value['password'] === this.registerForm.value['password-repeat'] ){
   //     this.registerForm.removeControl('password-repeat');

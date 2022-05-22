@@ -71,8 +71,8 @@ export class UserService {
     return null;
   }
 
-  updatePassword(newPassword: String) {
-    this.dataService.updatePassword(newPassword)
+  updatePassword(updatePasswordDto: {oldPassword: String, newPassword: String}) {
+    this.dataService.updatePassword(updatePasswordDto)
       //@ts-ignore
       .subscribe((res: {
         status?: number,
