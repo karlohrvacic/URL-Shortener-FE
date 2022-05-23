@@ -10,7 +10,7 @@ import {ToastrService} from "ngx-toastr";
 import {ApiKeyService} from "../shared/services/api-key.service";
 
 @Component({
-  selector: 'app-url',
+  selector: 'app-shorten-url',
   templateUrl: './url.component.html',
   styleUrls: ['./url.component.css']
 })
@@ -21,7 +21,7 @@ export class UrlComponent implements OnInit {
   authenticated: boolean = false;
   authChangeSubscription: Subscription | undefined;
   urlSubmittedSubscription: Subscription | undefined;
-  urlForClipboard!: string;
+  urlForClipboard!: String;
 
   reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
 
@@ -38,11 +38,14 @@ export class UrlComponent implements OnInit {
     this.urlSubmittedSubscription = this.urlService.urlChange
       .subscribe(() => {
         this.url = this.urlService.url
-        this.urlForClipboard = environment.API_URL + "/" + this.url.shortUrl;
+        this.urlForClipboard = this.url.shortUrl;
         this.copyToClipboard()
-        this.apiKeyService.getAllMyApiKeys()
-        this.urlService.getMyUrls()
+        if (this.authenticated) {
+          this.apiKeyService.getAllMyApiKeys()
+          this.urlService.getMyUrls()
+        }
       })
+
 
     this.shortenerForm = new FormGroup({
       'longUrl': new FormControl(null, [Validators.required, Validators.pattern(this.reg)]),
@@ -57,7 +60,7 @@ export class UrlComponent implements OnInit {
 
   copyToClipboard() {
     if (this.urlForClipboard != null) {
-      this.clipboardApi.copyFromContent(this.urlForClipboard)
+      this.clipboardApi.copyFromContent(environment.API_URL + "/" + this.urlForClipboard)
       this.toastr.success("Url has been copied to clipboard")
     }
   }

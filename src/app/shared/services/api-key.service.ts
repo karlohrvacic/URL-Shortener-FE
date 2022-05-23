@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {DataService} from "./data.service";
 import {ToastrService} from "ngx-toastr";
-import {Subject} from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import {ApiKey} from "../models/ApiKey";
 import {UserService} from "./user.service";
 import {AuthService} from "./auth.service";
@@ -18,12 +18,22 @@ export class ApiKeyService {
   allApiKeys: ApiKey[] = null!;
   allApiKeysChange: Subject<ApiKey[]> = new Subject<ApiKey[]>();
 
+  authenticated: boolean = false;
+  authChangeSubscription: Subscription | undefined;
+
   constructor(private dataService: DataService, private toastr: ToastrService, private authService: AuthService) {
     this.init()
   }
 
   init() {
-    this.getAllMyApiKeys();
+    this.authenticated = this.authService.isAuthenticated()
+    this.authChangeSubscription = this.authService.authChange
+      .subscribe(authenticated => {
+        this.authenticated = authenticated;
+        if (this.authenticated) {
+          this.getAllMyApiKeys();
+        }
+      });
   }
 
   getAllMyApiKeys() {

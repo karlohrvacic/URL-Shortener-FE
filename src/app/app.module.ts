@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {UrlComponent} from './url/url.component';
+import {UrlComponent} from './shorten-url/url.component';
 import {ToastrModule} from "ngx-toastr";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -13,11 +13,6 @@ import {AuthInterceptor} from "./shared/interceptor/auth.interceptor";
 import {LoginComponent} from './auth/login/login.component';
 import {RegisterComponent} from './auth/register/register.component';
 import {CommonModule} from "@angular/common";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatIconModule} from "@angular/material/icon";
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {ClipboardModule} from "ngx-clipboard";
 import {DashboardRoutingModule} from "./dashboard/dashboard-routing.module";
 import {ApiKeysComponent} from './dashboard/api-keys/api-keys.component';
@@ -31,6 +26,7 @@ import {UrlsTotalClicksPipe} from "./shared/pipes/dashboard/urls-total-clicks.pi
 import {UrlStatsActivityPipe} from "./shared/pipes/dashboard/url-stats-activity.pipe";
 import {GetElementsForApiKeyByActivePipe} from "./shared/pipes/dashboard/get-elements-for-api-key-by-active.pipe";
 import {GetElementsForUrlByActivePipe} from "./shared/pipes/dashboard/get-elements-for-url-by-active.pipe";
+import {MaterialModule} from "./shared/material/material.module";
 
 @NgModule({
   declarations: [
@@ -65,14 +61,10 @@ import {GetElementsForUrlByActivePipe} from "./shared/pipes/dashboard/get-elemen
       maxOpened: 5,
       preventDuplicates: true
     }),
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatButtonModule,
     FormsModule,
-    MatProgressSpinnerModule,
     ClipboardModule,
     DashboardRoutingModule,
+    MaterialModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   exports: [

@@ -3,8 +3,9 @@ import {ToastrService} from "ngx-toastr";
 import {DataService} from "./data.service";
 import {Url} from "../models/Url";
 import {Router} from "@angular/router";
-import {Subject} from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import {ApiKey} from "../models/ApiKey";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +21,22 @@ export class UrlService {
   allUrls: Url[] = null!;
   allUrlsChange: Subject<Url[]> = new Subject<Url[]>();
 
-  constructor(private dataService: DataService, private toastr: ToastrService, private router: Router) {
+  authenticated: boolean = false;
+  authChangeSubscription: Subscription | undefined;
+
+  constructor(private dataService: DataService, private toastr: ToastrService, private authService: AuthService) {
     this.init()
   }
 
   init() {
-    this.getMyUrls();
+    this.authenticated = this.authService.isAuthenticated()
+    this.authChangeSubscription = this.authService.authChange
+      .subscribe(authenticated => {
+        this.authenticated = authenticated;
+        if (this.authenticated) {
+          this.getMyUrls();
+        }
+      });
   }
 
   addUrl(url: Url): Url | null {

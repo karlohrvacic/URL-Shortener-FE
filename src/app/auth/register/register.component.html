@@ -1,54 +1,61 @@
-<div class="container">
-  <h2>Register</h2>
+<div class="container-fluid main">
+  <div class="bg"></div>
+  <div class="bg bg2"></div>
+  <div class="bg bg3"></div>
+  <div class="row col-8 col-sm-8 col-lg-4 infobox p-2">
+    <div class="container">
+      <h2>Register</h2>
 
-  <form class="register-form" (submit)="register()" [formGroup]="registerForm">
+      <form class="register-form" (submit)="register()" [formGroup]="registerForm">
 
-    <label>Name</label>
-    <fieldset class="form-group">
-      <input type="text" class="form-control {{registerForm.get('name')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="name" placeholder="Alice">
-      <small class="invalid-feedback" *ngIf="registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched)">
-        <small *ngIf="registerForm.get('name')?.errors?.['required']">
-          Name is required.
-        </small>
-      </small>
-    </fieldset>
+        <label>Name</label>
+        <fieldset class="form-group">
+          <input type="text" class="form-control {{registerForm.get('name')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="name" placeholder="Alice">
+          <small class="invalid-feedback" *ngIf="registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched)">
+            <small *ngIf="registerForm.get('name')?.errors?.['required']">
+              Name is required.
+            </small>
+          </small>
+        </fieldset>
 
-    <label>Email</label>
-    <fieldset class="form-group">
-      <input type="email" class="form-control {{registerForm.get('email')?.invalid ? 'is-invalid': 'is-valid'}}"  formControlName="email" placeholder="alice@example.com">
-      <small class="invalid-feedback" *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)">
-        <small *ngIf="registerForm.get('email')?.errors?.['required']">
-          Email is required.
-        </small>
-        <small *ngIf="registerForm.get('email')?.errors?.['email']">
-          This has to be email
-        </small>
-      </small>
-    </fieldset>
+        <label>Email</label>
+        <fieldset class="form-group">
+          <input type="email" class="form-control {{registerForm.get('email')?.invalid ? 'is-invalid': 'is-valid'}}"  formControlName="email" placeholder="alice@example.com">
+          <small class="invalid-feedback" *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)">
+            <small *ngIf="registerForm.get('email')?.errors?.['required']">
+              Email is required.
+            </small>
+            <small *ngIf="registerForm.get('email')?.errors?.['email']">
+              This has to be email
+            </small>
+          </small>
+        </fieldset>
 
-    <label>Password</label>
-    <fieldset class="form-group">
-      <input type="password" class="form-control {{registerForm.get('password')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="password" placeholder="Password">
-      <small class="invalid-feedback" *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)">
-        <small *ngIf="registerForm.get('password')?.errors?.['required']">
-          Password is required.
-        </small>
-        <small *ngIf="registerForm.get('password')?.errors?.['minlength']">
-          Password needs to be at least 8 characters long.
-        </small>
-      </small>
-    </fieldset>
+        <label>Password</label>
+        <fieldset class="form-group">
+          <input type="password" class="form-control {{registerForm.get('password')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="password" placeholder="Password">
+          <small class="invalid-feedback" *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)">
+            <small *ngIf="registerForm.get('password')?.errors?.['required']">
+              Password is required.
+            </small>
+            <small *ngIf="registerForm.get('password')?.errors?.['minlength']">
+              Password needs to be at least 8 characters long.
+            </small>
+          </small>
+        </fieldset>
 
-    <label>Repeat password</label>
-    <fieldset class="form-group">
-      <input type="password" class="form-control {{registerForm.get('password-repeat')?.invalid || registerForm.get('password')?.value != registerForm.get('password-repeat')?.value ? 'is-invalid': 'is-valid'}}" formControlName="password-repeat" placeholder="Repeat password">
-      <small class="invalid-feedback" *ngIf="registerForm.get('password-repeat')?.invalid && (registerForm.get('password-repeat')?.dirty || registerForm.get('password-repeat')?.touched)">
-        <small *ngIf="registerForm.get('password-repeat')?.errors?.['required']">
-          You need to repeat password
-        </small>
-      </small>
-    </fieldset>
+        <label>Repeat password</label>
+        <fieldset class="form-group">
+          <input type="password" class="form-control {{registerForm.get('password-repeat')?.invalid || registerForm.get('password')?.value != registerForm.get('password-repeat')?.value ? 'is-invalid': 'is-valid'}}" formControlName="password-repeat" placeholder="Repeat password">
+          <small class="invalid-feedback" *ngIf="registerForm.get('password-repeat')?.invalid && (registerForm.get('password-repeat')?.dirty || registerForm.get('password-repeat')?.touched)">
+            <small *ngIf="registerForm.get('password-repeat')?.errors?.['required']">
+              You need to repeat password
+            </small>
+          </small>
+        </fieldset>
 
-    <button type="submit" [disabled]="registerForm.invalid" class="btn btn-success m-1">Register!</button>
-  </form>
+        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-success m-1">Register!</button>
+      </form>
+    </div>
+  </div>
 </div>

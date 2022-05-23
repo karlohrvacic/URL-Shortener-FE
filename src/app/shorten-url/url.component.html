@@ -2,7 +2,7 @@
   <div class="bg"></div>
   <div class="bg bg2"></div>
   <div class="bg bg3"></div>
-  <div class="row col-8 col-sm-12 col-lg-8 infobox p-2">
+  <div class="row col-8 col-sm-8 col-lg-4 infobox p-2">
     <div class="container">
       <h2>Shorten your URL</h2>
 
@@ -13,25 +13,28 @@
         <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="copyToClipboard()">Copy!</button>
       </div>
 
-      <form [formGroup]="shortenerForm" (ngSubmit)="submit()" >
+      <form [formGroup]="shortenerForm" (ngSubmit)="submit()">
+
+        <div class="row">
           <mat-form-field appearance="standard">
             <mat-label>Url for shortening</mat-label>
             <input matInput formControlName="longUrl" placeholder="https://oncut.me">
             <mat-hint>Enter valid URL</mat-hint>
           </mat-form-field>
 
-        <div *ngIf="authenticated">
-          <mat-form-field  appearance="standard">
-            <mat-label>Short URL</mat-label>
-            <input matInput formControlName="shortUrl" placeholder="karlo">
-            <mat-hint>Enter short URL of your choosing</mat-hint>
-          </mat-form-field>
+          <ng-container *ngIf="authenticated">
+            <mat-form-field appearance="standard">
+              <mat-label>Short URL</mat-label>
+              <input matInput formControlName="shortUrl" placeholder="oncut">
+              <mat-hint>Enter short URL of your choosing</mat-hint>
+            </mat-form-field>
 
-          <mat-form-field  appearance="standard">
-            <mat-label>Number of visits:</mat-label>
-            <input type="number" matInput formControlName="visitLimit" placeholder="1">
-            <mat-hint>Enter visit limit after which short url becomes invalid</mat-hint>
-          </mat-form-field>
+            <mat-form-field appearance="standard">
+              <mat-label>Number of visits:</mat-label>
+              <input type="number" matInput formControlName="visitLimit" placeholder="1">
+              <mat-hint>Enter visit limit after which short url becomes invalid</mat-hint>
+            </mat-form-field>
+          </ng-container>
         </div>
 
         <div class="example-button-row">

@@ -9,20 +9,20 @@ import {AuthService} from "../../shared/services/auth.service";
 })
 export class LoginComponent implements OnInit {
 
-  signinForm!: FormGroup;
+  signInForm!: FormGroup;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
 
-    this.signinForm = new FormGroup({
+    this.signInForm = new FormGroup({
       'email': new FormControl(null, [Validators.required, Validators.email]),
       'password': new FormControl(null, Validators.required)
     });
   }
 
   onLogin(){
-    this.authService.login(this.signinForm.value);
+    this.authService.login(this.signInForm.value);
   }
 
   ngOnDestroy(): void {
