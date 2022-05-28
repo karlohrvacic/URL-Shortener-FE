@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ApiKey} from "../../shared/models/ApiKey";
 import {Subscription} from "rxjs";
 import {ApiKeyService} from "../../shared/services/api-key.service";
@@ -6,6 +6,9 @@ import {UrlService} from "../../shared/services/url.service";
 import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../../shared/services/auth.service";
 import {User} from "../../shared/models/User";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatSort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-api-keys',
@@ -14,17 +17,30 @@ import {User} from "../../shared/models/User";
 })
 export class ApiKeysComponent implements OnInit {
 
+  displayedColumns: string[] = ['key', 'apiCallsLimit', 'apiCallsUsed', 'visitLimit', 'createDate', 'expirationDate', 'active', 'action'];
+  apiKeysView: MatTableDataSource<ApiKey> = new MatTableDataSource(this.apiKeyService.apiKeys);
+
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   apiKeys!: ApiKey[];
   apiKeyChangeSubscription: Subscription | undefined;
   user!: User | undefined;
 
   constructor(private apiKeyService: ApiKeyService, private urlService: UrlService, private toastr: ToastrService, private authService: AuthService) { }
 
+  ngAfterViewInit(): void {
+    this.apiKeysView.sort = this.sort
+    this.apiKeysView.paginator = this.paginator
+  }
+
   ngOnInit(): void {
     this.apiKeys = this.apiKeyService.apiKeys;
     this.apiKeyChangeSubscription = this.apiKeyService.apiKeysChange
       .subscribe(apiKeys => {
         this.apiKeys = apiKeys
+        this.apiKeysView = new MatTableDataSource(this.apiKeys)
+        this.ngAfterViewInit()
       });
     this.user = this.authService.user
   }
@@ -35,6 +51,10 @@ export class ApiKeysComponent implements OnInit {
 
   createApiKey() {
     this.apiKeyService.generateNewApiKey();
+  }
+
+  applyFilter(filterValue: string) {
+    this.apiKeysView.filter = filterValue.trim().toLowerCase();
   }
 
 }

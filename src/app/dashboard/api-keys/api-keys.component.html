@@ -2,65 +2,66 @@
   <mat-spinner>Loading...</mat-spinner>
 </ng-container>
 <ng-template #apiKeysLoaded>
-  <h1>You have {{(apiKeys | getElementsForApiKeyByActive : true).length}} active keys of allowed {{user!.apiKeySlots}}</h1>
-  <ng-container *ngIf="(apiKeys | getElementsForApiKeyByActive : true).length; else noApiKeys">
-    <table class="table table-striped">
-      <thead>
-      <th scope="col">KEY</th>
-      <th scope="col">API CALLS LIMIT</th>
-      <th scope="col">API CALLS USED</th>
-      <th scope="col">CREATE DATE</th>
-      <th scope="col">EXPIRATION DATE</th>
-      <th scope="col">ACTION</th>
-      </thead>
-      <tbody>
-      <tr href *ngFor="let apiKey of (apiKeys | getElementsForApiKeyByActive : true); let i = index;" [ngClass]="apiKey.active ? 'table-success': 'table-danger'">
-          <td>{{apiKey.key}}</td>
-          <td>{{apiKey.apiCallsLimit}}</td>
-          <td>{{apiKey.apiCallsUsed}}</td>
-          <td>{{apiKey.createDate | date: 'yyyy-M-d HH:mm:ss'}}</td>
-          <td>{{apiKey.expirationDate | date: 'yyyy-M-d'}}</td>
-          <td>
-            <button class="btn btn-info me-1" [routerLink]="['../api-key/' + apiKey.id]">Info</button>
-            <button class="btn btn-danger" (click)="revoke(apiKey.id)" [disabled]="!apiKey.active">Revoke</button>
-          </td>
-      </tr>
-      </tbody>
-    </table>
+  <h1>You have ?? active urls</h1>
+  <ng-container class="mat-elevation-z8" *ngIf="apiKeys; else noApiKeys">
+    <mat-form-field>
+      <input (keyup)="applyFilter($any($event).target.value)" matInput placeholder="Search">
+    </mat-form-field>
+    <mat-table [dataSource]="apiKeysView" matSort  matSortActive="active" matSortDirection="desc" matSortDisableClear>
+
+      <ng-container matColumnDef="key">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Key </th>
+        <td mat-cell *matCellDef="let apiKey"> {{apiKey.key}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="apiCallsLimit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> API calls limit </th>
+        <td mat-cell *matCellDef="let apiKey"> {{apiKey.apiCallsLimit}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="apiCallsUsed">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> API calls used </th>
+        <td mat-cell *matCellDef="let apiKey"> {{apiKey.apiCallsUsed}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="visitLimit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> API calls limit </th>
+        <td mat-cell *matCellDef="let apiKey"> {{apiKey.apiCallsLimit}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Create date </th>
+        <td mat-cell *matCellDef="let apiKey"> {{apiKey.createDate | date: 'yyyy-M-d HH:mm:ss'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expirationDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Expiration date </th>
+        <td mat-cell *matCellDef="let apiKey"> {{apiKey.expirationDate | date: 'yyyy-M-d'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Activew</th>
+        <mat-icon mat-cell *matCellDef="let apiKey" color="{{apiKey.active ? 'accent' : 'warn'}}"> {{apiKey.active ? 'check_circle_outline' : 'cancel'}}</mat-icon>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef > Action </th>
+        <td *matCellDef="let apiKey">
+          <button class="btn btn-info me-1" [routerLink]="['../api-key/' + apiKey.id]">Info</button>
+          <button class="btn btn-danger" *ngIf="apiKey.active" (click)="revoke(apiKey.id)" [disabled]="!apiKey.active">Revoke</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
   </ng-container>
   <ng-template #noApiKeys>
-    <h2>You have no api keys!</h2>
+    <h2>You have no active API keys!</h2>
   </ng-template>
-  <button type="button" class="btn btn-warning" (click)="createApiKey()"
-          [disabled]="(apiKeys | getElementsForApiKeyByActive : true).length >= user!.apiKeySlots && user!.apiKeySlots != null">
-    Create new API key
-  </button>
 </ng-template>
-
-<ng-container>
-  <h1>You have {{(apiKeys | getElementsForApiKeyByActive : false).length}} inactive keys</h1>
-  <ng-container *ngIf="(apiKeys | getElementsForApiKeyByActive : false).length">
-    <table class="table table-striped">
-      <thead>
-      <th scope="col">KEY</th>
-      <th scope="col">API CALLS LIMIT</th>
-      <th scope="col">API CALLS USED</th>
-      <th scope="col">CREATE DATE</th>
-      <th scope="col">EXPIRED</th>
-      <th scope="col">ACTION</th>
-      </thead>
-      <tbody>
-      <tr href *ngFor="let apiKey of (apiKeys | getElementsForApiKeyByActive : false); let i = index;" [ngClass]="apiKey.active ? 'table-success': 'table-danger'">
-        <td>{{apiKey.key}}</td>
-        <td>{{apiKey.apiCallsLimit}}</td>
-        <td>{{apiKey.apiCallsUsed}}</td>
-        <td>{{apiKey.createDate | date: 'yyyy-M-d HH:mm:ss'}}</td>
-        <td>{{apiKey.expirationDate | date: 'yyyy-M-d'}}</td>
-        <td>
-          <button class="btn btn-info me-1" [routerLink]="['../api-key/' + apiKey.id]">Info</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </ng-container>
-</ng-container>
+<button type="button" class="btn btn-warning" (click)="createApiKey()"
+            [disabled]="(apiKeys | getElementsForApiKeyByActive : true).length >= user!.apiKeySlots && user!.apiKeySlots != null">
+      Create new API key
+</button>

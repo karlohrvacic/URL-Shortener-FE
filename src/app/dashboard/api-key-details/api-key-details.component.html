@@ -20,36 +20,66 @@
   </tr>
   </tbody>
 </table>
-<ng-container *ngIf="urls.length; else noUrls">
-    <h1>This API key has {{urls.length}} URLs</h1>
-    <table class="table table-striped">
-      <thead>
-      <th scope="col">URL</th>
-      <th scope="col">SHORT URL</th>
-      <th scope="col">VISITS</th>
-      <th scope="col">VISIT LIMIT</th>
-      <th scope="col">CREATE DATE</th>
-      <th scope="col">LAST ACCESSED</th>
-      <th scope="col">ACTIVE</th>
-      <th scope="col">ACTION</th>
-      </thead>
-      <tbody>
-      <tr href *ngFor="let url of urls; let i = index;" [ngClass]="url.active ? 'table-success': 'table-danger'">
-        <td>{{url.longUrl}}</td>
-        <td>{{url.shortUrl}}</td>
-        <td>{{url.visits}}</td>
-        <td>{{url.visitLimit}}</td>
-        <td>{{url.createDate | date: 'yyyy-M-d HH:mm:ss'}}</td>
-        <td>{{url.lastAccessed | date: 'yyyy-M-d HH:mm:ss'}}</td>
-        <td>{{url.active}}</td>
-        <td>
-          <button class="btn btn-danger" (click)="revokeUrl(url.id)" [disabled]="!url.active">Revoke</button>
+<ng-container *ngIf="!urls; else urlsLoaded" class="spinner-border text-dark" role="status">
+  <mat-spinner>Loading...</mat-spinner>
+</ng-container>
+<ng-template #urlsLoaded>
+  <h1>You have ?? active urls</h1>
+  <ng-container class="mat-elevation-z8" *ngIf="urls; else noUrls">
+    <mat-form-field>
+      <input (keyup)="applyFilter($any($event).target.value)" matInput placeholder="Search">
+    </mat-form-field>
+    <mat-table [dataSource]="urls" matSort  matSortActive="active" matSortDirection="desc" matSortDisableClear>
+
+      <ng-container matColumnDef="longUrl">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> URL </th>
+        <td mat-cell *matCellDef="let url"> {{url.longUrl}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="shortUrl">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Short URL </th>
+        <td mat-cell *matCellDef="let url"> {{url.shortUrl}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="visits">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Visits </th>
+        <td mat-cell *matCellDef="let url"> {{url.visits}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="visitLimit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Visit limit </th>
+        <td mat-cell *matCellDef="let url"> {{url.visitLimit}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Create date </th>
+        <td mat-cell *matCellDef="let url"> {{url.createDate | date: 'yyyy-M-d HH:mm:ss'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="lastAccessed">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Last accessed </th>
+        <td mat-cell *matCellDef="let url"> {{url.lastAccessed | date: 'yyyy-M-d HH:mm:ss'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
+        <mat-icon mat-cell *matCellDef="let url" color="{{url.active ? 'accent' : 'warn'}}">{{url.active ? 'check_circle_outline' : 'cancel'}}</mat-icon>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td *matCellDef="let url">
+          <button class="btn btn-danger" *ngIf="url.active" (click)="revokeUrl(url.id)">Deactivate</button>
         </td>
-      </tr>
-      </tbody>
-    </table>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
   </ng-container>
   <ng-template #noUrls>
-    <h2>This API key doesn't have any URL!</h2>
+    <h2>You have no URLs for this key!</h2>
   </ng-template>
+</ng-template>
   <button class="btn btn-info" (click)="back()">Back</button>

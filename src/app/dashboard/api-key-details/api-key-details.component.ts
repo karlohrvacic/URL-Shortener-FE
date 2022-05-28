@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {ApiKeyService} from "../../shared/services/api-key.service";
@@ -6,6 +6,9 @@ import { Location } from '@angular/common'
 import {ApiKey} from "../../shared/models/ApiKey";
 import {Url} from "../../shared/models/Url";
 import {UrlService} from "../../shared/services/url.service";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatSort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-api-key-details',
@@ -14,12 +17,23 @@ import {UrlService} from "../../shared/services/url.service";
 })
 export class ApiKeyDetailsComponent implements OnInit {
 
+  displayedColumns: string[] = ['longUrl', 'shortUrl', 'visits', 'visitLimit', 'createDate', 'lastAccessed', 'active', 'action'];
+  urlsView: MatTableDataSource<Url> = new MatTableDataSource(this.urlService.urls.filter(u => u.apiKey.id == this.apiKeyId));
+
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   subscription: Subscription = null!;
   urls!: Url[];
   urlChangeSubscription: Subscription | undefined;  apiKeyId!: Number;
   apiKey!: ApiKey;
 
   constructor(private route: ActivatedRoute, private router: Router, private apiKeyService: ApiKeyService, private location: Location, private urlService: UrlService) { }
+
+  ngAfterViewInit(): void {
+    this.urlsView.sort = this.sort
+    this.urlsView.paginator = this.paginator
+  }
 
   ngOnInit(): void {
     this.apiKeyId = this.route.snapshot.params['id'];
@@ -35,6 +49,8 @@ export class ApiKeyDetailsComponent implements OnInit {
     this.urlChangeSubscription = this.urlService.urlsChange
       .subscribe(urls => {
         this.urls = urls.filter(u => u.apiKey.id == this.apiKeyId)
+        this.urlsView = new MatTableDataSource(this.urls);
+        this.ngAfterViewInit();
       });
   }
 
@@ -49,4 +65,9 @@ export class ApiKeyDetailsComponent implements OnInit {
   revokeUrl(id: Number) {
     this.urlService.revokeUrl(id);
   }
+
+  applyFilter(filterValue: string) {
+    this.urlsView.filter = filterValue.trim().toLowerCase();
+  }
+
 }
