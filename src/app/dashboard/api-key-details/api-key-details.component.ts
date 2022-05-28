@@ -9,6 +9,9 @@ import {UrlService} from "../../shared/services/url.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
+import {environment} from "../../../environments/environment";
+import {ToastrService} from "ngx-toastr";
+import {ClipboardService} from "ngx-clipboard";
 
 @Component({
   selector: 'app-api-key-details',
@@ -28,7 +31,8 @@ export class ApiKeyDetailsComponent implements OnInit {
   urlChangeSubscription: Subscription | undefined;  apiKeyId!: Number;
   apiKey!: ApiKey;
 
-  constructor(private route: ActivatedRoute, private router: Router, private apiKeyService: ApiKeyService, private location: Location, private urlService: UrlService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private apiKeyService: ApiKeyService, private location: Location, private urlService: UrlService,
+              private toastr: ToastrService, private clipboardApi: ClipboardService) { }
 
   ngAfterViewInit(): void {
     this.urlsView.sort = this.sort
@@ -68,6 +72,12 @@ export class ApiKeyDetailsComponent implements OnInit {
 
   applyFilter(filterValue: string) {
     this.urlsView.filter = filterValue.trim().toLowerCase();
+  }
+
+  copyUrl(id: Number) {
+    // @ts-ignore
+    this.clipboardApi.copyFromContent(environment.API_URL + "/" + this.urls.find(url => id == url.id).shortUrl)
+    this.toastr.success("Url has been copied to clipboard")
   }
 
 }

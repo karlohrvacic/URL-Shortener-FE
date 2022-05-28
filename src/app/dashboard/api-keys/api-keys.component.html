@@ -7,11 +7,12 @@
     <mat-form-field>
       <input (keyup)="applyFilter($any($event).target.value)" matInput placeholder="Search">
     </mat-form-field>
-    <mat-table [dataSource]="apiKeysView" matSort  matSortActive="active" matSortDirection="desc" matSortDisableClear>
+    <table mat-table [dataSource]="apiKeysView" matSort  matSortActive="active" matSortDirection="desc" matSortDisableClear class="w-100">
 
       <ng-container matColumnDef="key">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Key </th>
-        <td mat-cell *matCellDef="let apiKey"> {{apiKey.key}} </td>
+        <td mat-cell *matCellDef="let apiKey"> {{apiKey.key}}
+          <button mat-icon-button (click)="copyKey(apiKey.key)"><mat-icon>file_copy</mat-icon></button></td>
       </ng-container>
 
       <ng-container matColumnDef="apiCallsLimit">
@@ -40,28 +41,30 @@
       </ng-container>
 
       <ng-container matColumnDef="active">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Activew</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
         <mat-icon mat-cell *matCellDef="let apiKey" color="{{apiKey.active ? 'accent' : 'warn'}}"> {{apiKey.active ? 'check_circle_outline' : 'cancel'}}</mat-icon>
       </ng-container>
 
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef > Action </th>
         <td *matCellDef="let apiKey">
-          <button class="btn btn-info me-1" [routerLink]="['../api-key/' + apiKey.id]">Info</button>
-          <button class="btn btn-danger" *ngIf="apiKey.active" (click)="revoke(apiKey.id)" [disabled]="!apiKey.active">Revoke</button>
+          <button mat-mini-fab  [routerLink]="['../api-key/' + apiKey.id]"><mat-icon>info</mat-icon></button>
+          <button mat-mini-fab color="warn" *ngIf="apiKey.active" (click)="revoke(apiKey.id)"><mat-icon>delete</mat-icon></button>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </mat-table>
+    </table>
     <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
   </ng-container>
   <ng-template #noApiKeys>
     <h2>You have no active API keys!</h2>
   </ng-template>
 </ng-template>
-<button type="button" class="btn btn-warning" (click)="createApiKey()"
+<button type="button" mat-flat-button color="accent" (click)="createApiKey()"
             [disabled]="(apiKeys | getElementsForApiKeyByActive : true).length >= user!.apiKeySlots && user!.apiKeySlots != null">
       Create new API key
 </button>
+
+<footer><a href="{{docsUrl}}">API Docs</a></footer>

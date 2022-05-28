@@ -9,6 +9,8 @@ import {User} from "../../shared/models/User";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
+import {environment} from "../../../environments/environment";
+import {ClipboardService} from "ngx-clipboard";
 
 @Component({
   selector: 'app-api-keys',
@@ -17,7 +19,7 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 export class ApiKeysComponent implements OnInit {
 
-  displayedColumns: string[] = ['key', 'apiCallsLimit', 'apiCallsUsed', 'visitLimit', 'createDate', 'expirationDate', 'active', 'action'];
+  displayedColumns: string[] = ['key', 'apiCallsLimit', 'apiCallsUsed', 'createDate', 'expirationDate', 'active', 'action'];
   apiKeysView: MatTableDataSource<ApiKey> = new MatTableDataSource(this.apiKeyService.apiKeys);
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -26,8 +28,9 @@ export class ApiKeysComponent implements OnInit {
   apiKeys!: ApiKey[];
   apiKeyChangeSubscription: Subscription | undefined;
   user!: User | undefined;
+  docsUrl: String = environment.API_URL + "/swagger-ui/index.html";
 
-  constructor(private apiKeyService: ApiKeyService, private urlService: UrlService, private toastr: ToastrService, private authService: AuthService) { }
+  constructor(private apiKeyService: ApiKeyService, private urlService: UrlService, private toastr: ToastrService, private authService: AuthService, private clipboardApi: ClipboardService) { }
 
   ngAfterViewInit(): void {
     this.apiKeysView.sort = this.sort
@@ -57,4 +60,8 @@ export class ApiKeysComponent implements OnInit {
     this.apiKeysView.filter = filterValue.trim().toLowerCase();
   }
 
+  copyKey(key: string) {
+    this.clipboardApi.copyFromContent(key)
+    this.toastr.success("Api key has been copied to clipboard")
+  }
 }

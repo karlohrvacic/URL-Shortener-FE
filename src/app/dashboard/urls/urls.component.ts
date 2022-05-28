@@ -16,7 +16,8 @@ import {MatPaginator} from "@angular/material/paginator";
 export class UrlsComponent implements AfterViewInit {
 
   displayedColumns: string[] = ['longUrl', 'shortUrl', 'visits', 'visitLimit', 'createDate', 'lastAccessed', 'active', 'action'];
-  urls: MatTableDataSource<Url> = new MatTableDataSource(this.urlService.urls);
+  urlsView: MatTableDataSource<Url> = new MatTableDataSource(this.urlService.urls);
+  urls: Url[] = this.urlService.urls;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -24,8 +25,8 @@ export class UrlsComponent implements AfterViewInit {
   constructor(private urlService: UrlService, private toastr: ToastrService, private clipboardApi: ClipboardService) {}
 
   ngAfterViewInit(): void {
-    this.urls.sort = this.sort
-    this.urls.paginator = this.paginator
+    this.urlsView.sort = this.sort
+    this.urlsView.paginator = this.paginator
   }
 
   revokeUrl(id: Number) {
@@ -39,7 +40,7 @@ export class UrlsComponent implements AfterViewInit {
   }
 
   applyFilter(filterValue: string) {
-    this.urls.filter = filterValue.trim().toLowerCase();
+    this.urlsView.filter = filterValue.trim().toLowerCase();
   }
 
 }

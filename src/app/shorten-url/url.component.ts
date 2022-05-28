@@ -23,7 +23,7 @@ export class UrlComponent implements OnInit {
   urlSubmittedSubscription: Subscription | undefined;
   urlForClipboard!: String;
 
-  reg = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+  reg = 'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)';
 
   constructor(private urlService: UrlService, private authService: AuthService, private clipboardApi: ClipboardService,
               private toastr: ToastrService, private apiKeyService: ApiKeyService) { }
