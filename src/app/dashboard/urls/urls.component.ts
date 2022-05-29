@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {Url} from "../../shared/models/Url";
 import {UrlService} from "../../shared/services/url.service";
 import {ToastrService} from "ngx-toastr";
@@ -7,6 +7,7 @@ import {environment} from "../../../environments/environment";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-urls',
@@ -17,12 +18,27 @@ export class UrlsComponent implements AfterViewInit {
 
   displayedColumns: string[] = ['longUrl', 'shortUrl', 'visits', 'visitLimit', 'createDate', 'lastAccessed', 'active', 'action'];
   urlsView: MatTableDataSource<Url> = new MatTableDataSource(this.urlService.urls);
-  urls: Url[] = this.urlService.urls;
+  urls!: Url[];
+  urlsChangeSubscription: Subscription | undefined;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private urlService: UrlService, private toastr: ToastrService, private clipboardApi: ClipboardService) {}
+
+  ngOnInit(): void {
+    this.urls = this.urlService.urls;
+    this.urlsChangeSubscription = this.urlService.urlsChange
+      .subscribe(urls => {
+        this.urls = urls
+        this.urlsView = new MatTableDataSource(this.urls)
+        this.ngAfterViewInit()
+      });
+  }
+
+  ngOnDestroy() {
+    this.urlsChangeSubscription?.unsubscribe()
+  }
 
   ngAfterViewInit(): void {
     this.urlsView.sort = this.sort

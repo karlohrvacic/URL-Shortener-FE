@@ -46,8 +46,6 @@ export class ApiKeyDetailsComponent implements OnInit {
         this.apiKeyId = params['id'];
       });
 
-    console.log(this.urlService.urls.filter(u => u.apiKey.id == this.apiKeyId))
-
     // @ts-ignore
     this.apiKey = this.apiKeyService.apiKeys.find(a => a.id == this.apiKeyId);
     this.urls = this.urlService.urls.filter(u => u.apiKey.id == this.apiKeyId);
