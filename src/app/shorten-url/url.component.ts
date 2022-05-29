@@ -54,6 +54,12 @@ export class UrlComponent implements OnInit {
     });
   }
 
+
+  ngOnDestroy() {
+    this.authChangeSubscription?.unsubscribe();
+    this.urlSubmittedSubscription?.unsubscribe()
+  }
+
   submit() {
     this.urlService.addUrl(this.shortenerForm.value);
   }

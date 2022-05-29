@@ -17,7 +17,6 @@ import {ClipboardModule} from "ngx-clipboard";
 import {DashboardRoutingModule} from "./dashboard/dashboard-routing.module";
 import {ApiKeysComponent} from './dashboard/api-keys/api-keys.component';
 import {UrlsComponent} from './dashboard/urls/urls.component';
-import {ProfileComponent} from './dashboard/profile/profile.component';
 import {ApiKeyDetailsComponent} from './dashboard/api-key-details/api-key-details.component';
 import {ApiKeyStatsPipe} from "./shared/pipes/dashboard/api-key-stats.pipe";
 import {ApiKeysAllowedActivePipe} from "./shared/pipes/dashboard/api-keys-allowed-active.pipe";
@@ -29,6 +28,7 @@ import {GetElementsForUrlByActivePipe} from "./shared/pipes/dashboard/get-elemen
 import {MaterialModule} from "./shared/material/material.module";
 import { RequestPasswordResetComponent } from './auth/request-password-reset/request-password-reset.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { ChangePasswordComponent } from './dashboard/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +39,6 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     RegisterComponent,
     ApiKeysComponent,
     UrlsComponent,
-    ProfileComponent,
     ApiKeyDetailsComponent,
     ApiKeyStatsPipe,
     ApiKeysAllowedActivePipe,
@@ -50,6 +49,7 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
     UrlsTotalClicksPipe,
     RequestPasswordResetComponent,
     ResetPasswordComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

@@ -28,7 +28,6 @@ export class ApiKeysComponent implements OnInit {
   apiKeys!: ApiKey[];
   apiKeyChangeSubscription: Subscription | undefined;
   user!: User | undefined;
-  docsUrl: String = environment.API_URL + "/swagger-ui/index.html";
 
   constructor(private apiKeyService: ApiKeyService, private urlService: UrlService, private toastr: ToastrService, private authService: AuthService, private clipboardApi: ClipboardService) { }
 
@@ -46,6 +45,10 @@ export class ApiKeysComponent implements OnInit {
         this.ngAfterViewInit()
       });
     this.user = this.authService.user
+  }
+
+  ngOnDestroy() {
+    this.apiKeyChangeSubscription?.unsubscribe()
   }
 
   revoke(id: Number) {

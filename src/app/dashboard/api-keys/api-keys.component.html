@@ -2,17 +2,18 @@
   <mat-spinner>Loading...</mat-spinner>
 </ng-container>
 <ng-template #apiKeysLoaded>
-  <h1>You have ?? active urls</h1>
+  <h1>Your API keys</h1>
   <ng-container class="mat-elevation-z8" *ngIf="apiKeys; else noApiKeys">
     <mat-form-field>
       <input (keyup)="applyFilter($any($event).target.value)" matInput placeholder="Search">
     </mat-form-field>
-    <table mat-table [dataSource]="apiKeysView" matSort  matSortActive="active" matSortDirection="desc" matSortDisableClear class="w-100">
+    <table mat-table [dataSource]="apiKeysView" matSort  matSortActive="active" matSortDirection="desc" matSortDisableClear class="mat-elevation-z8">
 
       <ng-container matColumnDef="key">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Key </th>
         <td mat-cell *matCellDef="let apiKey"> {{apiKey.key}}
-          <button mat-icon-button (click)="copyKey(apiKey.key)"><mat-icon>file_copy</mat-icon></button></td>
+          <button mat-icon-button (click)="copyKey(apiKey.key)"><mat-icon>file_copy</mat-icon></button>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="apiCallsLimit">
@@ -66,5 +67,3 @@
             [disabled]="(apiKeys | getElementsForApiKeyByActive : true).length >= user!.apiKeySlots && user!.apiKeySlots != null">
       Create new API key
 </button>
-
-<footer><a href="{{docsUrl}}">API Docs</a></footer>

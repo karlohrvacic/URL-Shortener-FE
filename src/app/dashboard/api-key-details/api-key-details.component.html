@@ -1,5 +1,4 @@
-
-
+<h1>Details for API key</h1>
 <table class="table table-striped">
   <thead>
   <th scope="col">KEY</th>
@@ -26,12 +25,12 @@
   <mat-spinner>Loading...</mat-spinner>
 </ng-container>
 <ng-template #urlsLoaded>
-  <h1>You have ?? active urls</h1>
+  <h1>URLs created with this key</h1>
   <ng-container class="mat-elevation-z8" *ngIf="urls; else noUrls">
     <mat-form-field>
       <input (keyup)="applyFilter($any($event).target.value)" matInput placeholder="Search">
     </mat-form-field>
-    <table mat-table [dataSource]="urlsView" matSort  matSortActive="active" matSortDirection="desc" matSortDisableClear>
+    <table mat-table [dataSource]="urlsView" matSort  matSortActive="active" matSortDirection="desc" matSortDisableClear class="mat-elevation-z8">
 
       <ng-container matColumnDef="longUrl">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> URL </th>
@@ -40,7 +39,9 @@
 
       <ng-container matColumnDef="shortUrl">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Short URL </th>
-        <td mat-cell *matCellDef="let url"> {{url.shortUrl}} <mat-icon (click)="copyUrl(url.id)">file_copy</mat-icon> </td>
+        <td mat-cell *matCellDef="let url"> {{url.shortUrl}}
+          <button mat-icon-button (click)="copyUrl(url.id)"><mat-icon>file_copy</mat-icon></button>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="visits">

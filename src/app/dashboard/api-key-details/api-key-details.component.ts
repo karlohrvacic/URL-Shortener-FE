@@ -46,9 +46,13 @@ export class ApiKeyDetailsComponent implements OnInit {
         this.apiKeyId = params['id'];
       });
 
+    console.log(this.urlService.urls.filter(u => u.apiKey.id == this.apiKeyId))
+
     // @ts-ignore
     this.apiKey = this.apiKeyService.apiKeys.find(a => a.id == this.apiKeyId);
     this.urls = this.urlService.urls.filter(u => u.apiKey.id == this.apiKeyId);
+    this.urlsView = new MatTableDataSource(this.urls);
+    this.ngAfterViewInit();
 
     this.urlChangeSubscription = this.urlService.urlsChange
       .subscribe(urls => {
@@ -56,6 +60,11 @@ export class ApiKeyDetailsComponent implements OnInit {
         this.urlsView = new MatTableDataSource(this.urls);
         this.ngAfterViewInit();
       });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+    this.urlChangeSubscription?.unsubscribe()
   }
 
   back(){

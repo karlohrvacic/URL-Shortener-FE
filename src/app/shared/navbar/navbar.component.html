@@ -6,7 +6,6 @@
           <li class="nav-item" [ngClass]="getClass('/dashboard')"><a class="nav-link" [routerLink]="['/dashboard']">Dashboard</a></li>
           <li class="nav-item" [ngClass]="getClass('/urls')"><a class="nav-link" [routerLink]="['dashboard/urls']">My URLs</a></li>
           <li class="nav-item" [ngClass]="getClass('/apis')"><a class="nav-link" [routerLink]="['dashboard/api-keys']">My API Keys</a></li>
-          <li class="nav-item" [ngClass]="getClass('/profile')"><a class="nav-link" [routerLink]="['dashboard/profile']">My profile</a></li>
         </ng-container>
       </ul>
     </div>
@@ -18,7 +17,8 @@
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
       <ul class="navbar-nav ms-auto" >
         <ng-container *ngIf="authenticated; else notUser">
-          <a *ngIf="0 == 0" [routerLink]="['dashboard/profile']" class="navbar-brand mx-auto pe-2">Hello, {{user?.name}}!</a>
+          <li><h4 class="navbar-brand mx-auto pe-2" matTooltip="{{userInfo}}">Hello, {{user?.name}}!</h4></li>
+          <li><button mat-mini-fab (click)="openChangePassword()" matTooltip="Change password"><mat-icon> vpn_key</mat-icon></button></li>
           <li class="nav-item" (click)="logout()"><button class="btn btn-danger">Logout</button></li>
         </ng-container>
         <ng-template #notUser>
