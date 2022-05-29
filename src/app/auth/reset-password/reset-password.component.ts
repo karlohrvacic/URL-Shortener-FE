@@ -14,7 +14,7 @@ export class ResetPasswordComponent implements OnInit {
 
   resetPasswordForm!: FormGroup;
   token!: string;
-  constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService, private toastr: ToastrService) { }
+  constructor(private route: ActivatedRoute, private location: Location, private router: Router, private authService: AuthService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -30,13 +30,9 @@ export class ResetPasswordComponent implements OnInit {
 
     console.log(this.resetPasswordForm.value['token'])
 
-    this.router.navigate(
-      [],
-      {
-        relativeTo: this.route,
-        queryParams: this.route.queryParams,
-        queryParamsHandling: '', // remove to replace all query params by provided
-      });
+    const url = this.router.createUrlTree([], {relativeTo: this.route, queryParams: {}}).toString()
+
+    this.location.go(url);
   }
 
     resetPassword() {
