@@ -67,7 +67,20 @@ export class DataService {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
+  }
 
+  requestPasswordChange(email: string) {
+    return this.http.post(this.apiUrl + 'auth/reset-password', email, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  changePassword(passwordResetDto: { token: string, email: string, password: string }) {
+    return this.http.post(this.apiUrl + 'auth/reset-password/set-password', passwordResetDto, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
   }
 
   getAllUsers() {

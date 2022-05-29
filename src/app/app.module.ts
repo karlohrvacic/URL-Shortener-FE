@@ -27,6 +27,8 @@ import {UrlStatsActivityPipe} from "./shared/pipes/dashboard/url-stats-activity.
 import {GetElementsForApiKeyByActivePipe} from "./shared/pipes/dashboard/get-elements-for-api-key-by-active.pipe";
 import {GetElementsForUrlByActivePipe} from "./shared/pipes/dashboard/get-elements-for-url-by-active.pipe";
 import {MaterialModule} from "./shared/material/material.module";
+import { RequestPasswordResetComponent } from './auth/request-password-reset/request-password-reset.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import {MaterialModule} from "./shared/material/material.module";
     UrlStatsPipe,
     UrlStatsActivityPipe,
     UrlsTotalClicksPipe,
+    RequestPasswordResetComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

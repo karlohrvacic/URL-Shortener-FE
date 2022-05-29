@@ -12,7 +12,7 @@ export class RegisterComponent implements OnInit {
 
   registerForm!: FormGroup;
 
-  constructor(private auth: AuthService, private toastr: ToastrService) { }
+  constructor(private authService: AuthService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
     this.toastr.error("App is currently in invite only mode")
   //   if (this.registerForm.value['password'] === this.registerForm.value['password-repeat'] ){
   //     this.registerForm.removeControl('password-repeat');
-  //     this.auth.register(this.registerForm.value);
+  //     this.authService.register(this.registerForm.value);
   //   }
   //   else {
   //     this.registerForm.addControl('password-repeat',new FormControl( '',[Validators.required]));

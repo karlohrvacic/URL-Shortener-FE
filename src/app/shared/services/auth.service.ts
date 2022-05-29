@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   init() {
-    if (this.user == null) {
+    if (this.user == null && this.getToken()) {
       this.whoAmI().subscribe(() => {
         if (!this.user) {
           this.authChange.next(false);
@@ -85,7 +85,46 @@ export class AuthService {
       }) => {
         if (res.status === 200) {
           this.toastr.success("Successful registration!");
-          this.router.navigate(['/dashboard/login']);
+          this.router.navigate(['/login']);
+        }
+      }, e => {
+        if (e.error.message) {
+          this.toastr.error(e.error.message);
+        }
+      });
+  }
+
+  requestPasswordChange(email: string) {
+    this.dataService.requestPasswordChange(email)
+      // @ts-ignore
+      .subscribe((res: {
+        status: number,
+        body: {
+          message: string,
+        }
+      }) => {
+        if (res.status === 200) {
+          this.toastr.success("If email exists, we will send recovery email to it.");
+        }
+      }, e => {
+        if (e.error.message) {
+          this.toastr.error(e.error.message);
+        }
+      });
+  }
+
+  changePassword(passwordResetDto: { token: string,  email: string, password: string }) {
+    this.dataService.changePassword(passwordResetDto)
+      // @ts-ignore
+      .subscribe((res: {
+        status: number,
+        body: {
+          message: string,
+        }
+      }) => {
+        if (res.status === 200) {
+          this.toastr.success("Password changed successfully");
+          this.router.navigate(['/login']);
         }
       }, e => {
         if (e.error.message) {
