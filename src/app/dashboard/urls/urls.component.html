@@ -2,7 +2,7 @@
   <mat-spinner>Loading...</mat-spinner>
 </ng-container>
 <ng-template #urlsLoaded>
-  <h1>Your urls</h1>
+  <h1>Your URLs</h1>
   <ng-container class="mat-elevation-z8" *ngIf="urls; else noUrls">
     <mat-form-field>
       <input (keyup)="applyFilter($any($event).target.value)" matInput placeholder="Search">
@@ -51,8 +51,9 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef> Action </th>
         <td *matCellDef="let url">
-          <button mat-mini-fab  [routerLink]="['../api-key/' + url.apiKey.id]"><mat-icon>info</mat-icon></button>
-          <button mat-mini-fab color="warn" *ngIf="url.active" (click)="revokeUrl(url.id)"><mat-icon>delete</mat-icon></button>
+          <button mat-mini-fab *ngIf="url.active"(click)="editVisitLimit(url)"><mat-icon>edit</mat-icon></button>
+          <button mat-mini-fab color="primary" [routerLink]="['../api-key/' + url.apiKey.id]"><mat-icon>info</mat-icon></button>
+          <button mat-mini-fab matTooltip="Deactivate URL" color="warn" *ngIf="url.active" (click)="openConfirmationDialog(url.id)"><mat-icon>delete</mat-icon></button>
         </td>
       </ng-container>
 

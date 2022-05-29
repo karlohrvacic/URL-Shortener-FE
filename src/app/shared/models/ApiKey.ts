@@ -2,11 +2,11 @@ import {User} from "./User";
 import {Url} from "./Url";
 
 export interface ApiKey {
-  id: Number;
-  key: String;
+  id: number;
+  key: string;
   owner: User;
-  apiCallsLimit: Number;
-  apiCallsUsed: Number;
+  apiCallsLimit: number;
+  apiCallsUsed: number;
   createDate: Date;
   expirationDate: Date;
   active: Boolean;

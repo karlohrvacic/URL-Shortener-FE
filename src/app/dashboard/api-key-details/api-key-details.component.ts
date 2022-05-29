@@ -12,6 +12,9 @@ import {MatPaginator} from "@angular/material/paginator";
 import {environment} from "../../../environments/environment";
 import {ToastrService} from "ngx-toastr";
 import {ClipboardService} from "ngx-clipboard";
+import {EditVisitLimitComponent} from "../edit-visit-limit/edit-visit-limit.component";
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmationDialogComponent} from "../../shared/confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-api-key-details',
@@ -28,11 +31,11 @@ export class ApiKeyDetailsComponent implements OnInit {
 
   subscription: Subscription = null!;
   urls!: Url[];
-  urlChangeSubscription: Subscription | undefined;  apiKeyId!: Number;
+  urlChangeSubscription: Subscription | undefined;  apiKeyId!: number;
   apiKey!: ApiKey;
 
   constructor(private route: ActivatedRoute, private router: Router, private apiKeyService: ApiKeyService, private location: Location, private urlService: UrlService,
-              private toastr: ToastrService, private clipboardApi: ClipboardService) { }
+              private toastr: ToastrService, private clipboardApi: ClipboardService, private dialog: MatDialog) { }
 
   ngAfterViewInit(): void {
     this.urlsView.sort = this.sort
@@ -69,22 +72,45 @@ export class ApiKeyDetailsComponent implements OnInit {
     this.location.back();
   }
 
-  revoke() {
-    this.apiKeyService.revokeApiKey(this.apiKeyId);
+  openDeactivateApiKeyConfirmation() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '30%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.apiKeyService.revokeApiKey(this.apiKeyId);
+      }
+    });
   }
 
-  revokeUrl(id: Number) {
-    this.urlService.revokeUrl(id);
+  openDeactivateUrlConfirmation(urlId: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '30%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.urlService.revokeUrl(urlId);
+      }
+    });
   }
 
   applyFilter(filterValue: string) {
     this.urlsView.filter = filterValue.trim().toLowerCase();
   }
 
-  copyUrl(id: Number) {
+  copyUrl(id: number) {
     // @ts-ignore
     this.clipboardApi.copyFromContent(environment.API_URL + "/" + this.urls.find(url => id == url.id).shortUrl)
     this.toastr.success("Url has been copied to clipboard")
+  }
+
+  editVisitLimit(url: Url) {
+    this.dialog.open(EditVisitLimitComponent, {
+      width: '30%',
+      data: url
+    })
   }
 
 }

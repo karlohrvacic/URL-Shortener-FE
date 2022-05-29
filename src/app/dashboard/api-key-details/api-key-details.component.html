@@ -16,7 +16,7 @@
     <td>{{apiKey.createDate | date: 'yyyy-M-d HH:mm:ss'}}</td>
     <td>{{apiKey.expirationDate | date: 'yyyy-M-d'}}</td>
     <td>
-      <button mat-mini-fab *ngIf="apiKey.active" color="warn" (click)="revoke()"><mat-icon>delete</mat-icon></button>
+      <button mat-mini-fab *ngIf="apiKey.active" color="warn" matTooltip="Deactivate API key" (click)="openDeactivateApiKeyConfirmation()"><mat-icon>delete</mat-icon></button>
     </td>
   </tr>
   </tbody>
@@ -72,7 +72,8 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef> Action </th>
         <td *matCellDef="let url">
-          <button mat-mini-fab color="warn" *ngIf="url.active" (click)="revokeUrl(url.id)"><mat-icon>delete</mat-icon></button>
+          <button mat-mini-fab *ngIf="url.active"(click)="editVisitLimit(url)"><mat-icon>edit</mat-icon></button>
+          <button mat-mini-fab color="warn" matTooltip="Deactivate URL" *ngIf="url.active" (click)="openDeactivateUrlConfirmation(url.id)"><mat-icon>delete</mat-icon></button>
         </td>
       </ng-container>
 

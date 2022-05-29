@@ -3,11 +3,11 @@ import {Url} from "./Url";
 import {ApiKey} from "./ApiKey";
 
 export interface User {
-  id: Number;
-  name: String;
-  email: String;
-  password: String;
-  apiKeySlots: Number;
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  apiKeySlots: number;
   authorities: Authorities[];
   createDate: Date;
   lastLogin: Date;

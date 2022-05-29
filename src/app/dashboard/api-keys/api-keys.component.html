@@ -49,8 +49,8 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef > Action </th>
         <td *matCellDef="let apiKey">
-          <button mat-mini-fab  [routerLink]="['../api-key/' + apiKey.id]"><mat-icon>info</mat-icon></button>
-          <button mat-mini-fab color="warn" *ngIf="apiKey.active" (click)="revoke(apiKey.id)"><mat-icon>delete</mat-icon></button>
+          <button mat-mini-fab color="primary" [routerLink]="['../api-key/' + apiKey.id]"><mat-icon>info</mat-icon></button>
+          <button mat-mini-fab color="warn" matTooltip="Deactivate API key" *ngIf="apiKey.active" (click)="revoke(apiKey.id)"><mat-icon>delete</mat-icon></button>
         </td>
       </ng-container>
 
@@ -63,7 +63,7 @@
     <h2>You have no active API keys!</h2>
   </ng-template>
 </ng-template>
-<button type="button" mat-flat-button color="accent" (click)="createApiKey()"
+<button type="button" mat-flat-button color="primary" (click)="createApiKey()"
             [disabled]="(apiKeys | getElementsForApiKeyByActive : true).length >= user!.apiKeySlots && user!.apiKeySlots != null">
       Create new API key
 </button>

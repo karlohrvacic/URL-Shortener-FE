@@ -51,7 +51,7 @@ export class ApiKeysComponent implements OnInit {
     this.apiKeyChangeSubscription?.unsubscribe()
   }
 
-  revoke(id: Number) {
+  revoke(id: number) {
     this.apiKeyService.revokeApiKey(id);
   }
 

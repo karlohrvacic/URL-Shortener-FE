@@ -2,14 +2,14 @@ import {User} from "./User";
 import {ApiKey} from "./ApiKey";
 
 export interface Url {
-  id: Number;
-  longUrl: String;
-  shortUrl: String;
+  id: number;
+  longUrl: string;
+  shortUrl: string;
   owner: User;
   apiKey: ApiKey;
   createDate: Date;
   lastAccessed: Date;
-  visits: Number;
-  visitLimit: Number;
+  visits: number;
+  visitLimit: number;
   active: Boolean;
 }

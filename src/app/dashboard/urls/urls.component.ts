@@ -8,6 +8,10 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {Subscription} from "rxjs";
+import {RequestPasswordResetComponent} from "../../auth/request-password-reset/request-password-reset.component";
+import {MatDialog} from "@angular/material/dialog";
+import {EditVisitLimitComponent} from "../edit-visit-limit/edit-visit-limit.component";
+import {ConfirmationDialogComponent} from "../../shared/confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-urls',
@@ -20,11 +24,13 @@ export class UrlsComponent implements AfterViewInit {
   urlsView: MatTableDataSource<Url> = new MatTableDataSource(this.urlService.urls);
   urls!: Url[];
   urlsChangeSubscription: Subscription | undefined;
+  revokeUrlId: number | null = null;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private urlService: UrlService, private toastr: ToastrService, private clipboardApi: ClipboardService) {}
+  constructor(private urlService: UrlService, private toastr: ToastrService, private clipboardApi: ClipboardService,
+              private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.urls = this.urlService.urls;
@@ -45,11 +51,7 @@ export class UrlsComponent implements AfterViewInit {
     this.urlsView.paginator = this.paginator
   }
 
-  revokeUrl(id: Number) {
-    this.urlService.revokeUrl(id);
-  }
-
-  copyUrl(id: Number) {
+  copyUrl(id: number) {
     // @ts-ignore
     this.clipboardApi.copyFromContent(environment.API_URL + "/" + this.urls.find(url => id == url.id).shortUrl)
     this.toastr.success("Url has been copied to clipboard")
@@ -57,6 +59,25 @@ export class UrlsComponent implements AfterViewInit {
 
   applyFilter(filterValue: string) {
     this.urlsView.filter = filterValue.trim().toLowerCase();
+  }
+
+  editVisitLimit(url: Url) {
+      this.dialog.open(EditVisitLimitComponent, {
+        width: '30%',
+        data: url
+      })
+  }
+
+  openConfirmationDialog(urlId: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '30%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.urlService.revokeUrl(urlId);
+      }
+    });
   }
 
 }

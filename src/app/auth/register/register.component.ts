@@ -24,15 +24,14 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    this.toastr.error("App is currently in invite only mode")
-  //   if (this.registerForm.value['password'] === this.registerForm.value['password-repeat'] ){
-  //     this.registerForm.removeControl('password-repeat');
-  //     this.authService.register(this.registerForm.value);
-  //   }
-  //   else {
-  //     this.registerForm.addControl('password-repeat',new FormControl( '',[Validators.required]));
-  //     this.toastr.error('Passwords must match!');
-  //   }
+    if (this.registerForm.value['password'] === this.registerForm.value['password-repeat'] ){
+      this.registerForm.removeControl('password-repeat');
+      this.authService.register(this.registerForm.value);
+    }
+    else {
+      this.registerForm.addControl('password-repeat',new FormControl( '',[Validators.required]));
+      this.toastr.error('Passwords must match!');
+    }
    }
 
 }

@@ -13,7 +13,7 @@ import {ToastrService} from "ngx-toastr";
 export class ResetPasswordComponent implements OnInit {
 
   resetPasswordForm!: FormGroup;
-  token!: String;
+  token!: string;
   constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService, private toastr: ToastrService) { }
 
   ngOnInit(): void {

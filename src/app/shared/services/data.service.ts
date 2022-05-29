@@ -20,22 +20,29 @@ export class DataService {
     });
   }
 
-  createUrlWithApiKey(url: Url, apiKey: String){
+  createUrlWithApiKey(url: Url, apiKey: string){
     return this.http.post(this.apiUrl + 'url/new/' + apiKey, url, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
-  getUrlByShortUrl(shortUrl: String){
+  getUrlByShortUrl(shortUrl: string){
     return this.http.get(this.apiUrl + 'url/redirect/' + shortUrl, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
-  revokeUrl(id: Number){
+  revokeUrl(id: number){
     return this.http.get(this.apiUrl + 'url/revoke/' + id, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
+  updateUrl(urlUpdateDto: { id: number, visitLimit: number }){
+    return this.http.put(this.apiUrl + 'url', urlUpdateDto, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
@@ -90,21 +97,21 @@ export class DataService {
     });
   }
 
-  deleteUser(id: Number) {
+  deleteUser(id: number) {
     return this.http.delete(this.apiUrl + 'user' + id, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
-  editUser(userUpdateDto: {id: Number, name: String, email: String, apiKeySlots: Number, active: Boolean}) {
+  editUser(userUpdateDto: {id: number, name: string, email: string, apiKeySlots: number, active: Boolean}) {
     return this.http.put(this.apiUrl + 'user', userUpdateDto, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
-  updatePassword(updatePasswordDto: {oldPassword: String, newPassword: String}) {
+  updatePassword(updatePasswordDto: {oldPassword: string, newPassword: string}) {
     return this.http.put(this.apiUrl + 'user/update-password', updatePasswordDto, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
@@ -139,14 +146,14 @@ export class DataService {
     });
   }
 
-  editApiKey(apiKeyUpdateDto: { id: Number, apiCallsLimit: Number, apiCallsUsed: Number, expirationDate: Date, active: Boolean}) {
+  editApiKey(apiKeyUpdateDto: { id: number, apiCallsLimit: number, apiCallsUsed: number, expirationDate: Date, active: Boolean}) {
     return this.http.put(this.apiUrl + 'key', apiKeyUpdateDto, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'
     });
   }
 
-  revokeApiKey(id: Number){
+  revokeApiKey(id: number){
     return this.http.get(this.apiUrl + 'key/revoke/' + id, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
       observe: 'response'

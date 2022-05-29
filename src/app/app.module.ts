@@ -29,6 +29,8 @@ import {MaterialModule} from "./shared/material/material.module";
 import { RequestPasswordResetComponent } from './auth/request-password-reset/request-password-reset.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { ChangePasswordComponent } from './dashboard/change-password/change-password.component';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
+import { EditVisitLimitComponent } from './dashboard/edit-visit-limit/edit-visit-limit.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,8 @@ import { ChangePasswordComponent } from './dashboard/change-password/change-pass
     RequestPasswordResetComponent,
     ResetPasswordComponent,
     ChangePasswordComponent,
+    ConfirmationDialogComponent,
+    EditVisitLimitComponent,
   ],
   imports: [
     BrowserModule,

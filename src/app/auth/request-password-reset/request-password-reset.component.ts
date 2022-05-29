@@ -16,7 +16,6 @@ export class RequestPasswordResetComponent implements OnInit {
   requestPasswordResetForm!: FormGroup;
 
   ngOnInit() {
-
     this.requestPasswordResetForm = new FormGroup({
       'email': new FormControl(this.data, [Validators.required, Validators.email]),
     });

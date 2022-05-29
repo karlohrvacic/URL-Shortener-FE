@@ -33,7 +33,7 @@ export class UserService {
     return null;
   }
 
-  deactivateUser(id: Number) {
+  deactivateUser(id: number) {
     this.dataService.deleteUser(id)
       //@ts-ignore
       .subscribe((res: {
@@ -52,7 +52,7 @@ export class UserService {
     return null;
   }
 
-  editUser(userUpdateDto: {id: Number, name: String, email: String, apiKeySlots: Number, active: Boolean}) {
+  editUser(userUpdateDto: {id: number, name: string, email: string, apiKeySlots: number, active: Boolean}) {
     this.dataService.editUser(userUpdateDto)
       //@ts-ignore
       .subscribe((res: {
@@ -71,7 +71,7 @@ export class UserService {
     return null;
   }
 
-  updatePassword(updatePasswordDto: {oldPassword: String, newPassword: String}) {
+  updatePassword(updatePasswordDto: {oldPassword: string, newPassword: string}) {
     this.dataService.updatePassword(updatePasswordDto)
       //@ts-ignore
       .subscribe((res: {

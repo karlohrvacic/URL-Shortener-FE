@@ -94,7 +94,7 @@ export class ApiKeyService {
       });
   }
 
-  revokeApiKey(id: Number) {
+  revokeApiKey(id: number) {
     this.dataService.revokeApiKey(id)
       //@ts-ignore
       .subscribe((res: {
@@ -115,7 +115,7 @@ export class ApiKeyService {
       });
   }
 
-  editApiKey(apiKeyUpdateDto: { id: Number, apiCallsLimit: Number, apiCallsUsed: Number, expirationDate: Date, active: Boolean}) {
+  editApiKey(apiKeyUpdateDto: { id: number, apiCallsLimit: number, apiCallsUsed: number, expirationDate: Date, active: Boolean}) {
     this.dataService.editApiKey(apiKeyUpdateDto)
       //@ts-ignore
       .subscribe((res: {

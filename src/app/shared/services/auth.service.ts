@@ -60,7 +60,7 @@ export class AuthService {
                 if (this.user.authorities.find(a => a.name == 'ADMIN')) {
                   this.router.navigate(['/admin']);
                 } else {
-                  this.router.navigate(['/dashboard']);
+                  this.router.navigate(['']);
                 }
                 return res.body;
               }
@@ -150,7 +150,7 @@ export class AuthService {
     } else return null;
   }
 
-  updateUser(userUpdateDto: {id: Number, name: String, email: String, apiKeySlots: Number, active: Boolean}) {
+  updateUser(userUpdateDto: {id: number, name: string, email: string, apiKeySlots: number, active: Boolean}) {
     this.dataService.editUser(userUpdateDto)
       // @ts-ignore
       .subscribe((res: {
