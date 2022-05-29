@@ -8,7 +8,6 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
 import {Subscription} from "rxjs";
-import {RequestPasswordResetComponent} from "../../auth/request-password-reset/request-password-reset.component";
 import {MatDialog} from "@angular/material/dialog";
 import {EditVisitLimitComponent} from "../edit-visit-limit/edit-visit-limit.component";
 import {ConfirmationDialogComponent} from "../../shared/confirmation-dialog/confirmation-dialog.component";

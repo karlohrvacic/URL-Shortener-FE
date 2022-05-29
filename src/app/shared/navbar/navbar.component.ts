@@ -6,7 +6,7 @@ import {AuthService} from "../services/auth.service";
 import {Location} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {RequestPasswordResetComponent} from "../../auth/request-password-reset/request-password-reset.component";
-import {ChangePasswordComponent} from "../../dashboard/change-password/change-password.component";
+import {ChangePasswordComponent} from "../../user-dashboard/change-password/change-password.component";
 
 @Component({
   selector: 'app-navbar',

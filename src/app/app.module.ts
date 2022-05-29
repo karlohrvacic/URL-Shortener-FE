@@ -14,23 +14,18 @@ import {LoginComponent} from './auth/login/login.component';
 import {RegisterComponent} from './auth/register/register.component';
 import {CommonModule} from "@angular/common";
 import {ClipboardModule} from "ngx-clipboard";
-import {DashboardRoutingModule} from "./dashboard/dashboard-routing.module";
-import {ApiKeysComponent} from './dashboard/api-keys/api-keys.component';
-import {UrlsComponent} from './dashboard/urls/urls.component';
-import {ApiKeyDetailsComponent} from './dashboard/api-key-details/api-key-details.component';
-import {ApiKeyStatsPipe} from "./shared/pipes/dashboard/api-key-stats.pipe";
-import {ApiKeysAllowedActivePipe} from "./shared/pipes/dashboard/api-keys-allowed-active.pipe";
-import {UrlStatsPipe} from "./shared/pipes/dashboard/url-stats.pipe";
-import {UrlsTotalClicksPipe} from "./shared/pipes/dashboard/urls-total-clicks.pipe";
-import {UrlStatsActivityPipe} from "./shared/pipes/dashboard/url-stats-activity.pipe";
 import {GetElementsForApiKeyByActivePipe} from "./shared/pipes/dashboard/get-elements-for-api-key-by-active.pipe";
 import {GetElementsForUrlByActivePipe} from "./shared/pipes/dashboard/get-elements-for-url-by-active.pipe";
 import {MaterialModule} from "./shared/material/material.module";
 import { RequestPasswordResetComponent } from './auth/request-password-reset/request-password-reset.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
-import { ChangePasswordComponent } from './dashboard/change-password/change-password.component';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
-import { EditVisitLimitComponent } from './dashboard/edit-visit-limit/edit-visit-limit.component';
+import {ApiKeysComponent} from "./user-dashboard/api-keys/api-keys.component";
+import {ApiKeyDetailsComponent} from "./user-dashboard/api-key-details/api-key-details.component";
+import {ChangePasswordComponent} from "./user-dashboard/change-password/change-password.component";
+import {EditVisitLimitComponent} from "./user-dashboard/edit-visit-limit/edit-visit-limit.component";
+import {UrlsComponent} from "./user-dashboard/urls/urls.component";
+import {UserDashboardRoutingModule} from "./user-dashboard/user-dashboard-routing.module";
 
 @NgModule({
   declarations: [
@@ -42,13 +37,8 @@ import { EditVisitLimitComponent } from './dashboard/edit-visit-limit/edit-visit
     ApiKeysComponent,
     UrlsComponent,
     ApiKeyDetailsComponent,
-    ApiKeyStatsPipe,
-    ApiKeysAllowedActivePipe,
     GetElementsForApiKeyByActivePipe,
     GetElementsForUrlByActivePipe,
-    UrlStatsPipe,
-    UrlStatsActivityPipe,
-    UrlsTotalClicksPipe,
     RequestPasswordResetComponent,
     ResetPasswordComponent,
     ChangePasswordComponent,
@@ -71,18 +61,13 @@ import { EditVisitLimitComponent } from './dashboard/edit-visit-limit/edit-visit
     }),
     FormsModule,
     ClipboardModule,
-    DashboardRoutingModule,
+    UserDashboardRoutingModule,
     MaterialModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   exports: [
-    ApiKeyStatsPipe,
-    ApiKeysAllowedActivePipe,
     GetElementsForApiKeyByActivePipe,
     GetElementsForUrlByActivePipe,
-    UrlStatsPipe,
-    UrlStatsActivityPipe,
-    UrlsTotalClicksPipe
   ],
   bootstrap: [AppComponent]
 })
