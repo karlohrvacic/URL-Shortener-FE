@@ -4,7 +4,7 @@
   <th scope="col">KEY</th>
   <th scope="col">API CALLS LIMIT</th>
   <th scope="col">API CALLS USED</th>
-  <th scope="col">CREATE DATE</th>
+  <th scope="col">CREATED</th>
   <th scope="col">EXPIRATION DATE</th>
   <th scope="col">ACTION</th>
   </thead>
@@ -13,8 +13,8 @@
     <td>{{apiKey.key}}</td>
     <td>{{apiKey.apiCallsLimit}}</td>
     <td>{{apiKey.apiCallsUsed}}</td>
-    <td>{{apiKey.createDate | date: 'yyyy-M-d HH:mm:ss'}}</td>
-    <td>{{apiKey.expirationDate | date: 'yyyy-M-d'}}</td>
+    <td>{{apiKey.createDate | date: 'HH:mm:ss d.M.yyyy.'}}</td>
+    <td>{{apiKey.expirationDate | date: 'd.M.yyyy.'}}</td>
     <td>
       <button mat-mini-fab *ngIf="apiKey.active" color="warn" matTooltip="Deactivate API key" (click)="openDeactivateApiKeyConfirmation()"><mat-icon>delete</mat-icon></button>
     </td>
@@ -55,13 +55,13 @@
       </ng-container>
 
       <ng-container matColumnDef="createDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Create date </th>
-        <td mat-cell *matCellDef="let url"> {{url.createDate | date: 'yyyy-M-d HH:mm:ss'}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created </th>
+        <td mat-cell *matCellDef="let url"> {{url.createDate | date: 'HH:mm:ss d.M.yyyy.'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="lastAccessed">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Last accessed </th>
-        <td mat-cell *matCellDef="let url"> {{url.lastAccessed | date: 'yyyy-M-d HH:mm:ss'}} </td>
+        <td mat-cell *matCellDef="let url"> {{url.lastAccessed | date: 'HH:mm:ss d.M.yyyy.'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="active">
@@ -72,7 +72,7 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef> Action </th>
         <td *matCellDef="let url">
-          <button mat-mini-fab *ngIf="url.active"(click)="editVisitLimit(url)"><mat-icon>edit</mat-icon></button>
+          <button mat-mini-fab class="me-1" *ngIf="url.active"(click)="editVisitLimit(url)"><mat-icon>edit</mat-icon></button>
           <button mat-mini-fab color="warn" matTooltip="Deactivate URL" *ngIf="url.active" (click)="openDeactivateUrlConfirmation(url.id)"><mat-icon>delete</mat-icon></button>
         </td>
       </ng-container>
