@@ -30,7 +30,7 @@
             </mat-form-field>
 
             <mat-form-field appearance="standard">
-              <mat-label>number of visits:</mat-label>
+              <mat-label>Number of visits:</mat-label>
               <input type="number" matInput formControlName="visitLimit" placeholder="1">
               <mat-hint>Enter visit limit after which short url becomes invalid</mat-hint>
             </mat-form-field>
@@ -38,7 +38,7 @@
         </div>
 
         <div class="example-button-row">
-          <button type="submit" [disabled]="shortenerForm.invalid" class="m-2" mat-flat-button color="primary">Cut it!</button>
+          <button type="submit" [disabled]="shortenerForm.invalid" class="mt-1 w-100" mat-flat-button color="primary">Cut it!</button>
         </div>
       </form>
     </div>

@@ -28,9 +28,9 @@
           </small>
         </small>
       </fieldset>
-      <button type="submit" [disabled]="signInForm.invalid" mat-flat-button color="primary">Login!</button>
+      <button type="submit" class="w-100 mt-2" [disabled]="signInForm.invalid" mat-flat-button color="primary">Login</button>
     </form>
-    <button (click)="openForgotPasswordReset()" mat-flat-button color="accent">Forgot password</button>
+    <button mat-button (click)="openForgotPasswordReset()" color="primary">Forgot password</button>
   </div>
   </div>
 </div>
