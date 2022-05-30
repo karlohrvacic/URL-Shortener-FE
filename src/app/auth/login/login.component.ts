@@ -12,6 +12,7 @@ import {RequestPasswordResetComponent} from "../request-password-reset/request-p
 export class LoginComponent implements OnInit {
 
   signInForm!: FormGroup;
+  hidePassword = true;
 
   constructor(private authService: AuthService, private dialog: MatDialog) {}
 

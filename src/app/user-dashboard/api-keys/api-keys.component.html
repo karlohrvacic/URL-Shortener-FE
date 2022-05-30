@@ -43,7 +43,7 @@
 
       <ng-container matColumnDef="active">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
-        <mat-icon mat-cell *matCellDef="let apiKey" color="{{apiKey.active ? 'accent' : 'warn'}}"> {{apiKey.active ? 'check_circle_outline' : 'cancel'}}</mat-icon>
+        <mat-icon mat-cell *matCellDef="let apiKey" color="{{apiKey.active ? 'primary' : 'warn'}}"> {{apiKey.active ? 'check_circle_outline' : 'cancel'}}</mat-icon>
       </ng-container>
 
       <ng-container matColumnDef="action">

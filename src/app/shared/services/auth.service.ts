@@ -105,6 +105,7 @@ export class AuthService {
       }) => {
         if (res.status === 200) {
           this.toastr.success("If email exists, we will send recovery email to it.");
+          this.toastr.info("Please check spam folder as well");
         }
       }, e => {
         if (e.error.message) {
