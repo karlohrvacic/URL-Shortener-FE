@@ -16,9 +16,7 @@
 
       <ng-container matColumnDef="shortUrl">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Short URL </th>
-        <td mat-cell *matCellDef="let url"> {{url.shortUrl}}
-          <button mat-icon-button (click)="copyUrl(url.id)"><mat-icon>file_copy</mat-icon></button>
-        </td>
+        <td mat-cell style="cursor: pointer;" *matCellDef="let url" (click)="copyUrl(url.id)" matTooltip="Click to copy"> {{url.shortUrl}}</td>
       </ng-container>
 
       <ng-container matColumnDef="visits">
@@ -38,29 +36,29 @@
 
       <ng-container matColumnDef="lastAccessed">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Last accessed </th>
-        <td mat-cell *matCellDef="let url"> {{url.lastAccessed | date: 'HH:mm:ss d.M.yyyy.'}} </td>
+        <td mat-cell *matCellDef="let url"> {{url.lastAccessed | date: 'd.M.yyyy. HH:mm:ss'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="active">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
-        <td>
-          <mat-icon mat-cell *matCellDef="let url" color="{{url.active ? 'primary' : 'warn'}}"> {{url.active ? 'check_circle_outline' : 'cancel'}}</mat-icon>
+        <td mat-cell *matCellDef="let url" class="align-middle" >
+          <mat-icon color="{{url.active ? 'primary' : 'warn'}}"> {{url.active ? 'check_circle_outline' : 'cancel'}}</mat-icon>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef> Action </th>
-        <td *matCellDef="let url">
-          <button mat-mini-fab class="me-1" *ngIf="url.active"(click)="editVisitLimit(url)"><mat-icon>edit</mat-icon></button>
+        <td mat-cell *matCellDef="let url">
+          <button mat-mini-fab class="me-1"  [disabled]="!url.active" (click)="editVisitLimit(url)"><mat-icon>edit</mat-icon></button>
           <button mat-mini-fab class="me-1" color="primary" [routerLink]="['../api-key/' + url.apiKey.id]"><mat-icon>info</mat-icon></button>
-          <button mat-mini-fab matTooltip="Deactivate URL" color="warn" *ngIf="url.active" (click)="openConfirmationDialog(url.id)"><mat-icon>delete</mat-icon></button>
+          <button mat-mini-fab matTooltip="Deactivate URL" color="warn" [disabled]="!url.active" (click)="openConfirmationDialog(url.id)"><mat-icon>delete</mat-icon></button>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" [pageSize]="10" showFirstLastButtons></mat-paginator>
   </ng-container>
   <ng-template #noUrls>
     <h2>You have no active URLs!</h2>

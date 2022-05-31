@@ -2,10 +2,28 @@
 @import "../node_modules/ngx-toastr/toastr.css";
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 table {
   width: 100%;
 }
+
+td, th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.mat-sort-header-container {
+  justify-content: center !important;
+}
+
+table {
+  color: red;
+  background-color: red;
+}
+
 footer {
   position: fixed;
   left: 0;

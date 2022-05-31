@@ -6,7 +6,7 @@
     <div class="container">
       <h2>Register</h2>
 
-      <form class="register-form" (submit)="register()" [formGroup]="registerForm">
+      <form class="register-form" [formGroup]="registerForm">
 
         <label>Name</label>
         <fieldset class="form-group">
@@ -32,8 +32,15 @@
         </fieldset>
 
         <label>Password</label>
+
+
         <fieldset class="form-group">
-          <input type="password" class="form-control {{registerForm.get('password')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="password" placeholder="Password">
+          <input [type]="hidePassword ? 'password' : 'text'" class="form-control {{registerForm.get('password')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="password" placeholder="Password" aria-describedby="basic-addon2">
+<!--          <div class="input-group-append">-->
+<!--            <button mat-icon-button (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">-->
+<!--              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>-->
+<!--            </button>-->
+<!--          </div>-->
           <small class="invalid-feedback" *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)">
             <small *ngIf="registerForm.get('password')?.errors?.['required']">
               Password is required.
@@ -42,6 +49,7 @@
               Password needs to be at least 8 characters long.
             </small>
           </small>
+
         </fieldset>
 
         <label>Repeat password</label>
@@ -54,7 +62,7 @@
           </small>
         </fieldset>
 
-        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-success mt-2 w-100">Register!</button>
+        <button type="submit" (click)="register()" [disabled]="registerForm.invalid" class="btn btn-success mt-2 w-100">Register!</button>
       </form>
     </div>
   </div>

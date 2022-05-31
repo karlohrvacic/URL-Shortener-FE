@@ -17,8 +17,8 @@
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
       <ul class="navbar-nav ms-auto" >
         <ng-container *ngIf="authenticated; else notUser">
-          <li><h4 class="navbar-brand mx-auto me-1" matTooltip="{{userInfo}}">Hello, {{user?.name}}!</h4></li>
-          <li class="me-1"><button mat-mini-fab color="primary" (click)="openChangePassword()" matTooltip="Change password"><mat-icon> vpn_key</mat-icon></button></li>
+          <li class="nav-item"><h4 class="navbar-brand mx-auto me-1" matTooltip="{{userInfo}}">Hello, {{user?.name}}!</h4></li>
+          <li class="nav-item align-content-center me-1"><button mat-mini-fab color="primary" (click)="openChangePassword()" matTooltip="Change password"><mat-icon> vpn_key</mat-icon></button></li>
           <li class="nav-item" (click)="logout()"><button class="btn btn-danger">Logout</button></li>
         </ng-container>
         <ng-template #notUser>

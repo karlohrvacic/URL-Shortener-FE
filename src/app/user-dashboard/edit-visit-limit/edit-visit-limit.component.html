@@ -1,17 +1,13 @@
-<div class="container">
-  <h2>Edit visit limit</h2>
-  <form class="signin-form" (submit)="onSend()" [formGroup]="editVisitLimitForm">
-
-    <label>Visits</label>
-    <fieldset class="form-group">
-      <input type="number" class="form-control {{editVisitLimitForm.get('visits')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="visits" placeholder="New visit limit">
-      <small class="invalid-feedback" *ngIf="editVisitLimitForm.get('visits')?.invalid && (editVisitLimitForm.get('visits')?.dirty || editVisitLimitForm.get('visits')?.touched)">
-        <small *ngIf="editVisitLimitForm.get('visits')?.errors?.['required']">
-          New visit limit is required.
-        </small>
+<h2>Edit visit limit</h2>
+<form class="signin-form" (submit)="onSend()" [formGroup]="editVisitLimitForm">
+  <label>Visits</label>
+  <fieldset class="form-group">
+    <input type="number" min="{{url.visits}}" class="form-control {{editVisitLimitForm.get('visits')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="visits" placeholder="New visit limit">
+    <small class="invalid-feedback" *ngIf="editVisitLimitForm.get('visits')?.invalid && (editVisitLimitForm.get('visits')?.dirty || editVisitLimitForm.get('visits')?.touched)">
+      <small *ngIf="editVisitLimitForm.get('visits')?.errors?.['required']">
+        New visit limit is required.
       </small>
-    </fieldset>
-
-    <button type="submit" [disabled]="editVisitLimitForm.invalid" mat-flat-button mat-dialog-close color="primary">Change visit limit</button>
-  </form>
-</div>
+    </small>
+  </fieldset>
+  <button type="submit" class="mt-2" [disabled]="editVisitLimitForm.invalid" mat-flat-button mat-dialog-close color="primary">Change visit limit</button>
+</form>

@@ -11,6 +11,8 @@ import {ToastrService} from "ngx-toastr";
 export class RegisterComponent implements OnInit {
 
   registerForm!: FormGroup;
+  hidePassword: boolean = true;
+  hidePasswordRepeat: boolean = true;
 
   constructor(private authService: AuthService, private toastr: ToastrService) { }
 
