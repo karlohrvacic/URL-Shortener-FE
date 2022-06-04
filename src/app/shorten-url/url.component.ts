@@ -40,6 +40,7 @@ export class UrlComponent implements OnInit {
         this.url = this.urlService.url
         this.urlForClipboard = this.url.shortUrl;
         this.copyToClipboard()
+        this.shortenerForm.reset()
         if (this.authenticated) {
           this.apiKeyService.getAllMyApiKeys()
           this.urlService.getMyUrls()
