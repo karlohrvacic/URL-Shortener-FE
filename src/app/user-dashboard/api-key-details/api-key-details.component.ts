@@ -96,6 +96,18 @@ export class ApiKeyDetailsComponent implements OnInit {
     });
   }
 
+  openDeleteUrlConfirmation(urlId: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '30%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.urlService.deleteUrl(urlId);
+      }
+    });
+  }
+
   applyFilter(filterValue: string) {
     this.urlsView.filter = filterValue.trim().toLowerCase();
   }

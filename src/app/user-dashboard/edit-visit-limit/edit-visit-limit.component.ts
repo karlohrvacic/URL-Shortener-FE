@@ -20,7 +20,7 @@ export class EditVisitLimitComponent implements OnInit {
   ngOnInit() {
     this.url = this.data
     this.editVisitLimitForm = new FormGroup({
-      'visits': new FormControl(this.url.visitLimit, [Validators.required, Validators.min(this.url.visits)]),
+      'visits': new FormControl(this.url.visitLimit, [Validators.required, Validators.min(0)]),
     });
   }
 

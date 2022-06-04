@@ -116,6 +116,24 @@ export class UrlService {
       });
   }
 
+  deleteUrl(id: number) {
+    this.dataService.deleteUrl(id)
+      //@ts-ignore
+      .subscribe((res: {
+        status?: number,
+        body: Url[],
+      }) => {
+        if (res) {
+          this.toastr.success("URL deleted permanently!");
+          return this.getMyUrls();
+        }
+      }, e => {
+        if (e) {
+          this.toastr.error(e.error.message);
+        }
+      });
+  }
+
   changeUrlVisitLimit(urlUpdateDto: { id: number, visitLimit: number }) {
     this.dataService.updateUrl(urlUpdateDto)
       //@ts-ignore

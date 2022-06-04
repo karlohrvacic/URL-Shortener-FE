@@ -51,7 +51,8 @@
         <td mat-cell *matCellDef="let url">
           <button mat-mini-fab class="me-1"  [disabled]="!url.active" (click)="editVisitLimit(url)"><mat-icon>edit</mat-icon></button>
           <button mat-mini-fab class="me-1" color="primary" [routerLink]="['../api-key/' + url.apiKey.id]"><mat-icon>info</mat-icon></button>
-          <button mat-mini-fab matTooltip="Deactivate URL" color="warn" [disabled]="!url.active" (click)="openConfirmationDialog(url.id)"><mat-icon>delete</mat-icon></button>
+          <button mat-mini-fab matTooltip="Deactivate URL" color="warn" *ngIf="url.active" (click)="openConfirmationDialog(url.id)"><mat-icon>delete</mat-icon></button>
+          <button mat-mini-fab matTooltip="Delete URL permanently" color="warn" *ngIf="!url.active" (click)="openDeleteUrlConfirmation(url.id)"><mat-icon>delete_forever</mat-icon></button>
         </td>
       </ng-container>
 

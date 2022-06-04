@@ -19,11 +19,6 @@ td, th {
   justify-content: center !important;
 }
 
-table {
-  color: red;
-  background-color: red;
-}
-
 footer {
   position: fixed;
   left: 0;

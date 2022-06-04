@@ -2,11 +2,9 @@
 <form class="signin-form" (submit)="onSend()" [formGroup]="editVisitLimitForm">
   <label>Visits</label>
   <fieldset class="form-group">
-    <input type="number" min="{{url.visits}}" class="form-control {{editVisitLimitForm.get('visits')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="visits" placeholder="New visit limit">
-    <small class="invalid-feedback" *ngIf="editVisitLimitForm.get('visits')?.invalid && (editVisitLimitForm.get('visits')?.dirty || editVisitLimitForm.get('visits')?.touched)">
-      <small *ngIf="editVisitLimitForm.get('visits')?.errors?.['required']">
-        New visit limit is required.
-      </small>
+    <input type="number" min="0" class="form-control {{editVisitLimitForm.get('visits')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="visits" placeholder="New visit limit">
+    <small>
+      0 for infinite
     </small>
   </fieldset>
   <button type="submit" class="mt-2" [disabled]="editVisitLimitForm.invalid" mat-flat-button mat-dialog-close color="primary">Change visit limit</button>

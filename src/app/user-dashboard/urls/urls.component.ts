@@ -79,4 +79,16 @@ export class UrlsComponent implements AfterViewInit {
     });
   }
 
+  openDeleteUrlConfirmation(urlId: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '30%'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.urlService.deleteUrl(urlId);
+      }
+    });
+  }
+
 }

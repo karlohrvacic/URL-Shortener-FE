@@ -41,6 +41,13 @@ export class DataService {
     });
   }
 
+  deleteUrl(id: number){
+    return this.http.get(this.apiUrl + 'url/delete/' + id, {
+      headers: new HttpHeaders({'Content-Type': 'application/json'}),
+      observe: 'response'
+    });
+  }
+
   updateUrl(urlUpdateDto: { id: number, visitLimit: number }){
     return this.http.put(this.apiUrl + 'url', urlUpdateDto, {
       headers: new HttpHeaders({'Content-Type': 'application/json'}),
