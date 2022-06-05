@@ -26,6 +26,7 @@ import {ChangePasswordComponent} from "./user-dashboard/change-password/change-p
 import {EditVisitLimitComponent} from "./user-dashboard/edit-visit-limit/edit-visit-limit.component";
 import {UrlsComponent} from "./user-dashboard/urls/urls.component";
 import {UserDashboardRoutingModule} from "./user-dashboard/user-dashboard-routing.module";
+import { MainNavComponent } from './shared/main-nav/main-nav.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import {UserDashboardRoutingModule} from "./user-dashboard/user-dashboard-routin
     ChangePasswordComponent,
     ConfirmationDialogComponent,
     EditVisitLimitComponent,
+    MainNavComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,7 @@ import {UserDashboardRoutingModule} from "./user-dashboard/user-dashboard-routin
     FormsModule,
     ClipboardModule,
     UserDashboardRoutingModule,
-    MaterialModule
+    MaterialModule,
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   exports: [

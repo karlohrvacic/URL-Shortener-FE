@@ -4,8 +4,8 @@
       <ul class="navbar-nav me-auto" *ngIf="authenticated">
         <ng-container>
           <li class="nav-item" [ngClass]="getClass('')"><a class="nav-link" [routerLink]="['']">App</a></li>
-          <li class="nav-item" [ngClass]="getClass('/urls')"><a class="nav-link" [routerLink]="['dashboard/urls']">URLs</a></li>
-          <li class="nav-item" [ngClass]="getClass('/apis')"><a class="nav-link" [routerLink]="['dashboard/api-keys']">API Keys</a></li>
+          <li class="nav-item" [ngClass]="getClass('dashboard/urls')"><a class="nav-link" [routerLink]="['dashboard/urls']">URLs</a></li>
+          <li class="nav-item" [ngClass]="getClass('dashboard/apis')"><a class="nav-link" [routerLink]="['dashboard/api-keys']">API Keys</a></li>
         </ng-container>
       </ul>
     </div>

@@ -1,0 +1,55 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="false"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list *ngIf="authenticated; else authenticateList">
+      <a mat-list-item [ngClass]="getClass('')" [routerLink]="['']">App</a>
+      <a mat-list-item [ngClass]="getClass('dashboard/urls')" [routerLink]="['dashboard/urls']">URLs</a>
+      <a mat-list-item [ngClass]="getClass('dashboard/apis')" [routerLink]="['dashboard/api-keys']">API Keys</a>
+      <a mat-list-item matTooltip="{{userInfo}}">Hello, {{user?.name}}!</a>
+      <a mat-list-item (click)="openChangePassword()" matTooltip="Change password">Change password</a>
+      <a mat-list-item style="background-color: red" (click)="logout()" matTooltip="Logout">Logout</a>
+    </mat-nav-list>
+    <ng-template #authenticateList>
+      <mat-nav-list>
+        <a mat-list-item [ngClass]="getClass('register')" [routerLink]="['register']">Register</a>
+        <a mat-list-item [ngClass]="getClass('login')" [routerLink]="['login']">Login</a>
+      </mat-nav-list>
+    </ng-template>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <div class="full-navbar-content" *ngIf="authenticated">
+        <a [ngClass]="getClass('')" [routerLink]="['']">App</a>
+        <a [ngClass]="getClass('dashboard/urls')" [routerLink]="['dashboard/urls']">URLs</a>
+        <a [ngClass]="getClass('dashboard/apis')" [routerLink]="['dashboard/api-keys']">API Keys</a>
+      </div>
+      <div class="spacer"></div>
+      <a [routerLink]="['']">URL Shortener</a>
+      <div class="spacer"></div>
+      <div class="full-navbar-content">
+        <ng-container *ngIf="authenticated; else notUser">
+          <a><h4 matTooltip="{{userInfo}}">Hello, {{user?.name}}!</h4></a>
+          <a><button mat-mini-fab color="primary" (click)="openChangePassword()" matTooltip="Change password"><mat-icon> vpn_key</mat-icon></button></a>
+          <a (click)="logout()"><button class="btn btn-danger">Logout</button></a>
+        </ng-container>
+        <ng-template #notUser>
+          <a class="nav-item me-1" [routerLink]="['register']"><button  mat-button class="btn btn-light">Register</button></a>
+          <a class="nav-item" [routerLink]="['login']"><button mat-button class="btn btn-info">Login</button></a>
+        </ng-template>
+      </div>
+    </mat-toolbar>
+    <ng-content></ng-content>
+    <footer style="background-color: #3f51b5"><a style="color: white" href="https://oncut.me/swagger-ui/index.html"><mat-icon>code</mat-icon></a></footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -10,6 +10,10 @@ import {MatSortModule} from "@angular/material/sort";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
+import {LayoutModule} from "@angular/cdk/layout";
 
 const MaterialComponents = [
   CommonModule,
@@ -23,6 +27,13 @@ const MaterialComponents = [
   MatPaginatorModule,
   MatDialogModule,
   MatTooltipModule,
+  MatToolbarModule,
+  MatToolbarModule,
+  MatButtonModule,
+  MatSidenavModule,
+  MatIconModule,
+  MatListModule,
+  LayoutModule,
 ]
 
 @NgModule({
