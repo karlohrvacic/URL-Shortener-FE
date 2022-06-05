@@ -74,7 +74,7 @@ export class ApiKeyDetailsComponent implements OnInit {
 
   openDeactivateApiKeyConfirmation() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '30%'
+      width: '50%'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -86,7 +86,7 @@ export class ApiKeyDetailsComponent implements OnInit {
 
   openDeactivateUrlConfirmation(urlId: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '30%'
+      width: '50%'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -98,7 +98,7 @@ export class ApiKeyDetailsComponent implements OnInit {
 
   openDeleteUrlConfirmation(urlId: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '30%'
+      width: '50%'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -120,7 +120,7 @@ export class ApiKeyDetailsComponent implements OnInit {
 
   editVisitLimit(url: Url) {
     this.dialog.open(EditVisitLimitComponent, {
-      width: '30%',
+      width: '50%',
       data: url
     })
   }

@@ -62,14 +62,14 @@ export class UrlsComponent implements AfterViewInit {
 
   editVisitLimit(url: Url) {
       this.dialog.open(EditVisitLimitComponent, {
-        width: '30%',
+        width: '50%',
         data: url
       })
   }
 
   openConfirmationDialog(urlId: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '30%'
+      width: '50%'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -81,7 +81,7 @@ export class UrlsComponent implements AfterViewInit {
 
   openDeleteUrlConfirmation(urlId: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '30%'
+      width: '50%'
     });
 
     dialogRef.afterClosed().subscribe(result => {

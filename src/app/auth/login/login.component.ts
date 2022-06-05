@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
 
   openForgotPasswordReset() {
     this.dialog.open(RequestPasswordResetComponent, {
-      width: '30%',
+      width: '50%',
       data: this.signInForm.get('email')?.value
     })
   }
