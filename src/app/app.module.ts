@@ -8,7 +8,6 @@ import {ToastrModule} from "ngx-toastr";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {NavbarComponent} from './shared/navbar/navbar.component';
 import {AuthInterceptor} from "./shared/interceptor/auth.interceptor";
 import {LoginComponent} from './auth/login/login.component';
 import {RegisterComponent} from './auth/register/register.component';
@@ -32,7 +31,6 @@ import { MainNavComponent } from './shared/main-nav/main-nav.component';
   declarations: [
     AppComponent,
     UrlComponent,
-    NavbarComponent,
     LoginComponent,
     RegisterComponent,
     ApiKeysComponent,
