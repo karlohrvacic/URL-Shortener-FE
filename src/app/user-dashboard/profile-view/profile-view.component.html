@@ -1,0 +1,16 @@
+<h2>Your profile information</h2>
+<br>
+<ng-container *ngIf="user; else notLoaded">
+  <h4>Name</h4>
+  <p>{{user.name}}</p>
+  <h4>Email</h4>
+  <p>{{user.email}}</p>
+  <h4>Max Allowed API keys active</h4>
+  <p>{{user.apiKeySlots}}</p>
+  <h4>Account Create Date</h4>
+  <p>{{user.createDate | date : 'd.M.yyyy. HH:mm:ss'}}</p>
+</ng-container>
+<ng-template #notLoaded>
+  <mat-spinner>Loading...</mat-spinner>
+</ng-template>
+<button class="mt-2" mat-flat-button mat-dialog-close color="primary">Close</button>

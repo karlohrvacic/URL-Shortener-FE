@@ -8,7 +8,7 @@
       <a mat-list-item [ngClass]="getClass('')" [routerLink]="['']">App</a>
       <a mat-list-item [ngClass]="getClass('dashboard/urls')" [routerLink]="['dashboard/urls']">URLs</a>
       <a mat-list-item [ngClass]="getClass('dashboard/apis')" [routerLink]="['dashboard/api-keys']">API Keys</a>
-      <a mat-list-item matTooltip="{{userInfo}}">Hello, {{user?.name}}!</a>
+      <a mat-list-item (click)="openUserProfileInfo()">Hello, {{user?.name}}!</a>
       <a mat-list-item (click)="openChangePassword()" matTooltip="Change password">Change password</a>
       <a mat-list-item style="background-color: red" (click)="logout()" matTooltip="Logout">Logout</a>
     </mat-nav-list>
@@ -39,7 +39,7 @@
       <div class="spacer"></div>
       <div class="full-navbar-content">
         <ng-container *ngIf="authenticated; else notUser">
-          <a><h4 matTooltip="{{userInfo}}">Hello, {{user?.name}}!</h4></a>
+          <a (click)="openUserProfileInfo()" matTooltip="User info"><h4 >Hello, {{user?.name}}!</h4></a>
           <a><button mat-mini-fab color="primary" (click)="openChangePassword()" matTooltip="Change password"><mat-icon> vpn_key</mat-icon></button></a>
           <a (click)="logout()"><button class="btn btn-danger">Logout</button></a>
         </ng-container>

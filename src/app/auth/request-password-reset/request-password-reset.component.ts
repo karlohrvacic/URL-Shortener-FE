@@ -21,7 +21,6 @@ export class RequestPasswordResetComponent implements OnInit {
     });
   }
 
-
   onSend() {
     this.authService.requestPasswordChange(this.requestPasswordResetForm.value);
   }

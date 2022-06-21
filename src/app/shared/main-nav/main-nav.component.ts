@@ -8,6 +8,7 @@ import {AuthService} from "../services/auth.service";
 import {Location} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {ChangePasswordComponent} from "../../user-dashboard/change-password/change-password.component";
+import {ProfileViewComponent} from "../../user-dashboard/profile-view/profile-view.component";
 
 @Component({
   selector: 'app-main-nav',
@@ -25,7 +26,6 @@ export class MainNavComponent {
   user: User | null = null;
   authenticated: boolean = false;
   authChangeSubscription: Subscription | undefined;
-  userInfo!: string;
 
   constructor(private router: Router, private authService: AuthService, public location: Location, private dialog: MatDialog, private breakpointObserver: BreakpointObserver) { }
 
@@ -36,7 +36,6 @@ export class MainNavComponent {
         if (this.authenticated) {
           // @ts-ignore
           this.user = this.authService.getUser();
-          this.userInfo = "Name: " + this.user?.name + "\nEmail: " + this.user?.email + "\nMax active API keys: " + this.user?.apiKeySlots.toString();
         }
       });
   }
@@ -56,9 +55,12 @@ export class MainNavComponent {
   }
 
   openChangePassword() {
-    this.dialog.open(ChangePasswordComponent, {
-      width: '30%',
-    })
+    this.dialog.open(ChangePasswordComponent)
   }
 
+  openUserProfileInfo() {
+    this.dialog.open(ProfileViewComponent, {
+      data: this.user
+    })
+  }
 }

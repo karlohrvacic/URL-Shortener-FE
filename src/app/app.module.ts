@@ -26,6 +26,7 @@ import {EditVisitLimitComponent} from "./user-dashboard/edit-visit-limit/edit-vi
 import {UrlsComponent} from "./user-dashboard/urls/urls.component";
 import {UserDashboardRoutingModule} from "./user-dashboard/user-dashboard-routing.module";
 import { MainNavComponent } from './shared/main-nav/main-nav.component';
+import { ProfileViewComponent } from './user-dashboard/profile-view/profile-view.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { MainNavComponent } from './shared/main-nav/main-nav.component';
     ConfirmationDialogComponent,
     EditVisitLimitComponent,
     MainNavComponent,
+    ProfileViewComponent,
   ],
   imports: [
     BrowserModule,
