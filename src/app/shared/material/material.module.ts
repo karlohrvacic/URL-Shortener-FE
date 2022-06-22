@@ -14,6 +14,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {LayoutModule} from "@angular/cdk/layout";
+import {NgxMatDatetimePickerModule} from "@angular-material-components/datetime-picker";
 
 const MaterialComponents = [
   CommonModule,
@@ -34,6 +35,7 @@ const MaterialComponents = [
   MatIconModule,
   MatListModule,
   LayoutModule,
+  NgxMatDatetimePickerModule,
 ]
 
 @NgModule({

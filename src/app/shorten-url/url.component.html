@@ -7,6 +7,7 @@
       <h2>Shorten your URL</h2>
 
       <div *ngIf="url != null" id="answer" class="input-group d-flex justify-content-center mb-0">
+        <span class="input-group-text" id="basic-addon3">https://oncut.me/</span>
         <fieldset>
           <input type="text" id="link" class="form-control" [value]="urlForClipboard" aria-describedby="button-addon2" autocomplete="off" readonly="readonly">
         </fieldset>
@@ -34,6 +35,7 @@
               <input type="number" matInput formControlName="visitLimit" placeholder="1">
               <mat-hint>Enter visit limit after which short url becomes invalid</mat-hint>
             </mat-form-field>
+
           </ng-container>
         </div>
 

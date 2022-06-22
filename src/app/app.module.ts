@@ -27,6 +27,7 @@ import {UrlsComponent} from "./user-dashboard/urls/urls.component";
 import {UserDashboardRoutingModule} from "./user-dashboard/user-dashboard-routing.module";
 import { MainNavComponent } from './shared/main-nav/main-nav.component';
 import { ProfileViewComponent } from './user-dashboard/profile-view/profile-view.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
 
 @NgModule({
   declarations: [
@@ -47,25 +48,26 @@ import { ProfileViewComponent } from './user-dashboard/profile-view/profile-view
     MainNavComponent,
     ProfileViewComponent,
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    CommonModule,
-    ToastrModule.forRoot({
-      positionClass: 'toast-bottom-left',
-      progressBar: true,
-      closeButton: true,
-      maxOpened: 5,
-      preventDuplicates: true
-    }),
-    FormsModule,
-    ClipboardModule,
-    UserDashboardRoutingModule,
-    MaterialModule,
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        CommonModule,
+        ToastrModule.forRoot({
+            positionClass: 'toast-bottom-left',
+            progressBar: true,
+            closeButton: true,
+            maxOpened: 5,
+            preventDuplicates: true
+        }),
+        FormsModule,
+        ClipboardModule,
+        UserDashboardRoutingModule,
+        MaterialModule,
+        MatDatepickerModule,
+    ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   exports: [
     GetElementsForApiKeyByActivePipe,

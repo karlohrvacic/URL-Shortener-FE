@@ -22,6 +22,8 @@ export class UrlComponent implements OnInit {
   authChangeSubscription: Subscription | undefined;
   urlSubmittedSubscription: Subscription | undefined;
   urlForClipboard!: string;
+  noExpirationDate: boolean = true;
+  dateNow: Date = new Date()
 
   reg = 'https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)';
 
@@ -51,7 +53,8 @@ export class UrlComponent implements OnInit {
     this.shortenerForm = new FormGroup({
       'longUrl': new FormControl(null, [Validators.required, Validators.pattern(this.reg)]),
       'shortUrl': new FormControl(null),
-      'visitLimit': new FormControl(null, [Validators.min(1)])
+      'visitLimit': new FormControl(null, [Validators.min(1)]),
+      'expirationDate': new FormControl(null)
     });
   }
 

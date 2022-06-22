@@ -9,6 +9,7 @@ export interface Url {
   apiKey: ApiKey;
   createDate: Date;
   lastAccessed: Date;
+  expirationDate: Date;
   visits: number;
   visitLimit: number;
   active: Boolean;
