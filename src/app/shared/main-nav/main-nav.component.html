@@ -40,7 +40,7 @@
       <div class="full-navbar-content">
         <ng-container *ngIf="authenticated; else notUser">
           <a (click)="openUserProfileInfo()" matTooltip="User info"><h4 >Hello, {{user?.name}}!</h4></a>
-          <a><button mat-mini-fab color="primary" (click)="openChangePassword()" matTooltip="Change password"><mat-icon> vpn_key</mat-icon></button></a>
+          <a><button mat-mini-fab color="secondary" (click)="openChangePassword()" matTooltip="Change password"><mat-icon> vpn_key</mat-icon></button></a>
           <a (click)="logout()"><button class="btn btn-danger">Logout</button></a>
         </ng-container>
         <ng-template #notUser>

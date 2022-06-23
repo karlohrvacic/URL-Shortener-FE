@@ -17,20 +17,20 @@
       <form [formGroup]="shortenerForm" (ngSubmit)="submit()">
 
         <div class="row">
-          <mat-form-field appearance="standard">
+          <mat-form-field appearance="outline">
             <mat-label>Url for shortening</mat-label>
             <input matInput formControlName="longUrl" placeholder="https://oncut.me">
             <mat-hint>Enter valid URL</mat-hint>
           </mat-form-field>
 
           <ng-container *ngIf="authenticated">
-            <mat-form-field appearance="standard">
+            <mat-form-field appearance="outline">
               <mat-label>Short URL</mat-label>
               <input matInput formControlName="shortUrl" placeholder="oncut">
               <mat-hint>Enter short URL of your choosing</mat-hint>
             </mat-form-field>
 
-            <mat-form-field appearance="standard">
+            <mat-form-field appearance="outline">
               <mat-label>Number of visits:</mat-label>
               <input type="number" matInput formControlName="visitLimit" placeholder="1">
               <mat-hint>Enter visit limit after which short url becomes invalid</mat-hint>

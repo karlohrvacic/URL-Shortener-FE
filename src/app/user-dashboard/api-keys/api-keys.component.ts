@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ApiKey} from "../../shared/models/ApiKey";
-import {Subscription} from "rxjs";
+import {filter, Subscription} from "rxjs";
 import {ApiKeyService} from "../../shared/services/api-key.service";
 import {UrlService} from "../../shared/services/url.service";
 import {ToastrService} from "ngx-toastr";
@@ -9,7 +9,6 @@ import {User} from "../../shared/models/User";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {environment} from "../../../environments/environment";
 import {ClipboardService} from "ngx-clipboard";
 
 @Component({
@@ -28,6 +27,7 @@ export class ApiKeysComponent implements OnInit {
   apiKeys!: ApiKey[];
   apiKeyChangeSubscription: Subscription | undefined;
   user!: User | undefined;
+  filterValue: string = "";
 
   constructor(private apiKeyService: ApiKeyService, private urlService: UrlService, private toastr: ToastrService, private authService: AuthService, private clipboardApi: ClipboardService) { }
 
@@ -43,6 +43,7 @@ export class ApiKeysComponent implements OnInit {
         this.apiKeys = apiKeys
         this.apiKeysView = new MatTableDataSource(this.apiKeys)
         this.ngAfterViewInit()
+        this.applyFilter(this.filterValue)
       });
     this.user = this.authService.user
   }
@@ -60,7 +61,8 @@ export class ApiKeysComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-    this.apiKeysView.filter = filterValue.trim().toLowerCase();
+    this.filterValue = filterValue.trim().toLowerCase();
+    this.apiKeysView.filter = this.filterValue
   }
 
   copyKey(key: string) {

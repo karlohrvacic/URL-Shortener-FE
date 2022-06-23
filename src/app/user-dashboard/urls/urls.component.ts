@@ -7,7 +7,7 @@ import {environment} from "../../../environments/environment";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
-import {Subscription} from "rxjs";
+import {interval, Subscription} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {EditVisitLimitComponent} from "../edit-visit-limit/edit-visit-limit.component";
 import {ConfirmationDialogComponent} from "../../shared/confirmation-dialog/confirmation-dialog.component";
@@ -19,30 +19,41 @@ import {ConfirmationDialogComponent} from "../../shared/confirmation-dialog/conf
 })
 export class UrlsComponent implements AfterViewInit {
 
-  displayedColumns: string[] = ['longUrl', 'shortUrl', 'visits', 'visitLimit', 'createDate', 'lastAccessed', 'active', 'action'];
+  displayedColumns: string[] = ['longUrl', 'shortUrl', 'visits', 'visitLimit', 'createDate', 'lastAccessed', 'expirationDate', 'active', 'action'];
   urlsView: MatTableDataSource<Url> = new MatTableDataSource(this.urlService.urls);
   urls!: Url[];
   urlsChangeSubscription: Subscription | undefined;
+  updateSubscription: Subscription | undefined;
   revokeUrlId: number | null = null;
+  filterValue: string = "";
+  refreshedAtDate: Date = new Date();
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
 
   constructor(private urlService: UrlService, private toastr: ToastrService, private clipboardApi: ClipboardService,
               private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.urls = this.urlService.urls;
+
     this.urlsChangeSubscription = this.urlService.urlsChange
       .subscribe(urls => {
         this.urls = urls
         this.urlsView = new MatTableDataSource(this.urls)
         this.ngAfterViewInit()
+        this.applyFilter(this.filterValue)
+        this.refreshedAtDate = new Date()
       });
+
+    this.updateSubscription = interval(20000).subscribe(
+      (val) => { this.urlService.getMyUrls() });
   }
 
   ngOnDestroy() {
     this.urlsChangeSubscription?.unsubscribe()
+    this.updateSubscription?.unsubscribe()
   }
 
   ngAfterViewInit(): void {
@@ -57,20 +68,18 @@ export class UrlsComponent implements AfterViewInit {
   }
 
   applyFilter(filterValue: string) {
-    this.urlsView.filter = filterValue.trim().toLowerCase();
+    this.filterValue = filterValue.trim().toLowerCase();
+    this.urlsView.filter = this.filterValue
   }
 
   editVisitLimit(url: Url) {
       this.dialog.open(EditVisitLimitComponent, {
-        width: '50%',
         data: url
       })
   }
 
   openConfirmationDialog(urlId: number) {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '50%'
-    });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
@@ -80,9 +89,7 @@ export class UrlsComponent implements AfterViewInit {
   }
 
   openDeleteUrlConfirmation(urlId: number) {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '50%'
-    });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == true) {
