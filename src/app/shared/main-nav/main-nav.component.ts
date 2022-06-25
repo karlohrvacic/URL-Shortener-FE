@@ -7,7 +7,6 @@ import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
 import {Location} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
-import {ChangePasswordComponent} from "../../user-dashboard/change-password/change-password.component";
 import {ProfileViewComponent} from "../../user-dashboard/profile-view/profile-view.component";
 
 @Component({
@@ -54,13 +53,10 @@ export class MainNavComponent {
     }
   }
 
-  openChangePassword() {
-    this.dialog.open(ChangePasswordComponent)
-  }
-
   openUserProfileInfo() {
     this.dialog.open(ProfileViewComponent, {
       data: this.user
     })
   }
+
 }

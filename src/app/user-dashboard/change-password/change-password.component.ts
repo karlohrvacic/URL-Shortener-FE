@@ -5,6 +5,8 @@ import {ApiKeyService} from "../../shared/services/api-key.service";
 import {ToastrService} from "ngx-toastr";
 import {UserService} from "../../shared/services/user.service";
 import {AuthService} from "../../shared/services/auth.service";
+import {ProfileViewComponent} from "../profile-view/profile-view.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-change-password',
@@ -20,7 +22,7 @@ export class ChangePasswordComponent implements OnInit {
   hidePasswordRepeat = true;
 
   constructor(private apiKeyService: ApiKeyService, private toastr: ToastrService, private userService: UserService,
-              private authService: AuthService) { }
+              private authService: AuthService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.user = this.authService.user;
@@ -33,9 +35,10 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   changePassword() {
-    if (this.passwordChangeForm.value['newPassword'] === this.passwordChangeForm.value['repeat-new-password'] ){
+    if (this.passwordChangeForm.value['newPassword'] === this.passwordChangeForm.value['password-repeat'] ){
       this.passwordChangeForm.removeControl('password-repeat');
       this.userService.updatePassword(this.passwordChangeForm.value);
+      this.dialog.closeAll()
     }
     else {
       this.toastr.error('Passwords must match!');
@@ -62,6 +65,12 @@ export class ChangePasswordComponent implements OnInit {
       return 'Password needs to be at least 8 characters long';
     }
     return repeatPassword?.value != this.passwordChangeForm.get('password')?.value ? 'Passwords need to match' : '';
+  }
+
+  openUserProfileInfo() {
+    this.dialog.open(ProfileViewComponent, {
+      data: this.user
+    })
   }
 
 }
