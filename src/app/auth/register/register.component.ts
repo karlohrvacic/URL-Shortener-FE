@@ -36,4 +36,36 @@ export class RegisterComponent implements OnInit {
     }
    }
 
+  getEmailError() {
+    let email = this.registerForm.get('email');
+
+    if (email?.hasError('required')) {
+      return 'You must enter an email';
+    }
+
+    return email?.hasError('email') ? 'Not a valid email' : '';
+  }
+
+  getPasswordError() {
+    let password = this.registerForm.get('password');
+
+    if (password?.hasError('required')) {
+      return 'You must enter a password';
+    }
+
+    return password?.hasError('minlength') ? 'Password needs to be at least 8 characters long' : '';
+  }
+
+  getRepeatPasswordError() {
+    let repeatPassword = this.registerForm.get('password-repeat');
+
+    if (repeatPassword?.hasError('required')) {
+      return 'You need to repeat password';
+    }
+    if (repeatPassword?.hasError('minlength')) {
+      return 'Password needs to be at least 8 characters long';
+    }
+      return repeatPassword?.value != this.registerForm.get('password')?.value ? 'Passwords need to match' : '';
+  }
+
 }

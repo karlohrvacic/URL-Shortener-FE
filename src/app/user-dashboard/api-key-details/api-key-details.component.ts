@@ -23,7 +23,7 @@ import {ConfirmationDialogComponent} from "../../shared/confirmation-dialog/conf
 })
 export class ApiKeyDetailsComponent implements OnInit {
 
-  displayedColumns: string[] = ['longUrl', 'shortUrl', 'visits', 'visitLimit', 'createDate', 'lastAccessed', 'active', 'action'];
+  displayedColumns: string[] = ['longUrl', 'shortUrl', 'visits', 'visitLimit', 'createDate', 'lastAccessed', 'expirationDate', 'active', 'action'];
   urlsView: MatTableDataSource<Url> = new MatTableDataSource(this.urlService.urls.filter(u => u.apiKey.id == this.apiKeyId));
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -33,6 +33,7 @@ export class ApiKeyDetailsComponent implements OnInit {
   urls!: Url[];
   urlChangeSubscription: Subscription | undefined;  apiKeyId!: number;
   apiKey!: ApiKey;
+  private filterValue: string = '';
 
   constructor(private route: ActivatedRoute, private router: Router, private apiKeyService: ApiKeyService, private location: Location, private urlService: UrlService,
               private toastr: ToastrService, private clipboardApi: ClipboardService, private dialog: MatDialog) { }
@@ -60,6 +61,7 @@ export class ApiKeyDetailsComponent implements OnInit {
         this.urls = urls.filter(u => u.apiKey.id == this.apiKeyId)
         this.urlsView = new MatTableDataSource(this.urls);
         this.ngAfterViewInit();
+        this.applyFilter(this.filterValue)
       });
   }
 
@@ -109,7 +111,8 @@ export class ApiKeyDetailsComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-    this.urlsView.filter = filterValue.trim().toLowerCase();
+    this.filterValue = filterValue.trim().toLowerCase();
+    this.urlsView.filter = this.filterValue
   }
 
   copyUrl(id: number) {

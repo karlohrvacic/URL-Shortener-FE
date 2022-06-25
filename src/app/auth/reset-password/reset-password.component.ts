@@ -14,6 +14,9 @@ export class ResetPasswordComponent implements OnInit {
 
   resetPasswordForm!: FormGroup;
   token!: string;
+  hidePassword: boolean = true;
+  hidePasswordRepeat: boolean = true;
+
   constructor(private route: ActivatedRoute, private location: Location, private router: Router, private authService: AuthService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
@@ -28,22 +31,53 @@ export class ResetPasswordComponent implements OnInit {
       'password-repeat': new FormControl(null, [Validators.required, Validators.minLength(8)])
     });
 
-    console.log(this.resetPasswordForm.value['token'])
-
     const url = this.router.createUrlTree([], {relativeTo: this.route, queryParams: {}}).toString()
 
     this.location.go(url);
   }
 
-    resetPassword() {
-        if (this.resetPasswordForm.value['password'] === this.resetPasswordForm.value['password-repeat'] ){
-          this.resetPasswordForm.removeControl('password-repeat');
-          this.authService.changePassword(this.resetPasswordForm.value);
-        }
-        else {
-          this.resetPasswordForm.addControl('password-repeat', new FormControl( '',[Validators.required]));
-          this.toastr.error('Passwords must match!');
-        }
+  resetPassword() {
+    if (this.resetPasswordForm.value['password'] === this.resetPasswordForm.value['password-repeat']) {
+      this.resetPasswordForm.get(['password-repeat'])?.reset()
+      this.resetPasswordForm.removeControl('password-repeat');
+      this.authService.changePassword(this.resetPasswordForm.value);
+    }
+    else {
+      this.resetPasswordForm.addControl('password-repeat', new FormControl( '',[Validators.required]));
+      this.toastr.error('Passwords must match!');
+    }
+  }
+
+  getEmailError() {
+    let email = this.resetPasswordForm.get('email');
+
+    if (email?.hasError('required')) {
+      return 'You must enter an email';
+    }
+
+    return email?.hasError('email') ? 'Not a valid email' : '';
+  }
+
+  getPasswordError() {
+    let password = this.resetPasswordForm.get('password');
+
+    if (password?.hasError('required')) {
+      return 'You must enter a password';
+    }
+
+    return password?.hasError('minlength') ? 'Password needs to be at least 8 characters long' : '';
+  }
+
+  getRepeatPasswordError() {
+    let repeatPassword = this.resetPasswordForm.get('password-repeat');
+
+    if (repeatPassword?.hasError('required')) {
+      return 'You need to repeat password';
+    }
+    if (repeatPassword?.hasError('minlength')) {
+      return 'Password needs to be at least 8 characters long';
+    }
+    return repeatPassword?.value != this.resetPasswordForm.get('password')?.value ? 'Passwords need to match' : '';
 
   }
 

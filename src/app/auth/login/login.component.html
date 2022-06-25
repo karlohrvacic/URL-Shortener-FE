@@ -3,31 +3,37 @@
   <div class="bg bg2"></div>
   <div class="bg bg3"></div>
   <div class="row col-8 col-sm-8 col-lg-4 infobox p-2">
-  <div class="container">
-    <h2>Login</h2>
+    <div class="container">
+      <h2>Login</h2>
 
-    <form class="signin-form" [formGroup]="signInForm">
+      <form class="signin-form" (submit)="onLogin()" [formGroup]="signInForm" (keyup.enter)="onLogin()">
 
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" placeholder="bobby@example.com">
-          <mat-hint>Enter your email</mat-hint>
-        </mat-form-field>
-        <br>
-        <mat-form-field appearance="outline">
-          <mat-label>Password</mat-label>
-          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="********">
-
-          <mat-hint>Enter your password</mat-hint>
-          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Enter your email</mat-label>
+          <input type="email" matInput formControlName="email" placeholder="bobby@example.com" required>
+          <mat-icon matSuffix class="{{signInForm.get('email')?.invalid ? 'text-danger': 'text-success'}}">
+            {{signInForm.get('email')?.invalid ? 'cancel': 'check_circle'}}</mat-icon>
         </mat-form-field>
 
-        <br>
-      <button type="submit" (click)="onLogin()" class="w-50 mt-2" [disabled]="signInForm.invalid" mat-flat-button color="primary">Login</button>
-    </form>
-    <button mat-button (click)="openForgotPasswordReset()" color="primary">Forgot password</button>
-  </div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Enter your password</mat-label>
+          <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="password" placeholder="********" required>
+
+          <div matSuffix style="display:flex">
+            <button type="button" mat-icon-button (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <button disabled mat-icon-button>
+              <mat-icon matSuffix class="{{signInForm.get('password')?.invalid ? 'text-danger': 'text-success'}}">
+                {{signInForm.get('password')?.invalid ? 'cancel': 'check_circle'}}</mat-icon>
+            </button>
+          </div>
+        </mat-form-field>
+
+        <button (click)="onLogin()" class="w-100 mt-2" [disabled]="signInForm.invalid" mat-flat-button color="primary">Login</button>
+      </form>
+
+      <button mat-button (click)="openForgotPasswordReset()" color="primary">Forgot password</button>
+    </div>
   </div>
 </div>

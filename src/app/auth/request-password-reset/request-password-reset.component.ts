@@ -25,4 +25,14 @@ export class RequestPasswordResetComponent implements OnInit {
     this.authService.requestPasswordChange(this.requestPasswordResetForm.value);
   }
 
+  getEmailError() {
+    let email = this.requestPasswordResetForm.get('email');
+
+    if (email?.hasError('required')) {
+      return 'You must enter an email';
+    }
+
+    return email?.hasError('email') ? 'Not a valid email' : '';
+  }
+
 }

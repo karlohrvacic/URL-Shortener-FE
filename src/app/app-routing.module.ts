@@ -10,7 +10,7 @@ import {ResetPasswordComponent} from "./auth/reset-password/reset-password.compo
 const routes: Routes = [
   {path:'login', component: LoginComponent},
   {path:'register', component: RegisterComponent},
-  {path:'reset-password/:token', component: ResetPasswordComponent},
+  {path:'reset-password', component: ResetPasswordComponent},
   {path:'dashboard', loadChildren: () => UserDashboardRoutingModule, canActivate: [UserGuard]},
   {path:'', component: UrlComponent},
 ];

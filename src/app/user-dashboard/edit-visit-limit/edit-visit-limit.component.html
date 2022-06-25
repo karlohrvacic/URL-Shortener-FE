@@ -1,11 +1,13 @@
 <h2>Edit visit limit</h2>
-<form class="signin-form" (submit)="onSend()" [formGroup]="editVisitLimitForm">
-  <label>Visits</label>
-  <fieldset class="form-group">
-    <input type="number" min="0" class="form-control {{editVisitLimitForm.get('visits')?.invalid ? 'is-invalid': 'is-valid'}}" formControlName="visits" placeholder="New visit limit">
-    <small>
-      0 for infinite
-    </small>
-  </fieldset>
+<form class="signin-form" (submit)="onSend()" [formGroup]="editVisitLimitForm" (keyup.enter)="onSend()">
+
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Enter new visit limit</mat-label>
+    <input type="number" min="0" matInput formControlName="visits" placeholder="100" required>
+    <mat-hint>0 for infinite</mat-hint>
+    <mat-icon matSuffix class="{{editVisitLimitForm.get('visits')?.value == null ? 'text-danger': 'text-success'}}">
+      {{editVisitLimitForm.get('visits')?.value == null ? 'cancel': 'check_circle'}}</mat-icon>
+  </mat-form-field>
+
   <button type="submit" class="mt-2" [disabled]="editVisitLimitForm.invalid" mat-flat-button mat-dialog-close color="primary">Change visit limit</button>
 </form>

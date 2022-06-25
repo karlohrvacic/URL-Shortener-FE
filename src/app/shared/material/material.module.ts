@@ -4,7 +4,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
 import {MatPaginatorModule} from "@angular/material/paginator";
@@ -15,6 +15,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {LayoutModule} from "@angular/cdk/layout";
 import {NgxMatDatetimePickerModule} from "@angular-material-components/datetime-picker";
+import {MatNativeDateModule} from '@angular/material/core';
 
 const MaterialComponents = [
   CommonModule,
@@ -36,6 +37,7 @@ const MaterialComponents = [
   MatListModule,
   LayoutModule,
   NgxMatDatetimePickerModule,
+  MatNativeDateModule
 ]
 
 @NgModule({

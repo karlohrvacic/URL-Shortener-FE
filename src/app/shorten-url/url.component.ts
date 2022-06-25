@@ -8,6 +8,7 @@ import { ClipboardService } from 'ngx-clipboard';
 import {environment} from "../../environments/environment";
 import {ToastrService} from "ngx-toastr";
 import {ApiKeyService} from "../shared/services/api-key.service";
+import {NgxMatMomentAdapter} from "@angular-material-components/moment-adapter";
 
 @Component({
   selector: 'app-shorten-url',

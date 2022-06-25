@@ -28,6 +28,7 @@ import {UserDashboardRoutingModule} from "./user-dashboard/user-dashboard-routin
 import { MainNavComponent } from './shared/main-nav/main-nav.component';
 import { ProfileViewComponent } from './user-dashboard/profile-view/profile-view.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import {NgxMatMomentAdapter, NgxMatMomentModule} from "@angular-material-components/moment-adapter";
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
         UserDashboardRoutingModule,
         MaterialModule,
         MatDatepickerModule,
+        NgxMatMomentModule
     ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   exports: [
