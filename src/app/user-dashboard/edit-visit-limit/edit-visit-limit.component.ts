@@ -13,6 +13,7 @@ export class EditVisitLimitComponent implements OnInit {
 
   editVisitLimitForm!: FormGroup;
   url!: Url;
+  dateNow: Date = new Date();
 
   constructor(private urlService: UrlService, public dialogRef: MatDialogRef<EditVisitLimitComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -21,6 +22,7 @@ export class EditVisitLimitComponent implements OnInit {
     this.url = this.data
     this.editVisitLimitForm = new FormGroup({
       'visits': new FormControl(this.url.visitLimit, [Validators.required, Validators.min(0)]),
+      'expirationDate': new FormControl(null)
     });
   }
 

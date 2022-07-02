@@ -1,4 +1,4 @@
-<h2>Edit visit limit</h2>
+<h2>Edit URL expiration limit</h2>
 <form class="signin-form" (submit)="onSend()" [formGroup]="editVisitLimitForm" (keyup.enter)="onSend()">
 
   <mat-form-field appearance="outline" class="w-100">
@@ -7,6 +7,17 @@
     <mat-hint>0 for infinite</mat-hint>
     <mat-icon matSuffix class="{{editVisitLimitForm.get('visits')?.value == null ? 'text-danger': 'text-success'}}">
       {{editVisitLimitForm.get('visits')?.value == null ? 'cancel': 'check_circle'}}</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="w-100">
+    <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a expiration date and time" formControlName="expirationDate"
+           [min]="dateNow">
+    <mat-datepicker-toggle matSuffix [for]="$any(picker)"></mat-datepicker-toggle>
+    <ngx-mat-datetime-picker #picker [showSeconds]="false"
+                             [stepHour]="1" [stepMinute]="1"
+                             [touchUi]="true" [hideTime]="false">
+    </ngx-mat-datetime-picker>
+    <mat-hint>None for never</mat-hint>
   </mat-form-field>
 
   <button type="submit" class="mt-2" [disabled]="editVisitLimitForm.invalid" mat-flat-button mat-dialog-close color="primary">Change visit limit</button>
