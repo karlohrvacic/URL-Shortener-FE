@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, LOCALE_ID, OnInit} from '@angular/core';
 import {UrlService} from "../shared/services/url.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormGroup, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../shared/services/auth.service";
 import {Subscription} from "rxjs";
 import {Url} from "../shared/models/Url";
@@ -8,7 +8,6 @@ import { ClipboardService } from 'ngx-clipboard';
 import {environment} from "../../environments/environment";
 import {ToastrService} from "ngx-toastr";
 import {ApiKeyService} from "../shared/services/api-key.service";
-import {NgxMatMomentAdapter} from "@angular-material-components/moment-adapter";
 
 @Component({
   selector: 'app-shorten-url',
@@ -17,7 +16,7 @@ import {NgxMatMomentAdapter} from "@angular-material-components/moment-adapter";
 })
 export class UrlComponent implements OnInit {
 
-  shortenerForm!: FormGroup;
+  shortenerForm!: UntypedFormGroup;
   url!: Url | null;
   authenticated: boolean = false;
   authChangeSubscription: Subscription | undefined;
@@ -54,11 +53,11 @@ export class UrlComponent implements OnInit {
       })
 
 
-    this.shortenerForm = new FormGroup({
-      'longUrl': new FormControl(null, [Validators.required, Validators.pattern(this.reg)]),
-      'shortUrl': new FormControl(null),
-      'visitLimit': new FormControl(null, [Validators.min(1)]),
-      'expirationDate': new FormControl(null)
+    this.shortenerForm = new UntypedFormGroup({
+      'longUrl': new UntypedFormControl(null, [Validators.required, Validators.pattern(this.reg)]),
+      'shortUrl': new UntypedFormControl(null),
+      'visitLimit': new UntypedFormControl(null, [Validators.min(1)]),
+      'expirationDate': new UntypedFormControl(null)
     });
   }
 

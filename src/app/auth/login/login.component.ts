@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../shared/services/auth.service";
 import {MatDialog} from "@angular/material/dialog";
 import {RequestPasswordResetComponent} from "../request-password-reset/request-password-reset.component";
@@ -11,16 +11,16 @@ import {RequestPasswordResetComponent} from "../request-password-reset/request-p
 })
 export class LoginComponent implements OnInit {
 
-  signInForm!: FormGroup;
+  signInForm!: UntypedFormGroup;
   hidePassword = true;
 
   constructor(private authService: AuthService, private dialog: MatDialog) {}
 
   ngOnInit() {
 
-    this.signInForm = new FormGroup({
-      'email': new FormControl(null, [Validators.required, Validators.email]),
-      'password': new FormControl(null, Validators.required)
+    this.signInForm = new UntypedFormGroup({
+      'email': new UntypedFormControl(null, [Validators.required, Validators.email]),
+      'password': new UntypedFormControl(null, Validators.required)
     });
   }
 

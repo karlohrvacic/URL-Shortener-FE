@@ -10,14 +10,14 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="w-100">
-    <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a expiration date and time" formControlName="expirationDate"
-           [min]="dateNow">
-    <mat-datepicker-toggle matSuffix [for]="$any(picker)"></mat-datepicker-toggle>
-    <ngx-mat-datetime-picker #picker [showSeconds]="false"
-                             [stepHour]="1" [stepMinute]="1"
-                             [touchUi]="true" [hideTime]="false">
-    </ngx-mat-datetime-picker>
-    <mat-hint>None for never</mat-hint>
+    <mat-form-field appearance="outline">
+      <input matInput [owlDateTime]="dt1" formControlName="expirationDate" placeholder="Expiration date">
+      <owl-date-time #dt1></owl-date-time>
+      <button [owlDateTimeTrigger]="dt1" mat-icon-button matSuffix>
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <mat-hint>Enter expiration date in format DD.MM.YYYY HH:MM</mat-hint>
+    </mat-form-field>
   </mat-form-field>
 
   <button type="submit" class="mt-2" [disabled]="editVisitLimitForm.invalid" mat-flat-button mat-dialog-close color="primary">Change visit limit</button>

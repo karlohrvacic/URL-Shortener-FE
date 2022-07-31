@@ -48,7 +48,7 @@ export class UrlsComponent implements AfterViewInit {
       });
 
     this.updateSubscription = interval(20000).subscribe(
-      (val) => { this.urlService.getMyUrls() });
+      () => { this.urlService.getMyUrls() });
   }
 
   ngOnDestroy() {
@@ -82,7 +82,7 @@ export class UrlsComponent implements AfterViewInit {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
+      if (result) {
         this.urlService.revokeUrl(urlId);
       }
     });
@@ -92,7 +92,7 @@ export class UrlsComponent implements AfterViewInit {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
+      if (result) {
         this.urlService.deleteUrl(urlId);
       }
     });

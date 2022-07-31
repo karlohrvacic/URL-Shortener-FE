@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../shared/services/auth.service";
 import {ToastrService} from "ngx-toastr";
 
@@ -10,18 +10,18 @@ import {ToastrService} from "ngx-toastr";
 })
 export class RegisterComponent implements OnInit {
 
-  registerForm!: FormGroup;
+  registerForm!: UntypedFormGroup;
   hidePassword: boolean = true;
   hidePasswordRepeat: boolean = true;
 
   constructor(private authService: AuthService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.registerForm = new FormGroup({
-      'email': new FormControl(null, [Validators.required, Validators.email]),
-      'name': new FormControl(null, [Validators.required]),
-      'password': new FormControl(null, [Validators.required, Validators.minLength(8)]),
-      'password-repeat': new FormControl(null, [Validators.required, Validators.minLength(8)])
+    this.registerForm = new UntypedFormGroup({
+      'email': new UntypedFormControl(null, [Validators.required, Validators.email]),
+      'name': new UntypedFormControl(null, [Validators.required]),
+      'password': new UntypedFormControl(null, [Validators.required, Validators.minLength(8)]),
+      'password-repeat': new UntypedFormControl(null, [Validators.required, Validators.minLength(8)])
     });
   }
 
@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit {
       this.authService.register(this.registerForm.value);
     }
     else {
-      this.registerForm.addControl('password-repeat',new FormControl( '',[Validators.required]));
+      this.registerForm.addControl('password-repeat',new UntypedFormControl( '',[Validators.required]));
       this.toastr.error('Passwords must match!');
     }
    }

@@ -80,7 +80,7 @@ export class ApiKeyDetailsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
+      if (result) {
         this.apiKeyService.revokeApiKey(this.apiKeyId);
       }
     });
@@ -92,7 +92,7 @@ export class ApiKeyDetailsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
+      if (result) {
         this.urlService.revokeUrl(urlId);
       }
     });
@@ -104,7 +104,7 @@ export class ApiKeyDetailsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
+      if (result) {
         this.urlService.deleteUrl(urlId);
       }
     });

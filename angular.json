@@ -105,5 +105,7 @@
       }
     }
   },
-  "defaultProject": "url-shortener-frontend"
+  "cli": {
+    "analytics": false
+  }
 }

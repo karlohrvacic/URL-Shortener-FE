@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {User} from "../../shared/models/User";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {ApiKeyService} from "../../shared/services/api-key.service";
 import {ToastrService} from "ngx-toastr";
 import {UserService} from "../../shared/services/user.service";
@@ -16,7 +16,7 @@ import {MatDialog} from "@angular/material/dialog";
 export class ChangePasswordComponent implements OnInit {
 
   user!: User | undefined;
-  passwordChangeForm!: FormGroup;
+  passwordChangeForm!: UntypedFormGroup;
   hidePassword = true;
   hideOldPassword = true;
   hidePasswordRepeat = true;
@@ -27,10 +27,10 @@ export class ChangePasswordComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.authService.user;
 
-    this.passwordChangeForm = new FormGroup({
-      'oldPassword': new FormControl(null, [Validators.required]),
-      'newPassword': new FormControl(null, [Validators.required, Validators.minLength(8)]),
-      'password-repeat': new FormControl(null, [Validators.required, Validators.minLength(8)])
+    this.passwordChangeForm = new UntypedFormGroup({
+      'oldPassword': new UntypedFormControl(null, [Validators.required]),
+      'newPassword': new UntypedFormControl(null, [Validators.required, Validators.minLength(8)]),
+      'password-repeat': new UntypedFormControl(null, [Validators.required, Validators.minLength(8)])
     });
   }
 

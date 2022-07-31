@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {UrlService} from "../../shared/services/url.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {Url} from "../../shared/models/Url";
 
 @Component({
@@ -11,7 +11,7 @@ import {Url} from "../../shared/models/Url";
 })
 export class EditVisitLimitComponent implements OnInit {
 
-  editVisitLimitForm!: FormGroup;
+  editVisitLimitForm!: UntypedFormGroup;
   url!: Url;
   dateNow: Date = new Date();
 
@@ -20,9 +20,9 @@ export class EditVisitLimitComponent implements OnInit {
 
   ngOnInit() {
     this.url = this.data
-    this.editVisitLimitForm = new FormGroup({
-      'visits': new FormControl(this.url.visitLimit, [Validators.required, Validators.min(0)]),
-      'expirationDate': new FormControl(null)
+    this.editVisitLimitForm = new UntypedFormGroup({
+      'visits': new UntypedFormControl(this.url.visitLimit, [Validators.required, Validators.min(0)]),
+      'expirationDate': new UntypedFormControl(null)
     });
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../../shared/services/auth.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {ToastrService} from "ngx-toastr";
@@ -12,7 +12,7 @@ import {ToastrService} from "ngx-toastr";
 })
 export class ResetPasswordComponent implements OnInit {
 
-  resetPasswordForm!: FormGroup;
+  resetPasswordForm!: UntypedFormGroup;
   token!: string;
   hidePassword: boolean = true;
   hidePasswordRepeat: boolean = true;
@@ -24,11 +24,11 @@ export class ResetPasswordComponent implements OnInit {
       this.token = params['token'];
     });
 
-    this.resetPasswordForm = new FormGroup({
-      'token': new FormControl(this.token, [Validators.required]),
-      'email': new FormControl(null, [Validators.required, Validators.email]),
-      'password': new FormControl(null, [Validators.required, Validators.minLength(8)]),
-      'password-repeat': new FormControl(null, [Validators.required, Validators.minLength(8)])
+    this.resetPasswordForm = new UntypedFormGroup({
+      'token': new UntypedFormControl(this.token, [Validators.required]),
+      'email': new UntypedFormControl(null, [Validators.required, Validators.email]),
+      'password': new UntypedFormControl(null, [Validators.required, Validators.minLength(8)]),
+      'password-repeat': new UntypedFormControl(null, [Validators.required, Validators.minLength(8)])
     });
 
     const url = this.router.createUrlTree([], {relativeTo: this.route, queryParams: {}}).toString()
@@ -43,7 +43,7 @@ export class ResetPasswordComponent implements OnInit {
       this.authService.changePassword(this.resetPasswordForm.value);
     }
     else {
-      this.resetPasswordForm.addControl('password-repeat', new FormControl( '',[Validators.required]));
+      this.resetPasswordForm.addControl('password-repeat', new UntypedFormControl( '',[Validators.required]));
       this.toastr.error('Passwords must match!');
     }
   }

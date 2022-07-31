@@ -28,7 +28,17 @@ import {UserDashboardRoutingModule} from "./user-dashboard/user-dashboard-routin
 import { MainNavComponent } from './shared/main-nav/main-nav.component';
 import { ProfileViewComponent } from './user-dashboard/profile-view/profile-view.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {NgxMatMomentAdapter, NgxMatMomentModule} from "@angular-material-components/moment-adapter";
+import {OWL_DATE_TIME_LOCALE, OwlDateTimeModule, OwlNativeDateTimeModule} from '@danielmoncada/angular-datetime-picker';
+
+export const MY_MOMENT_FORMATS = {
+  parseInput: 'l LT',
+  fullPickerInput: 'l LT',
+  datePickerInput: 'l',
+  timePickerInput: 'LT',
+  monthYearLabel: 'MMM YYYY',
+  dateA11yLabel: 'LL',
+  monthYearA11yLabel: 'MMMM YYYY',
+};
 
 @NgModule({
   declarations: [
@@ -68,9 +78,12 @@ import {NgxMatMomentAdapter, NgxMatMomentModule} from "@angular-material-compone
         UserDashboardRoutingModule,
         MaterialModule,
         MatDatepickerModule,
-        NgxMatMomentModule
+        OwlDateTimeModule,
+        OwlNativeDateTimeModule
     ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: OWL_DATE_TIME_LOCALE, useValue: MY_MOMENT_FORMATS}
+  ],
   exports: [
     GetElementsForApiKeyByActivePipe,
     GetElementsForUrlByActivePipe,
