@@ -1,5 +1,5 @@
 <h2>Edit URL expiration limit</h2>
-<form class="signin-form" (submit)="onSend()" [formGroup]="editVisitLimitForm" (keyup.enter)="onSend()">
+<form class="signin-form" [formGroup]="editVisitLimitForm" (keyup.enter)="onSend()">
 
   <mat-form-field appearance="outline" class="w-100">
     <mat-label>Enter new visit limit</mat-label>
@@ -10,15 +10,13 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="w-100">
-    <mat-form-field appearance="outline">
-      <input matInput [owlDateTime]="dt1" formControlName="expirationDate" placeholder="Expiration date">
-      <owl-date-time #dt1></owl-date-time>
-      <button [owlDateTimeTrigger]="dt1" mat-icon-button matSuffix>
-        <mat-icon>calendar_today</mat-icon>
-      </button>
-      <mat-hint>Enter expiration date in format DD.MM.YYYY HH:MM</mat-hint>
-    </mat-form-field>
+    <input matInput [owlDateTime]="dt1" formControlName="expirationDate" placeholder="Expiration date">
+    <owl-date-time #dt1></owl-date-time>
+    <button [owlDateTimeTrigger]="dt1" mat-icon-button matSuffix>
+      <mat-icon>calendar_today</mat-icon>
+    </button>
+    <mat-hint>Enter expiration date in format DD.MM.YYYY HH:MM</mat-hint>
   </mat-form-field>
 
-  <button type="submit" class="mt-2" [disabled]="editVisitLimitForm.invalid" mat-flat-button mat-dialog-close color="primary">Change visit limit</button>
+  <button type="submit" (click)="onSend()" class="mt-2" [disabled]="editVisitLimitForm.invalid" mat-flat-button mat-dialog-close color="primary">Change visit limit</button>
 </form>

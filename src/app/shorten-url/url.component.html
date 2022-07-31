@@ -14,7 +14,7 @@
         <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="copyToClipboard()">Copy!</button>
       </div>
 
-      <form [formGroup]="shortenerForm" (ngSubmit)="submit()">
+      <form [formGroup]="shortenerForm">
 
         <div class="row">
           <mat-form-field appearance="outline">
@@ -51,7 +51,7 @@
         </div>
 
         <div class="example-button-row">
-          <button type="submit" [disabled]="shortenerForm.invalid" class="mt-1 w-100" mat-flat-button color="primary">Cut it!</button>
+          <button type="submit" (click)="submit()" [disabled]="shortenerForm.invalid" class="mt-1 w-100" mat-flat-button color="primary">Cut it!</button>
         </div>
       </form>
     </div>
