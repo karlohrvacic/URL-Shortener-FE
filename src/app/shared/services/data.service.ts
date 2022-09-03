@@ -38,7 +38,7 @@ export class DataService {
     return this.http.get(this.apiUrl + 'url/delete/' + id, this.options);
   }
 
-  updateUrl(urlUpdateDto: { id: number, visitLimit: number }) {
+  updateUrl(urlUpdateDto: { id: number, visitLimit: number, expirationDate: Date }) {
     return this.http.put(this.apiUrl + 'url', urlUpdateDto, this.options);
   }
 

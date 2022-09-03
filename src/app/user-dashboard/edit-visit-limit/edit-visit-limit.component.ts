@@ -28,7 +28,8 @@ export class EditVisitLimitComponent implements OnInit {
 
   onSend() {
     this.url.visitLimit = this.editVisitLimitForm.value['visits']
-    this.urlService.changeUrlVisitLimit({ id: this.url.id, visitLimit: this.url.visitLimit });
+    this.url.expirationDate = this.editVisitLimitForm.value['expirationDate']
+    this.urlService.changeUrlVisitLimit({ id: this.url.id, visitLimit: this.url.visitLimit, expirationDate: this.url.expirationDate });
   }
 
 }

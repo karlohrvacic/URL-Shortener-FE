@@ -134,7 +134,7 @@ export class UrlService {
       });
   }
 
-  changeUrlVisitLimit(urlUpdateDto: { id: number, visitLimit: number }) {
+  changeUrlVisitLimit(urlUpdateDto: { id: number, visitLimit: number, expirationDate: Date }) {
     this.dataService.updateUrl(urlUpdateDto)
       //@ts-ignore
       .subscribe((res: {
