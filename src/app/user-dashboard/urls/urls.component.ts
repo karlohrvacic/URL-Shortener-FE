@@ -23,10 +23,11 @@ export class UrlsComponent implements AfterViewInit {
   urlsView: MatTableDataSource<Url> = new MatTableDataSource(this.urlService.urls);
   urls!: Url[];
   urlsChangeSubscription: Subscription | undefined;
-  updateSubscription: Subscription | undefined;
+  updateUrlSubscription: Subscription | undefined;
   revokeUrlId: number | null = null;
   filterValue: string = "";
   refreshedAtDate: Date = new Date();
+  refreshRate: number = 20;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -47,13 +48,23 @@ export class UrlsComponent implements AfterViewInit {
         this.refreshedAtDate = new Date()
       });
 
-    this.updateSubscription = interval(20000).subscribe(
+    this.subscribeUrl()
+  }
+
+  subscribeUrl() {
+    this.updateUrlSubscription?.unsubscribe();
+
+    if (this.refreshRate < 5) {
+      this.refreshRate = 5;
+    }
+
+    this.updateUrlSubscription = interval(1000 * this.refreshRate).subscribe(
       () => { this.urlService.getMyUrls() });
   }
 
   ngOnDestroy() {
     this.urlsChangeSubscription?.unsubscribe()
-    this.updateSubscription?.unsubscribe()
+    this.updateUrlSubscription?.unsubscribe()
   }
 
   ngAfterViewInit(): void {

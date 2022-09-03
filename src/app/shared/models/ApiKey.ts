@@ -1,5 +1,4 @@
 import {User} from "./User";
-import {Url} from "./Url";
 
 export interface ApiKey {
   id: number;

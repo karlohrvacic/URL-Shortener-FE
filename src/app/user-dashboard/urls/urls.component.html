@@ -3,7 +3,9 @@
 </ng-container>
 <ng-template #urlsLoaded>
   <div>
-  <span *ngIf="refreshedAtDate" class="float-end ">Last refreshed at: {{refreshedAtDate | date: 'HH:mm:ss'}} (every 20 seconds)</span>
+  <span *ngIf="refreshedAtDate" class="float-end ">Last refreshed at: {{refreshedAtDate | date: 'HH:mm:ss'}} (every
+        <input type="number" min="5" [(ngModel)]="refreshRate" value="refreshRate" (change)="subscribeUrl()" [placeholder]="refreshRate.toString()" required> seconds)
+    </span>
     <h2>Your URLs</h2>
     <mat-form-field appearance="outline" class="float-end">
       <input (keyup)="applyFilter($any($event).target.value)" matInput placeholder="Search">

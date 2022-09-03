@@ -1,6 +1,4 @@
 import {Authorities} from "./Authorities";
-import {Url} from "./Url";
-import {ApiKey} from "./ApiKey";
 
 export interface User {
   id: number;

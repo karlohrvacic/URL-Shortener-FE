@@ -22,7 +22,7 @@ export class EditVisitLimitComponent implements OnInit {
     this.url = this.data
     this.editVisitLimitForm = new UntypedFormGroup({
       'visits': new UntypedFormControl(this.url.visitLimit, [Validators.required, Validators.min(0)]),
-      'expirationDate': new UntypedFormControl(null)
+      'expirationDate': new UntypedFormControl(this.url.expirationDate)
     });
   }
 
