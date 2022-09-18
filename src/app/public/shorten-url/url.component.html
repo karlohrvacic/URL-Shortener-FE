@@ -7,10 +7,7 @@
       <h2>Shorten your URL</h2>
 
       <div *ngIf="url != null" id="answer" class="input-group d-flex justify-content-center mb-0">
-        <span class="input-group-text" id="basic-addon3">https://oncut.me/</span>
-        <fieldset>
-          <input type="text" id="link" class="form-control" [value]="urlForClipboard" aria-describedby="button-addon2" autocomplete="off" readonly="readonly">
-        </fieldset>
+        <span class="input-group-text" id="basic-addon3">{{backendUrl}}{{url.shortUrl}}</span>
         <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="copyToClipboard()">Copy!</button>
       </div>
 

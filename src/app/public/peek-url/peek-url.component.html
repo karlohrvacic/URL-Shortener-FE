@@ -1,0 +1,40 @@
+<div class="container-fluid main">
+  <div class="bg"></div>
+  <div class="bg bg2"></div>
+  <div class="bg bg3"></div>
+  <div class="row col-8 col-sm-8 col-lg-4 infobox p-2">
+    <div class="container">
+      <h2>Validate shortened URL destination</h2>
+
+      <div *ngIf="url != null" id="answer" class="w-100 input-group d-flex justify-content-center">
+        <span class="input-group-text" id="basic-addon1">Long Url</span>
+        <fieldset>
+          <input type="text" id="link" class="form-control mw-70" [value]="url.longUrl" aria-describedby="button-addon2" autocomplete="off" readonly="readonly">
+        </fieldset>
+        <button class="btn btn-outline-secondary" type="button" id="button-addon1" (click)="redirectToUrl()">Redirect</button>
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="scanUrl()">Scan</button>
+        <button class="btn btn-outline-secondary" type="button" id="button-addon3" (click)="copyToClipboard()">Copy</button>
+
+        <span class="input-group-text mt-3" id="basic-addon2">Create date: {{url.createDate | date : 'd. MM. y., HH:mm:ss'}}</span>
+      </div>
+
+      <form [formGroup]="peekForm">
+
+        <div class="row">
+          <mat-form-field appearance="outline">
+            <mat-label>Short url for validation</mat-label>
+            <input matInput formControlName="shortUrl" placeholder="oncut" required>
+            <mat-error *ngIf="peekForm.get('shortUrl')?.errors?.['required']">Enter valid short url</mat-error>
+            <mat-icon matSuffix class="{{peekForm.get('shortUrl')?.invalid ? 'text-danger': 'text-success'}}">
+              {{peekForm.get('shortUrl')?.invalid ? 'cancel': 'check_circle'}}</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="example-button-row">
+          <button type="submit" (click)="submit()" [disabled]="peekForm.invalid" class="mt-1 w-100" mat-flat-button color="primary">Get info!</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

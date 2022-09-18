@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {UrlComponent} from './shorten-url/url.component';
+import {UrlComponent} from './public/shorten-url/url.component';
 import {ToastrModule} from "ngx-toastr";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -25,10 +25,11 @@ import {ChangePasswordComponent} from "./user-dashboard/change-password/change-p
 import {EditVisitLimitComponent} from "./user-dashboard/edit-visit-limit/edit-visit-limit.component";
 import {UrlsComponent} from "./user-dashboard/urls/urls.component";
 import {UserDashboardRoutingModule} from "./user-dashboard/user-dashboard-routing.module";
-import { MainNavComponent } from './shared/main-nav/main-nav.component';
+import { MainNavComponent } from './public/main-nav/main-nav.component';
 import { ProfileViewComponent } from './user-dashboard/profile-view/profile-view.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {OWL_DATE_TIME_LOCALE, OwlDateTimeModule, OwlNativeDateTimeModule} from '@danielmoncada/angular-datetime-picker';
+import { PeekUrlComponent } from './public/peek-url/peek-url.component';
 
 export const MY_MOMENT_FORMATS = {
   parseInput: 'l LT',
@@ -58,6 +59,7 @@ export const MY_MOMENT_FORMATS = {
     EditVisitLimitComponent,
     MainNavComponent,
     ProfileViewComponent,
+    PeekUrlComponent,
   ],
     imports: [
         BrowserModule,

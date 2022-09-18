@@ -30,6 +30,10 @@ export class DataService {
     return this.http.get(this.apiUrl + 'url/redirect/' + shortUrl, this.options);
   }
 
+  peekUrl(shortUrl: string) {
+    return this.http.get(this.apiUrl + 'url/peek/' + shortUrl, this.options);
+  }
+
   revokeUrl(id: number) {
     return this.http.get(this.apiUrl + 'url/deactivate/' + id, this.options);
   }
