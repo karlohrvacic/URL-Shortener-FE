@@ -16,7 +16,7 @@
         <div class="row">
           <mat-form-field appearance="outline">
             <mat-label>Url for shortening</mat-label>
-            <input matInput formControlName="longUrl" placeholder="https://oncut.me" required>
+            <input matInput formControlName="longUrl" placeholder="https://hrva.cc" required>
             <mat-error *ngIf="shortenerForm.get('longUrl')?.errors?.['required']">Enter valid URL</mat-error>
             <mat-icon matSuffix class="{{shortenerForm.get('longUrl')?.invalid ? 'text-danger': 'text-success'}}">
               {{shortenerForm.get('longUrl')?.invalid ? 'cancel': 'check_circle'}}</mat-icon>
@@ -25,7 +25,7 @@
           <ng-container *ngIf="authenticated">
             <mat-form-field appearance="outline">
               <mat-label>Short URL</mat-label>
-              <input matInput formControlName="shortUrl" placeholder="oncut">
+              <input matInput formControlName="shortUrl" placeholder="short">
               <mat-hint>Enter short URL of your choosing</mat-hint>
             </mat-form-field>
           </ng-container>

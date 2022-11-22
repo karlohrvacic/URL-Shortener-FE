@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  API_URL: 'https://oncut.me',
+  API_URL: 'https://hrva.cc',
 };

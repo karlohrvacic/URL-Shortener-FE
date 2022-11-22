@@ -26,4 +26,4 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
-Run `ng build && touch docs/CNAME && echo "app.oncut.me" > docs/CNAME` for build with cname 
+Run `ng build && touch docs/CNAME && echo "app.hrva.cc" > docs/CNAME` for build with cname 

@@ -23,7 +23,7 @@
         <div class="row">
           <mat-form-field appearance="outline">
             <mat-label>Short url for validation</mat-label>
-            <input matInput formControlName="shortUrl" placeholder="oncut" required>
+            <input matInput formControlName="shortUrl" placeholder="short" required>
             <mat-error *ngIf="peekForm.get('shortUrl')?.errors?.['required']">Enter valid short url</mat-error>
             <mat-icon matSuffix class="{{peekForm.get('shortUrl')?.invalid ? 'text-danger': 'text-success'}}">
               {{peekForm.get('shortUrl')?.invalid ? 'cancel': 'check_circle'}}</mat-icon>
