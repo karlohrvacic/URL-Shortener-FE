@@ -19,7 +19,7 @@ export class DataService {
   };
 
   createUrlWithoutApiKey(url: Url) {
-    return this.http.post(this.apiUrl + 'url/new/', url, this.options)
+    return this.http.post(this.apiUrl + 'url/new', url, this.options)
   }
 
   createUrlWithApiKey(url: Url, apiKey: string) {
@@ -47,11 +47,11 @@ export class DataService {
   }
 
   getMyUrls() {
-    return this.http.get(this.apiUrl + 'url/my/', this.options);
+    return this.http.get(this.apiUrl + 'url/my', this.options);
   }
 
   getAllUrls() {
-    return this.http.get(this.apiUrl + 'url/all/', this.options);
+    return this.http.get(this.apiUrl + 'url/all', this.options);
   }
 
   login(loginDto: { email: string, password: string }) {
