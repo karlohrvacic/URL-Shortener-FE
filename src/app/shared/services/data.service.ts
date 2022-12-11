@@ -87,7 +87,7 @@ export class DataService {
   }
 
   whoAmI() {
-    return this.http.get(this.apiUrl + 'user/whoAmI', this.options);
+    return this.http.get(this.apiUrl + 'user/me', this.options);
   }
 
   createApiKey() {

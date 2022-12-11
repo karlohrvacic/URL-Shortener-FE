@@ -42,29 +42,22 @@ export class AuthService {
       .subscribe((res: {
           status: number,
           body: {
-            token?: string
+            token: string,
+            user: User
           }
         }) => {
           if (res.status === 200 && res.body.token) {
             this.token = res.body.token
             localStorage.setItem('auth-token', this.token);
-            //@ts-ignore
-            this.whoAmI().subscribe((res: {
-              status?: number,
-              body: User
-            }) => {
-              if (res.status == 200 && res.body) {
-                this.user = res.body;
-                this.authChange.next(true);
-                this.toastr.success(`Welcome back ${this.user.name}`)
-                if (this.user.authorities.find(a => a.name == 'ADMIN')) {
-                  this.router.navigate(['/admin']);
-                } else {
-                  this.router.navigate(['']);
-                }
-                return res.body;
-              }
-            })
+            this.user = res.body.user;
+            this.authChange.next(true);
+            this.toastr.success(`Welcome back ${this.user.name}`)
+            if (this.user.authorities.find(auth => auth.name == 'ADMIN')) {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['']);
+            }
+            return res.body;
           }
         }, e => {
           if (e.error.message) {
@@ -78,12 +71,12 @@ export class AuthService {
     this.dataService.register(user)
       // @ts-ignore
       .subscribe((res: {
-        status: number,
+        statusCodeValue: number,
         body: {
           message: string,
         }
       }) => {
-        if (res.status === 200) {
+        if (res.statusCodeValue === 200) {
           this.toastr.success("Successful registration!");
           this.router.navigate(['/login']);
         }
@@ -98,12 +91,12 @@ export class AuthService {
     this.dataService.requestPasswordChange(email)
       // @ts-ignore
       .subscribe((res: {
-        status: number,
+        statusCodeValue: number,
         body: {
           message: string,
         }
       }) => {
-        if (res.status === 200) {
+        if (res.statusCodeValue === 200) {
           this.toastr.success("If email exists, we will send recovery email to it.");
         }
       }, e => {
@@ -117,12 +110,12 @@ export class AuthService {
     this.dataService.changePassword(passwordResetDto)
       // @ts-ignore
       .subscribe((res: {
-        status: number,
+        statusCodeValue: number,
         body: {
           message: string,
         }
       }) => {
-        if (res.status === 200) {
+        if (res.statusCodeValue === 200) {
           this.toastr.success("Password changed successfully");
           this.router.navigate(['/login']);
         }
@@ -154,10 +147,10 @@ export class AuthService {
     this.dataService.editUser(userUpdateDto)
       // @ts-ignore
       .subscribe((res: {
-          status: number,
+        statusCodeValue: number,
           body: User
         }) => {
-          if (res.status === 200) {
+          if (res.statusCodeValue === 200) {
             this.logout();
           }
         }, e => {

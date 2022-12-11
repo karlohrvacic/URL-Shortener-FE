@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onLogin(){
+  onLogin() {
     this.authService.login(this.signInForm.value);
   }
 
