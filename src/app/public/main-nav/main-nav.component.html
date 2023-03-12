@@ -7,6 +7,7 @@
     <mat-nav-list>
       <a mat-list-item [ngClass]="getClass('')" [routerLink]="['']">App</a>
       <a mat-list-item [ngClass]="getClass('validate')" [routerLink]="['validate']">Validate</a>
+      <a mat-list-item href="https://status.hrva.cc/status/url">Status</a>
       <a *ngIf="authenticated" mat-list-item [ngClass]="getClass('dashboard/urls')" [routerLink]="['dashboard/urls']">URLs</a>
       <a *ngIf="authenticated" mat-list-item [ngClass]="getClass('dashboard/apis')" [routerLink]="['dashboard/api-keys']">API Keys</a>
       <a *ngIf="authenticated" mat-list-item (click)="openUserProfileInfo()">Hello, {{user?.name}}!</a>
@@ -28,6 +29,7 @@
       <div class="full-navbar-content">
         <a [ngClass]="getClass('')" [routerLink]="['']">App</a>
         <a [ngClass]="getClass('validate')" [routerLink]="['validate']">Validate</a>
+        <a href="https://status.hrva.cc/status/url">Status</a>
         <a *ngIf="authenticated" [ngClass]="getClass('dashboard/urls')" [routerLink]="['dashboard/urls']">URLs</a>
         <a *ngIf="authenticated" [ngClass]="getClass('dashboard/apis')" [routerLink]="['dashboard/api-keys']">API Keys</a>
       </div>
