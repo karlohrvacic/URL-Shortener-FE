@@ -1,0 +1,59 @@
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
+export function formatDate(date: string | Date | null | undefined): string {
+  if (!date) return "N/A"
+  const d = new Date(date)
+  return d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })
+}
+
+export function formatRelativeDate(date: string | Date | null | undefined): string {
+  if (!date) return "N/A"
+  const d = new Date(date)
+  const now = new Date()
+  const diffMs = d.getTime() - now.getTime()
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+
+  if (diffDays < 0) return "Expired"
+  if (diffDays === 0) return "Today"
+  if (diffDays === 1) return "Tomorrow"
+  if (diffDays < 7) return `${diffDays} days`
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks`
+  return formatDate(date)
+}
+
+export function maskApiKey(key: string): string {
+  if (key.length <= 8) return key
+  return key.slice(0, 4) + "••••" + key.slice(-4)
+}
+
+export function truncateUrl(url: string, maxLen = 50): string {
+  if (url.length <= maxLen) return url
+  return url.slice(0, maxLen) + "..."
+}
+
+export function getApiBaseUrl(): string {
+  if (process.env.NODE_ENV === "production") {
+    return "https://hrva.cc/api/v1"
+  }
+  return "http://localhost:8080/api/v1"
+}
+
+export function getShortBaseUrl(): string {
+  if (process.env.NODE_ENV === "production") {
+    return "https://hrva.cc"
+  }
+  return "http://localhost:8080"
+}
+
+export function formatShortUrl(short: string): string {
+  return `${getShortBaseUrl()}/${short}`
+}

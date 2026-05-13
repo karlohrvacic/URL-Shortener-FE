@@ -1,0 +1,73 @@
+"use client"
+
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
+import { authApi, userApi } from "./api-client"
+import type { UserDto } from "./types"
+
+interface AuthContextType {
+  user: UserDto | null
+  isLoading: boolean
+  isAdmin: boolean
+  login: (email: string, password: string) => Promise<void>
+  register: (name: string | undefined, email: string, password: string) => Promise<void>
+  logout: () => void
+  refreshUser: () => Promise<void>
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<UserDto | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const refreshUser = useCallback(async () => {
+    const token = localStorage.getItem("auth-token")
+    if (!token) {
+      setUser(null)
+      setIsLoading(false)
+      return
+    }
+    try {
+      const userData = await userApi.getMe()
+      setUser(userData)
+    } catch {
+      localStorage.removeItem("auth-token")
+      setUser(null)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    refreshUser()
+  }, [refreshUser])
+
+  const login = useCallback(async (email: string, password: string) => {
+    const res = await authApi.login({ email, password })
+    localStorage.setItem("auth-token", res.token)
+    setUser(res.user)
+  }, [])
+
+  const register = useCallback(async (name: string | undefined, email: string, password: string) => {
+    await authApi.register({ name, email, password })
+  }, [])
+
+  const logout = useCallback(() => {
+    localStorage.removeItem("auth-token")
+    setUser(null)
+  }, [])
+
+  const isAdmin = user?.authorities?.some((a) => a.name === "ADMIN") ?? false
+
+  return (
+    <AuthContext.Provider value={{ user, isLoading, isAdmin, login, register, logout, refreshUser }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) throw new Error("useAuth must be used within AuthProvider")
+  return context
+}
