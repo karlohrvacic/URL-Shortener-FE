@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ToggleLeft, Key, Shield } from "lucide-react"
 import { toast } from "sonner"
 import { formatDate, maskApiKey } from "@/lib/utils"
+import { PageMeta } from "@/components/page-meta"
 import { useState } from "react"
 
 export default function AdminApiKeysPage() {
@@ -47,9 +48,10 @@ export default function AdminApiKeysPage() {
 
   return (
     <div className="space-y-6">
+      <PageMeta title="Admin — API Keys" description="View all API keys in the hrva.cc system." />
       <div>
-        <h1 className="text-3xl font-bold">All API Keys</h1>
-        <p className="text-muted-foreground">View all API keys in the system</p>
+        <h1 className="text-2xl font-display tracking-tight">All API Keys</h1>
+        <p className="text-sm text-muted-foreground">View all API keys in the system</p>
       </div>
 
       <Dialog open={!!editKey} onOpenChange={(open) => { if (!open) setEditKey(null) }}>

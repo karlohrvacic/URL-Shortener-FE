@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { LinkIcon, BarChart3, Key, Settings, Shield, Users, LogOut } from "lucide-react"
+import { Logo } from "@/components/logo"
+import { BarChart3, Key, Settings, Users, LinkIcon, Shield, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function DashboardNav() {
@@ -25,45 +26,52 @@ export function DashboardNav() {
   ]
 
   return (
-    <nav className="bg-white dark:bg-gray-900 border-b">
+    <nav className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-2">
-              <LinkIcon className="h-6 w-6 text-primary" />
-              <span className="font-bold text-xl">hrva.cc</span>
-            </Link>
+        <div className="flex items-center justify-between h-14">
+          <div className="flex items-center gap-8">
+            <Logo showText className="shrink-0" />
 
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="hidden md:flex items-center gap-0.5">
               {navItems.map((item) => {
                 const Icon = item.icon
                 const isActive = pathname === item.href
                 return (
                   <Link key={item.href} href={item.href}>
                     <Button
-                      variant={isActive ? "secondary" : "ghost"}
+                      variant="ghost"
                       size="sm"
-                      className={cn("flex items-center gap-2", isActive && "bg-primary/10 text-primary")}
+                      className={cn(
+                        "h-8 gap-1.5 text-xs font-medium",
+                        isActive
+                          ? "bg-primary/10 text-primary hover:bg-primary/15"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
                     >
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-3.5 w-3.5" />
                       {item.label}
                     </Button>
                   </Link>
                 )
               })}
               {isAdmin && (
-                <div className="flex items-center space-x-1 ml-4 pl-4 border-l">
+                <div className="flex items-center gap-0.5 ml-3 pl-3 border-l border-border/50">
                   {adminItems.map((item) => {
                     const Icon = item.icon
                     const isActive = pathname === item.href
                     return (
                       <Link key={item.href} href={item.href}>
                         <Button
-                          variant={isActive ? "secondary" : "ghost"}
+                          variant="ghost"
                           size="sm"
-                          className={cn("flex items-center gap-2", isActive && "bg-primary/10 text-primary")}
+                          className={cn(
+                            "h-8 gap-1.5 text-xs font-medium",
+                            isActive
+                              ? "bg-primary/10 text-primary hover:bg-primary/15"
+                              : "text-muted-foreground hover:text-foreground",
+                          )}
                         >
-                          <Icon className="h-4 w-4" />
+                          <Icon className="h-3.5 w-3.5" />
                           {item.label}
                         </Button>
                       </Link>
@@ -74,26 +82,30 @@ export function DashboardNav() {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-2">
             <ThemeToggle />
-            <span className="hidden md:block text-sm text-muted-foreground">{user?.email}</span>
-            <Button variant="ghost" size="icon" onClick={logout}>
-              <LogOut className="h-4 w-4" />
+            <span className="hidden md:block text-xs text-muted-foreground max-w-[140px] truncate">
+              {user?.email}
+            </span>
+            <Button variant="ghost" size="icon" onClick={logout} className="h-8 w-8 text-muted-foreground hover:text-foreground">
+              <LogOut className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
 
         {/* Mobile nav */}
-        <div className="flex md:hidden items-center justify-around pb-2">
+        <div className="flex md:hidden items-center justify-start gap-1 pb-2 overflow-x-auto scrollbar-none">
           {[...navItems, ...(isAdmin ? adminItems : [])].map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href
             return (
               <Link key={item.href} href={item.href} className={cn(
-                "flex flex-col items-center py-1 px-3 text-xs",
-                isActive ? "text-primary" : "text-muted-foreground"
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors",
+                isActive
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:text-foreground",
               )}>
-                <Icon className="h-5 w-5 mb-1" />
+                <Icon className="h-3.5 w-3.5" />
                 {item.label}
               </Link>
             )

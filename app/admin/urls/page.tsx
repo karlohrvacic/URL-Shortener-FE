@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Trash2, ToggleLeft, LinkIcon } from "lucide-react"
 import { toast } from "sonner"
 import { formatDate, truncateUrl } from "@/lib/utils"
+import { PageMeta } from "@/components/page-meta"
 
 export default function AdminUrlsPage() {
   const { data: urls, isLoading, error } = useAllUrls()
@@ -37,9 +38,10 @@ export default function AdminUrlsPage() {
 
   return (
     <div className="space-y-6">
+      <PageMeta title="Admin — All URLs" description="View all shortened URLs in the hrva.cc system." />
       <div>
-        <h1 className="text-3xl font-bold">All URLs</h1>
-        <p className="text-muted-foreground">View all shortened URLs in the system</p>
+        <h1 className="text-2xl font-display tracking-tight">All URLs</h1>
+        <p className="text-sm text-muted-foreground">View all shortened URLs in the system</p>
       </div>
 
       {isLoading ? (

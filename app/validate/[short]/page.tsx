@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { ExternalLink, Copy, Check, LinkIcon, AlertCircle, ArrowLeft, Calendar, Search } from "lucide-react"
+import { Logo } from "@/components/logo"
+import { PageMeta } from "@/components/page-meta"
+import { ExternalLink, Copy, Check, AlertCircle, ArrowLeft, Calendar, Search } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
 import { formatDate, formatShortUrl } from "@/lib/utils"
@@ -58,23 +60,24 @@ export default function ValidateByShortPage({ params }: { params: Promise<{ shor
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b bg-background/95">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2">
-            <LinkIcon className="h-6 w-6 text-primary" />
-            <span className="font-bold text-xl">hrva.cc</span>
-          </Link>
+      <PageMeta title={`URL /${short}`} description={`Look up where the short URL hrva.cc/${short} redirects to.`} />
+      <header className="fixed top-0 inset-x-0 z-50 h-16 border-b border-border/50 bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40">
+        <div className="container mx-auto px-4 h-full flex items-center justify-between">
+          <Logo />
           <ThemeToggle />
         </div>
       </header>
-      <div className="flex-1 flex items-start justify-center p-4 pt-16 bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-950 dark:to-blue-950">
-        <Card className="w-full max-w-lg">
+      <div className="flex-1 flex items-start justify-center p-4 pt-24 relative">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-primary/4 blur-[100px] pointer-events-none" />
+        <Card className="w-full max-w-lg relative glass border-border/40 animate-scale-in">
           <CardHeader>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Link href="/validate">
-                <Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
               </Link>
-              <CardTitle>Validate URL</CardTitle>
+              <CardTitle className="font-display text-lg tracking-tight">Validate URL</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -84,18 +87,18 @@ export default function ValidateByShortPage({ params }: { params: Promise<{ shor
                 placeholder="Look up another short code..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="flex-1"
+                className="flex-1 h-10 bg-background/50 border-border/50 text-sm"
               />
-              <Button type="submit" size="sm" disabled={searchLoading}>
-                <Search className="h-4 w-4" />
+              <Button type="submit" size="sm" disabled={searchLoading} className="h-10 bg-primary text-primary-foreground hover:brightness-110" >
+                <Search className="h-3.5 w-3.5" />
               </Button>
             </form>
 
-            {searchLoading && <Skeleton className="h-12 w-full" />}
+            {searchLoading && <Skeleton className="h-10 w-full bg-muted/50" />}
             {searchError && <p className="text-sm text-destructive">{searchError}</p>}
             {searchResult && (
-              <div className="text-sm p-3 bg-muted rounded-lg flex items-center justify-between">
-                <span className="truncate font-medium">/{searchResult.shortUrl}</span>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/20 text-sm">
+                <span className="font-medium text-primary">/{searchResult.shortUrl}</span>
                 <span className="truncate text-muted-foreground ml-2">{searchResult.longUrl}</span>
               </div>
             )}
@@ -103,46 +106,50 @@ export default function ValidateByShortPage({ params }: { params: Promise<{ shor
             {/* Current URL result */}
             {loading ? (
               <div className="space-y-4">
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-1/2" />
+                <Skeleton className="h-6 w-3/4 bg-muted/50" />
+                <Skeleton className="h-4 w-full bg-muted/50" />
+                <Skeleton className="h-4 w-1/2 bg-muted/50" />
               </div>
             ) : error ? (
               <div className="text-center py-8 space-y-4">
-                <AlertCircle className="h-12 w-12 mx-auto text-destructive" />
-                <h3 className="text-lg font-semibold">URL not found</h3>
-                <p className="text-muted-foreground">{error}</p>
+                <AlertCircle className="h-10 w-10 mx-auto text-destructive/60" />
+                <h3 className="font-display text-lg tracking-tight">URL not found</h3>
+                <p className="text-sm text-muted-foreground">{error}</p>
                 <Link href="/">
-                  <Button variant="outline">Shorten a URL</Button>
+                  <Button variant="outline" size="sm" className="border-border/50 text-xs">
+                    Shorten a URL
+                  </Button>
                 </Link>
               </div>
             ) : data ? (
-              <div className="space-y-4 border-t pt-4">
+              <div className="space-y-4 rounded-lg border border-border/30 p-4 bg-background/50">
                 <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Short URL</p>
-                  <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                    <span className="font-medium">{formatShortUrl(data.shortUrl)}</span>
-                    <Button variant="ghost" size="icon" onClick={() => copyToClipboard(formatShortUrl(data.shortUrl))}>
-                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  <p className="text-[11px] text-muted-foreground tracking-wide uppercase font-medium">Short URL</p>
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/20">
+                    <span className="text-sm font-medium text-primary">{formatShortUrl(data.shortUrl)}</span>
+                    <Button variant="ghost" size="icon" onClick={() => copyToClipboard(formatShortUrl(data.shortUrl))} className="h-7 w-7">
+                      {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                     </Button>
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs text-muted-foreground">Redirects to</p>
-                  <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                    <span className="text-sm truncate">{data.longUrl}</span>
+                  <p className="text-[11px] text-muted-foreground tracking-wide uppercase font-medium">Redirects to</p>
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 border border-border/20">
+                    <span className="text-sm text-muted-foreground truncate">{data.longUrl}</span>
                     <a href={data.longUrl} target="_blank" rel="noopener noreferrer">
-                      <Button variant="ghost" size="icon"><ExternalLink className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7">
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </Button>
                     </a>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Calendar className="h-3.5 w-3.5" />
                   <span>Created: {formatDate(data.createDate)}</span>
                 </div>
                 <a href={data.longUrl} target="_blank" rel="noopener noreferrer">
-                  <Button className="w-full">
-                    <ExternalLink className="h-4 w-4 mr-2" />
+                  <Button className="w-full h-9 bg-primary text-primary-foreground hover:brightness-110 text-xs">
+                    <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
                     Visit URL
                   </Button>
                 </a>

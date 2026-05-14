@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Users, ShieldAlert, Edit, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { formatDate } from "@/lib/utils"
+import { PageMeta } from "@/components/page-meta"
 
 export default function AdminUsersPage() {
   const { data: users, isLoading, error } = useAllUsers()
@@ -59,9 +60,10 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-6">
+      <PageMeta title="Admin — Users" description="Manage all registered users on hrva.cc." />
       <div>
-        <h1 className="text-3xl font-bold">Users</h1>
-        <p className="text-muted-foreground">Manage all registered users</p>
+        <h1 className="text-2xl font-display tracking-tight">Users</h1>
+        <p className="text-sm text-muted-foreground">Manage all registered users</p>
       </div>
 
       <Dialog open={!!editUser} onOpenChange={(open) => { if (!open) setEditUser(null) }}>
