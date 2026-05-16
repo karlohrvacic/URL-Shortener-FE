@@ -4,17 +4,17 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { userApi } from "@/lib/api-client"
 import type { UserUpdateDto } from "@/lib/types"
 
-export function useAllUsers() {
+export function useAllUsers(page = 0, size = 20) {
   return useQuery({
-    queryKey: ["users", "all"],
-    queryFn: userApi.getAll,
+    queryKey: ["users", "all", page, size],
+    queryFn: () => userApi.getAll(page, size),
   })
 }
 
 export function useUpdateUser() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: UserUpdateDto) => userApi.update(data),
+    mutationFn: ({ id, data }: { id: number; data: UserUpdateDto }) => userApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] })
       queryClient.invalidateQueries({ queryKey: ["me"] })

@@ -1,7 +1,9 @@
 "use client"
 
 import { useAllApiKeys, useRevokeApiKey, useUpdateApiKey } from "@/lib/hooks/useApiKeys"
-import type { ApiKey } from "@/lib/types"
+import { usePagination } from "@/lib/hooks/usePagination"
+import { Pagination } from "@/components/ui/pagination"
+import type { ApiKeyResponse } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,15 +14,16 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ToggleLeft, Key, Shield } from "lucide-react"
 import { toast } from "sonner"
-import { formatDate, maskApiKey } from "@/lib/utils"
+import { formatDate, formatDateTime, maskApiKey } from "@/lib/utils"
 import { PageMeta } from "@/components/page-meta"
 import { useState } from "react"
 
 export default function AdminApiKeysPage() {
-  const { data: apiKeys, isLoading, error } = useAllApiKeys()
+  const { page, size, setPage, setSize } = usePagination()
+  const { data: apiKeys, isLoading, error } = useAllApiKeys(page, size)
   const revokeKey = useRevokeApiKey()
   const updateKey = useUpdateApiKey()
-  const [editKey, setEditKey] = useState<ApiKey | null>(null)
+  const [editKey, setEditKey] = useState<ApiKeyResponse | null>(null)
   const [editLimit, setEditLimit] = useState("")
 
   const handleRevoke = async (id: number) => {
@@ -37,7 +40,10 @@ export default function AdminApiKeysPage() {
     try {
       await updateKey.mutateAsync({
         id: editKey.id,
-        apiCallsLimit: parseInt(editLimit) || editKey.apiCallsLimit,
+        data: {
+          id: editKey.id,
+          apiCallsLimit: parseInt(editLimit) || editKey.apiCallsLimit,
+        },
       })
       toast.success("API key updated")
       setEditKey(null)
@@ -88,7 +94,7 @@ export default function AdminApiKeysPage() {
             <Button variant="outline" className="mt-2" onClick={() => window.location.reload()}>Retry</Button>
           </CardContent>
         </Card>
-      ) : !apiKeys || apiKeys.length === 0 ? (
+      ) : !apiKeys || !apiKeys.content || apiKeys.content.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center">
             <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -98,23 +104,24 @@ export default function AdminApiKeysPage() {
       ) : (
         <Card>
           <CardContent className="p-0">
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Key</TableHead>
-                  <TableHead>Owner</TableHead>
-                  <TableHead>Created</TableHead>
+                  <TableHead className="hidden lg:table-cell">Owner</TableHead>
+                  <TableHead className="hidden lg:table-cell">Created</TableHead>
                   <TableHead>Usage</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {apiKeys.map((key: ApiKey) => (
+                {apiKeys.content.map((key: ApiKeyResponse) => (
                   <TableRow key={key.id}>
                     <TableCell><code className="text-sm">{maskApiKey(key.key)}</code></TableCell>
-                    <TableCell className="text-sm">{key.owner?.email || "\u2014"}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{formatDate(key.createDate)}</TableCell>
+                    <TableCell className="text-sm hidden lg:table-cell">{key.ownerEmail || "\u2014"}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground hidden lg:table-cell" title={formatDateTime(key.createDate)}>{formatDate(key.createDate)}</TableCell>
                     <TableCell className="text-sm">{key.apiCallsUsed} / {key.apiCallsLimit > 0 ? key.apiCallsLimit : "\u221E"}</TableCell>
                     <TableCell>
                       <Badge variant={key.active ? "success" : "destructive"}>
@@ -140,6 +147,14 @@ export default function AdminApiKeysPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
+            <Pagination
+              page={page}
+              totalPages={apiKeys?.totalPages ?? 0}
+              size={size}
+              onPageChange={setPage}
+              onSizeChange={setSize}
+            />
           </CardContent>
         </Card>
       )}

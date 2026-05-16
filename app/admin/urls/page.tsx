@@ -1,20 +1,24 @@
 "use client"
 
 import { useAllUrls, useDeactivateUrl, useDeleteUrl } from "@/lib/hooks/useUrls"
-import type { Url } from "@/lib/types"
+import { usePagination } from "@/lib/hooks/usePagination"
+import { Pagination } from "@/components/ui/pagination"
+import type { UrlResponse } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Trash2, ToggleLeft, LinkIcon } from "lucide-react"
+import { Download, Trash2, ToggleLeft, LinkIcon } from "lucide-react"
 import { toast } from "sonner"
-import { formatDate, truncateUrl } from "@/lib/utils"
+import { formatDate, formatDateTime, truncateUrl } from "@/lib/utils"
+import { adminApi } from "@/lib/api-client"
 import { PageMeta } from "@/components/page-meta"
 
 export default function AdminUrlsPage() {
-  const { data: urls, isLoading, error } = useAllUrls()
+  const { page, size, setPage, setSize } = usePagination()
+  const { data: urls, isLoading, error } = useAllUrls(page, size)
   const deactivateUrl = useDeactivateUrl()
   const deleteUrl = useDeleteUrl()
 
@@ -39,9 +43,20 @@ export default function AdminUrlsPage() {
   return (
     <div className="space-y-6">
       <PageMeta title="Admin — All URLs" description="View all shortened URLs in the hrva.cc system." />
-      <div>
-        <h1 className="text-2xl font-display tracking-tight">All URLs</h1>
-        <p className="text-sm text-muted-foreground">View all shortened URLs in the system</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-display tracking-tight">All URLs</h1>
+          <p className="text-sm text-muted-foreground">View all shortened URLs in the system</p>
+        </div>
+        <Button
+          onClick={() => adminApi.exportUrlsCsv()}
+          variant="outline"
+          size="sm"
+          className="h-8 gap-1.5 border-border/50 text-xs"
+        >
+          <Download className="h-3.5 w-3.5" />
+          Export CSV
+        </Button>
       </div>
 
       {isLoading ? (
@@ -59,7 +74,7 @@ export default function AdminUrlsPage() {
             <Button variant="outline" className="mt-2" onClick={() => window.location.reload()}>Retry</Button>
           </CardContent>
         </Card>
-      ) : !urls || urls.length === 0 ? (
+      ) : !urls || !urls.content || urls.content.length === 0 ? (
         <Card>
           <CardContent className="p-12 text-center">
             <LinkIcon className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -69,28 +84,29 @@ export default function AdminUrlsPage() {
       ) : (
         <Card>
           <CardContent className="p-0">
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Short URL</TableHead>
-                  <TableHead>Long URL</TableHead>
-                  <TableHead>Owner</TableHead>
+                  <TableHead className="hidden lg:table-cell">Long URL</TableHead>
+                  <TableHead className="hidden lg:table-cell">Owner</TableHead>
                   <TableHead>Visits</TableHead>
-                  <TableHead>Created</TableHead>
+                  <TableHead className="hidden lg:table-cell">Created</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {urls.map((url: Url) => (
+                {urls.content.map((url: UrlResponse) => (
                   <TableRow key={url.id}>
                     <TableCell><span className="text-primary font-medium">/{url.shortUrl}</span></TableCell>
-                    <TableCell className="max-w-[200px]">
+                    <TableCell className="max-w-[200px] hidden lg:table-cell">
                       <span className="truncate block" title={url.longUrl}>{truncateUrl(url.longUrl, 40)}</span>
                     </TableCell>
-                    <TableCell className="text-sm">{url.owner?.email || "\u2014"}</TableCell>
+                    <TableCell className="text-sm hidden lg:table-cell">{url.ownerEmail || "\u2014"}</TableCell>
                     <TableCell className="text-sm">{url.visits}{url.visitLimit > 0 ? ` / ${url.visitLimit}` : ""}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{formatDate(url.createDate)}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground hidden lg:table-cell" title={formatDateTime(url.createDate)}>{formatDate(url.createDate)}</TableCell>
                     <TableCell>
                       <Badge variant={url.active ? "success" : "destructive"}>
                         {url.active ? "Active" : "Revoked"}
@@ -124,6 +140,14 @@ export default function AdminUrlsPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
+            <Pagination
+              page={page}
+              totalPages={urls?.totalPages ?? 0}
+              size={size}
+              onPageChange={setPage}
+              onSizeChange={setSize}
+            />
           </CardContent>
         </Card>
       )}

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useMyApiKeys, useGenerateApiKey, useRevokeApiKey, useUpdateApiKey } from "@/lib/hooks/useApiKeys"
-import type { ApiKey } from "@/lib/types"
+import type { ApiKeyResponse } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -26,7 +26,7 @@ export default function ApiKeysPage() {
   const [showGenerate, setShowGenerate] = useState(false)
   const [newKey, setNewKey] = useState<string | null>(null)
   const [newKeyCopied, setNewKeyCopied] = useState(false)
-  const [editKey, setEditKey] = useState<ApiKey | null>(null)
+  const [editKey, setEditKey] = useState<ApiKeyResponse | null>(null)
   const [editLimit, setEditLimit] = useState("")
   const [visibleKeys, setVisibleKeys] = useState<Set<number>>(new Set())
   const [copiedKeyId, setCopiedKeyId] = useState<number | null>(null)
@@ -75,7 +75,10 @@ export default function ApiKeysPage() {
     try {
       await updateKey.mutateAsync({
         id: editKey.id,
-        apiCallsLimit: parseInt(editLimit) || editKey.apiCallsLimit,
+        data: {
+          id: editKey.id,
+          apiCallsLimit: parseInt(editLimit) || editKey.apiCallsLimit,
+        },
       })
       toast.success("API key updated")
       setEditKey(null)
@@ -205,7 +208,7 @@ export default function ApiKeysPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {apiKeys.map((key: ApiKey) => {
+                {apiKeys.map((key: ApiKeyResponse) => {
                   const isVisible = visibleKeys.has(key.id)
                   const displayKey = isVisible ? key.key : maskApiKey(key.key)
 

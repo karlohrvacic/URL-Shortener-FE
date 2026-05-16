@@ -1,4 +1,5 @@
 import { getApiBaseUrl } from "./utils"
+import type { UrlResponse, ApiKeyResponse, UserDto, User, PeekUrl, CreateUrlDto, UrlUpdateDto, ApiKeyUpdateDto, UserUpdateDto, UpdatePasswordDto, LinkPreviewResponse, Page, AdminStatsResponse } from "./types"
 
 class ApiError extends Error {
   status: number
@@ -12,93 +13,142 @@ class ApiError extends Error {
 async function request<T>(
   method: string,
   path: string,
-  body?: unknown
+  body?: unknown,
+  headers?: Record<string, string>,
 ): Promise<T> {
   const baseUrl = getApiBaseUrl()
   const token = localStorage.getItem("auth-token")
 
-  const headers: Record<string, string> = {
+  const reqHeaders: Record<string, string> = {
     "Content-Type": "application/json",
   }
 
   if (token) {
-    headers["Authorization"] = token
+    reqHeaders["Authorization"] = token
+  }
+
+  if (headers) {
+    Object.assign(reqHeaders, headers)
   }
 
   const response = await fetch(`${baseUrl}${path}`, {
     method,
-    headers,
+    headers: reqHeaders,
     body: body ? JSON.stringify(body) : undefined,
   })
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: "Request failed" }))
-    throw new ApiError(error.message || "Request failed", response.status)
+    const body = await response.json().catch(() => ({}))
+    // New API: { "error": "message" }, old API: { "message": "..." }
+    const msg = body.error || body.message || "Request failed"
+    throw new ApiError(msg, response.status)
   }
 
-  if (response.status === 204) return {} as T
+  if (response.status === 204 || response.status === 202) return {} as T
 
   return response.json()
 }
 
 // Auth
 export const authApi = {
-  login: (data: { email: string; password: string }) =>
-    request<{ token: string; user: import("./types").UserDto }>("POST", "/auth/login", data),
-  register: (data: { name?: string; email: string; password: string }) =>
+  login: (data: { email: string; password: string; rememberMe?: boolean }) =>
+    request<{ token: string; user: UserDto }>("POST", "/auth/login", data),
+  register: (data: { email: string; password: string }) =>
     request<string>("POST", "/auth/register", data),
   requestPasswordReset: (data: { email: string }) =>
-    request<void>("POST", "/auth/reset-password", data),
+    request<void>("POST", "/auth/password-reset", data),
   resetPassword: (data: { token: string; email: string; password: string }) =>
-    request<import("./types").User>("POST", "/auth/reset-password/set-password", data),
+    request<User>("POST", "/auth/password-reset/confirm", data),
 }
 
 // URL
 export const urlApi = {
-  create: (data: import("./types").CreateUrlDto) =>
-    request<import("./types").Url>("POST", "/url/new", data),
-  createWithApiKey: (apiKey: string, data: import("./types").CreateUrlDto) =>
-    request<import("./types").Url>("POST", `/url/new/${apiKey}`, data),
-  getMyUrls: () =>
-    request<import("./types").Url[]>("GET", "/url/my"),
-  getAllUrls: () =>
-    request<import("./types").Url[]>("GET", "/url/all"),
+  create: (data: CreateUrlDto, apiKey?: string) => {
+    const headers = apiKey ? { "X-Api-Key": apiKey } : undefined
+    return request<UrlResponse>("POST", "/urls", data, headers)
+  },
+  bulkCreate: (data: CreateUrlDto[]) =>
+    request<UrlResponse[]>("POST", "/urls/bulk", data),
+  getMyUrls: (page = 0, size = 20) =>
+    request<Page<UrlResponse>>("GET", `/urls?page=${page}&size=${size}`),
+  getAllUrls: (page = 0, size = 20) =>
+    request<Page<UrlResponse>>("GET", `/urls/all?page=${page}&size=${size}`),
   getByShort: (short: string) =>
-    request<import("./types").Url>("GET", `/url/redirect/${short}`),
+    request<UrlResponse>("GET", `/urls/${short}`),
   peek: (short: string) =>
-    request<import("./types").PeekUrl>("GET", `/url/peek/${short}`),
-  update: (data: import("./types").UrlUpdateDto) =>
-    request<import("./types").Url>("PUT", "/url", data),
+    request<PeekUrl>("GET", `/urls/${short}/peek`),
+  preview: (short: string) =>
+    request<LinkPreviewResponse>("GET", `/urls/${short}/preview`),
+  getQrCodeUrl: (short: string, size = 300) =>
+    `${getApiBaseUrl()}/urls/${short}/qr?size=${size}`,
+  update: (id: number, data: UrlUpdateDto) =>
+    request<UrlResponse>("PUT", `/urls/${id}`, data),
   deactivate: (id: number) =>
-    request<import("./types").Url>("GET", `/url/deactivate/${id}`),
+    request<UrlResponse>("PATCH", `/urls/${id}/deactivate`),
   delete: (id: number) =>
-    request<void>("GET", `/url/delete/${id}`),
+    request<void>("DELETE", `/urls/${id}`),
+  exportCsv: async () => {
+    const baseUrl = getApiBaseUrl()
+    const token = localStorage.getItem("auth-token")
+    const response = await fetch(`${baseUrl}/urls/export`, {
+      headers: token ? { "Authorization": token } : {},
+    })
+    if (!response.ok) throw new Error("Failed to export")
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "my-urls.csv"
+    a.click()
+    URL.revokeObjectURL(url)
+  },
 }
 
 // API Key
 export const apiKeyApi = {
   generate: () =>
-    request<import("./types").ApiKey>("GET", "/api-key/new"),
+    request<ApiKeyResponse>("POST", "/api-keys"),
   getMyKeys: () =>
-    request<import("./types").ApiKey[]>("GET", "/api-key/my"),
-  getAllKeys: () =>
-    request<import("./types").ApiKey[]>("GET", "/api-key"),
-  update: (data: import("./types").ApiKeyUpdateDto) =>
-    request<import("./types").ApiKey>("PUT", "/api-key", data),
+    request<ApiKeyResponse[]>("GET", "/api-keys"),
+  getAllKeys: (page = 0, size = 20) =>
+    request<Page<ApiKeyResponse>>("GET", `/api-keys/all?page=${page}&size=${size}`),
+  update: (id: number, data: ApiKeyUpdateDto) =>
+    request<ApiKeyResponse>("PUT", `/api-keys/${id}`, data),
   revoke: (id: number) =>
-    request<import("./types").ApiKey>("GET", `/api-key/revoke/${id}`),
+    request<ApiKeyResponse>("PATCH", `/api-keys/${id}/revoke`),
 }
 
 // User
 export const userApi = {
   getMe: () =>
-    request<import("./types").UserDto>("GET", "/user/me"),
-  getAll: () =>
-    request<import("./types").User[]>("GET", "/user/all"),
-  update: (data: import("./types").UserUpdateDto) =>
-    request<import("./types").User>("PUT", "/user", data),
-  updatePassword: (data: import("./types").UpdatePasswordDto) =>
-    request<import("./types").User>("PUT", "/user/update-password", data),
+    request<UserDto>("GET", "/users/me"),
+  getAll: (page = 0, size = 20) =>
+    request<Page<User>>("GET", `/users?page=${page}&size=${size}`),
+  update: (id: number, data: UserUpdateDto) =>
+    request<User>("PUT", `/users/${id}`, data),
+  updatePassword: (data: UpdatePasswordDto) =>
+    request<User>("PATCH", "/users/password", data),
   delete: (id: number) =>
-    request<void>("DELETE", `/user/${id}`),
+    request<void>("DELETE", `/users/${id}`),
+}
+
+// Admin
+export const adminApi = {
+  getStats: () =>
+    request<AdminStatsResponse>("GET", "/admin/stats"),
+  exportUrlsCsv: async () => {
+    const baseUrl = getApiBaseUrl()
+    const token = localStorage.getItem("auth-token")
+    const response = await fetch(`${baseUrl}/admin/urls/export`, {
+      headers: token ? { "Authorization": token } : {},
+    })
+    if (!response.ok) throw new Error("Failed to export")
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "all-urls.csv"
+    a.click()
+    URL.revokeObjectURL(url)
+  },
 }

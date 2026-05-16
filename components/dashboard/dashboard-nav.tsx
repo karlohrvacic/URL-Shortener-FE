@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Logo } from "@/components/logo"
-import { BarChart3, Key, Settings, Users, LinkIcon, Shield, LogOut } from "lucide-react"
+import { BarChart3, Key, Settings, Users, LinkIcon, Shield, LogOut, Activity } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function DashboardNav() {
@@ -20,6 +20,7 @@ export function DashboardNav() {
   ]
 
   const adminItems = [
+    { href: "/admin/dashboard", label: "Dashboard", icon: Activity },
     { href: "/admin", label: "Users", icon: Users },
     { href: "/admin/urls", label: "All URLs", icon: LinkIcon },
     { href: "/admin/api-keys", label: "All API Keys", icon: Shield },

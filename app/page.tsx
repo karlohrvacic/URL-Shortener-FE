@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useCreateUrl, useMyUrls } from "@/lib/hooks/useUrls"
-import type { Url } from "@/lib/types"
+import type { UrlResponse } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -14,7 +14,7 @@ import { Logo } from "@/components/logo"
 import {
   LinkIcon, BarChart3, Shield, Copy, Check, ExternalLink,
   Clock, Zap, Globe, BookOpen, ChevronDown, ChevronUp,
-  ArrowRight, Plus, Sparkles,
+  ArrowRight, Plus, Sparkles, LogOut,
 } from "lucide-react"
 import { QRCodeSVG } from "qrcode.react"
 import { toast } from "sonner"
@@ -27,11 +27,11 @@ export default function HomePage() {
   const [customAlias, setCustomAlias] = useState("")
   const [visitLimit, setVisitLimit] = useState("")
   const [expirationDate, setExpirationDate] = useState("")
-  const [result, setResult] = useState<Url | null>(null)
+  const [result, setResult] = useState<UrlResponse | null>(null)
   const [copied, setCopied] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
   const createUrl = useCreateUrl()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const { data: recentUrls } = useMyUrls()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,9 +71,9 @@ export default function HomePage() {
   ]
 
   // Stats for logged-in user
-  const totalUrls = recentUrls?.length ?? 0
-  const totalVisits = recentUrls?.reduce((sum, u) => sum + u.visits, 0) ?? 0
-  const latestUrls = recentUrls?.slice(0, 5) ?? []
+  const totalUrls = recentUrls?.content?.length ?? 0
+  const totalVisits = recentUrls?.content?.reduce((sum, u) => sum + u.visits, 0) ?? 0
+  const latestUrls = recentUrls?.content?.slice(0, 5) ?? []
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -85,12 +85,22 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             {user ? (
-              <Link href="/dashboard">
-                <Button variant="outline" size="sm" className="h-9 gap-1.5">
-                  <BarChart3 className="h-3.5 w-3.5" />
-                  Dashboard
+              <>
+                <Link href="/dashboard">
+                  <Button variant="outline" size="sm" className="h-9 gap-1.5">
+                    <BarChart3 className="h-3.5 w-3.5" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={logout}
+                  className="h-9 gap-1.5 text-muted-foreground hover:text-foreground"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
                 </Button>
-              </Link>
+              </>
             ) : (
               <>
                 <Link href="/login">

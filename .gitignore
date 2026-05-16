@@ -47,3 +47,6 @@ out/
 # System files
 .DS_Store
 Thumbs.db
+
+# Build output
+.open-next/

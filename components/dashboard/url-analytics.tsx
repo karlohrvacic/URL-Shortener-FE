@@ -1,6 +1,6 @@
 "use client"
 
-import type { Url } from "@/lib/types"
+import type { UrlResponse } from "@/lib/types"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { formatDate } from "@/lib/utils"
@@ -8,7 +8,7 @@ import { Eye, Target, Calendar, Activity } from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
 interface UrlAnalyticsProps {
-  url: Url
+  url: UrlResponse
 }
 
 function generateVisitHistory(totalVisits: number, createdDate: string) {
@@ -72,7 +72,7 @@ export function UrlAnalytics({ url }: UrlAnalyticsProps) {
           <CardContent className="p-4 flex items-center gap-3">
             <Activity className="h-8 w-8 text-primary" />
             <div>
-              <p className="text-sm font-medium">{url.lastAccessed ? formatDate(url.lastAccessed) : "Never"}</p>
+              <p className="text-sm font-medium text-muted-foreground">N/A</p>
               <p className="text-xs text-muted-foreground">Last Accessed</p>
             </div>
           </CardContent>

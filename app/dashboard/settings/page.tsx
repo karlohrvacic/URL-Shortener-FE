@@ -26,7 +26,7 @@ export default function SettingsPage() {
     if (!user) return
     setProfileLoading(true)
     try {
-      await userApi.update({ id: user.id, email })
+      await userApi.update(user.id, { id: user.id, email })
       await refreshUser()
       toast.success("Profile updated! Please sign in again.")
       logout()

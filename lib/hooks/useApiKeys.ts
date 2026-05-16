@@ -11,10 +11,10 @@ export function useMyApiKeys() {
   })
 }
 
-export function useAllApiKeys() {
+export function useAllApiKeys(page = 0, size = 20) {
   return useQuery({
-    queryKey: ["apiKeys", "all"],
-    queryFn: apiKeyApi.getAllKeys,
+    queryKey: ["apiKeys", "all", page, size],
+    queryFn: () => apiKeyApi.getAllKeys(page, size),
   })
 }
 
@@ -22,7 +22,7 @@ export function useGenerateApiKey() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: () => apiKeyApi.generate(),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["apiKeys"] })
     },
   })
@@ -31,7 +31,7 @@ export function useGenerateApiKey() {
 export function useUpdateApiKey() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: ApiKeyUpdateDto) => apiKeyApi.update(data),
+    mutationFn: ({ id, data }: { id: number; data: ApiKeyUpdateDto }) => apiKeyApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["apiKeys"] })
     },

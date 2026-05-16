@@ -2,26 +2,26 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { urlApi } from "@/lib/api-client"
-import type { CreateUrlDto, UrlUpdateDto } from "@/lib/types"
+import type { CreateUrlDto, UrlUpdateDto, UrlResponse, Page } from "@/lib/types"
 
-export function useMyUrls() {
+export function useMyUrls(page = 0, size = 20) {
   return useQuery({
-    queryKey: ["urls", "my"],
-    queryFn: urlApi.getMyUrls,
+    queryKey: ["urls", "my", page, size],
+    queryFn: () => urlApi.getMyUrls(page, size),
   })
 }
 
-export function useAllUrls() {
+export function useAllUrls(page = 0, size = 20) {
   return useQuery({
-    queryKey: ["urls", "all"],
-    queryFn: urlApi.getAllUrls,
+    queryKey: ["urls", "all", page, size],
+    queryFn: () => urlApi.getAllUrls(page, size),
   })
 }
 
-export function useCreateUrl() {
+export function useCreateUrl(apiKey?: string) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: CreateUrlDto) => urlApi.create(data),
+    mutationFn: (data: CreateUrlDto) => urlApi.create(data, apiKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["urls"] })
     },
@@ -31,7 +31,7 @@ export function useCreateUrl() {
 export function useCreateUrlWithApiKey(apiKey: string) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: CreateUrlDto) => urlApi.createWithApiKey(apiKey, data),
+    mutationFn: (data: CreateUrlDto) => urlApi.create(data, apiKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["urls"] })
     },
@@ -41,7 +41,7 @@ export function useCreateUrlWithApiKey(apiKey: string) {
 export function useUpdateUrl() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: UrlUpdateDto) => urlApi.update(data),
+    mutationFn: ({ id, data }: { id: number; data: UrlUpdateDto }) => urlApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["urls"] })
     },

@@ -2,7 +2,10 @@
 
 import { useState } from "react"
 import { useMyUrls, useDeactivateUrl, useDeleteUrl } from "@/lib/hooks/useUrls"
-import type { Url } from "@/lib/types"
+import { usePagination } from "@/lib/hooks/usePagination"
+import { useMyApiKeys } from "@/lib/hooks/useApiKeys"
+import { Pagination } from "@/components/ui/pagination"
+import type { UrlResponse } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -13,17 +16,22 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { QRCodeSVG } from "qrcode.react"
-import { Copy, ExternalLink, QrCode, Trash2, ToggleLeft, BarChart3, Plus, LinkIcon, Download } from "lucide-react"
+import { Copy, ExternalLink, Key, QrCode, Trash2, ToggleLeft, BarChart3, Plus, LinkIcon, Download } from "lucide-react"
 import { toast } from "sonner"
-import { formatDate, formatRelativeDate, truncateUrl, formatShortUrl } from "@/lib/utils"
+import { formatDate, formatDateTime, formatRelativeDate, truncateUrl, formatShortUrl } from "@/lib/utils"
+import { urlApi } from "@/lib/api-client"
 import { CreateUrlDialog } from "@/components/dashboard/create-url-dialog"
 import { UrlAnalytics } from "@/components/dashboard/url-analytics"
 import { PageMeta } from "@/components/page-meta"
 
 export default function DashboardPage() {
-  const { data: urls, isLoading, error } = useMyUrls()
+  const { page, size, setPage, setSize } = usePagination()
+  const { data: urls, isLoading, error } = useMyUrls(page, size)
   const deactivateUrl = useDeactivateUrl()
   const deleteUrl = useDeleteUrl()
+  const { data: apiKeys } = useMyApiKeys()
+  const totalKeys = apiKeys?.length ?? 0
+  const activeKeys = apiKeys?.filter(k => k.active).length ?? 0
   const [showCreateDialog, setShowCreateDialog] = useState(false)
 
   const copyToClipboard = (text: string) => {
@@ -58,16 +66,42 @@ export default function DashboardPage() {
           <h1 className="text-2xl font-display tracking-tight">My URLs</h1>
           <p className="text-sm text-muted-foreground">Manage and track your shortened links</p>
         </div>
-        <Button
-          onClick={() => setShowCreateDialog(true)}
-          className="h-9 gap-1.5 bg-primary text-primary-foreground hover:brightness-110 text-xs font-medium"
-        >
-          <Plus className="h-3.5 w-3.5" />
-          New URL
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => urlApi.exportCsv()}
+            variant="outline"
+            size="sm"
+            className="h-9 gap-1.5 border-border/50 text-xs font-medium"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Export
+          </Button>
+          <Button
+            onClick={() => setShowCreateDialog(true)}
+            className="h-9 gap-1.5 bg-primary text-primary-foreground hover:brightness-110 text-xs font-medium"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            New URL
+          </Button>
+        </div>
       </div>
 
       <CreateUrlDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} />
+
+      {/* Stats */}
+      <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <BarChart3 className="h-3.5 w-3.5" />
+          <span className="tabular-nums">{urls?.content?.length ?? 0}</span>
+          <span>URLs</span>
+        </div>
+        <div className="w-px h-4 bg-border/50" />
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <Key className="h-3.5 w-3.5" />
+          <span className="tabular-nums">{activeKeys}/{totalKeys}</span>
+          <span>API keys active</span>
+        </div>
+      </div>
 
       {/* Loading */}
       {isLoading ? (
@@ -87,7 +121,7 @@ export default function DashboardPage() {
             </Button>
           </CardContent>
         </Card>
-      ) : !urls || urls.length === 0 ? (
+      ) : !urls || !urls.content || urls.content.length === 0 ? (
         /* Empty state */
         <Card className="border-border/40">
           <CardContent className="p-16 text-center space-y-4">
@@ -111,6 +145,7 @@ export default function DashboardPage() {
         /* URL Table */
         <Card className="border-border/40 overflow-hidden">
           <CardContent className="p-0">
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="border-border/30 hover:bg-transparent">
@@ -124,7 +159,7 @@ export default function DashboardPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {urls.map((url: Url) => (
+                {urls.content.map((url: UrlResponse) => (
                   <TableRow key={url.id} className="border-border/20 hover:bg-muted/30 transition-colors">
                     <TableCell>
                       <button
@@ -153,7 +188,7 @@ export default function DashboardPage() {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">{formatDate(url.createDate)}</TableCell>
+                    <TableCell className="hidden lg:table-cell text-sm text-muted-foreground" title={formatDateTime(url.createDate)}>{formatDate(url.createDate)}</TableCell>
                     <TableCell className="hidden lg:table-cell text-sm">{formatRelativeDate(url.expirationDate)}</TableCell>
                     <TableCell>
                       <Badge
@@ -327,6 +362,14 @@ export default function DashboardPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
+            <Pagination
+              page={page}
+              totalPages={urls?.totalPages ?? 0}
+              size={size}
+              onPageChange={setPage}
+              onSizeChange={setSize}
+            />
           </CardContent>
         </Card>
       )}

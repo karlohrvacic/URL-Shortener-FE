@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { useAllUsers, useUpdateUser, useDeleteUser } from "@/lib/hooks/useUsers"
+import { usePagination } from "@/lib/hooks/usePagination"
+import { Pagination } from "@/components/ui/pagination"
 import type { User } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -12,23 +14,22 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Users, ShieldAlert, Edit, Trash2 } from "lucide-react"
+import { Users, Edit, Trash2, ToggleLeft, ToggleRight, Shield } from "lucide-react"
 import { toast } from "sonner"
-import { formatDate } from "@/lib/utils"
+import { formatDate, formatDateTime } from "@/lib/utils"
 import { PageMeta } from "@/components/page-meta"
 
 export default function AdminUsersPage() {
-  const { data: users, isLoading, error } = useAllUsers()
+  const { page, size, setPage, setSize } = usePagination()
+  const { data: users, isLoading, error } = useAllUsers(page, size)
   const updateUser = useUpdateUser()
   const deleteUser = useDeleteUser()
   const [editUser, setEditUser] = useState<User | null>(null)
-  const [editName, setEditName] = useState("")
   const [editEmail, setEditEmail] = useState("")
   const [editSlots, setEditSlots] = useState("")
 
   const handleEdit = (user: User) => {
     setEditUser(user)
-    setEditName(user.name || "")
     setEditEmail(user.email)
     setEditSlots(user.apiKeySlots.toString())
   }
@@ -38,9 +39,12 @@ export default function AdminUsersPage() {
     try {
       await updateUser.mutateAsync({
         id: editUser.id,
-        name: editName,
-        email: editEmail,
-        apiKeySlots: parseInt(editSlots) || editUser.apiKeySlots,
+        data: {
+          id: editUser.id,
+          email: editEmail,
+          apiKeySlots: parseInt(editSlots) || editUser.apiKeySlots,
+          active: editUser.active,
+        },
       })
       toast.success("User updated")
       setEditUser(null)
@@ -49,12 +53,27 @@ export default function AdminUsersPage() {
     }
   }
 
-  const handleDeactivate = async (id: number) => {
+  const handleToggleActive = async (user: User) => {
+    try {
+      await updateUser.mutateAsync({
+        id: user.id,
+        data: {
+          id: user.id,
+          active: !user.active,
+        },
+      })
+      toast.success(user.active ? "User deactivated" : "User activated")
+    } catch (err: any) {
+      toast.error(err.message || "Failed to toggle user status")
+    }
+  }
+
+  const handleDelete = async (id: number) => {
     try {
       await deleteUser.mutateAsync(id)
-      toast.success("User deactivated")
+      toast.success("User deleted permanently")
     } catch (err: any) {
-      toast.error(err.message || "Failed to deactivate user")
+      toast.error(err.message || "Failed to delete user")
     }
   }
 
@@ -74,12 +93,17 @@ export default function AdminUsersPage() {
           {editUser && (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Name</Label>
-                <Input value={editName} onChange={(e) => setEditName(e.target.value)} />
-              </div>
-              <div className="space-y-2">
                 <Label>Email</Label>
-                <Input value={editEmail} onChange={(e) => setEditEmail(e.target.value)} />
+                <Input
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  disabled={!!(editUser?.authProvider && editUser.authProvider !== "local")}
+                />
+                {editUser?.authProvider && editUser.authProvider !== "local" && (
+                  <p className="text-[11px] text-muted-foreground">
+                    Email is managed by {editUser.authProvider === "google" ? "Google" : "GitHub"}. Cannot be changed here.
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label>API Key Slots</Label>
@@ -108,31 +132,43 @@ export default function AdminUsersPage() {
             <Button variant="outline" className="mt-2" onClick={() => window.location.reload()}>Retry</Button>
           </CardContent>
         </Card>
+      ) : !users || !users.content || users.content.length === 0 ? (
+        <Card>
+          <CardContent className="p-12 text-center">
+            <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No users found</h3>
+          </CardContent>
+        </Card>
       ) : (
         <Card>
           <CardContent className="p-0">
+            <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Name</TableHead>
+                  <TableHead className="hidden lg:table-cell">ID</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>API Key Slots</TableHead>
+                  <TableHead>Provider</TableHead>
+                  <TableHead className="hidden lg:table-cell">Slots</TableHead>
                   <TableHead>Created</TableHead>
-                  <TableHead>Last Login</TableHead>
+                  <TableHead className="hidden lg:table-cell">Last Login</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users?.map((user: User) => (
+                {users.content?.map((user: User) => (
                   <TableRow key={user.id}>
-                    <TableCell className="text-sm text-muted-foreground">{user.id}</TableCell>
-                    <TableCell>{user.name || "\u2014"}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground hidden lg:table-cell">{user.id}</TableCell>
                     <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.apiKeySlots}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{formatDate(user.createDate)}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{formatDate(user.lastLogin)}</TableCell>
+                    <TableCell>
+                      <Badge variant={user.authProvider && user.authProvider !== "local" ? "secondary" : "outline"} className="text-xs">
+                        {user.authProvider === "google" ? "Google" : user.authProvider === "github" ? "GitHub" : "Email"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">{user.apiKeySlots}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground" title={formatDateTime(user.createDate)}>{formatDate(user.createDate)}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground hidden lg:table-cell" title={formatDateTime(user.lastLogin)}>{formatDate(user.lastLogin)}</TableCell>
                     <TableCell>
                       <Badge variant={user.active ? "success" : "destructive"}>
                         {user.active ? "Active" : "Inactive"}
@@ -143,31 +179,49 @@ export default function AdminUsersPage() {
                         <Button variant="ghost" size="icon" onClick={() => handleEdit(user)}>
                           <Edit className="h-4 w-4" />
                         </Button>
-                        {user.active && (
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Deactivate user?</AlertDialogTitle>
-                                <AlertDialogDescription>This will deactivate {user.email}. They will not be able to log in.</AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleDeactivate(user.id)} className="bg-destructive">Deactivate</AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        )}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleToggleActive(user)}
+                          disabled={updateUser.isPending}
+                          title={user.active ? "Deactivate user" : "Activate user"}
+                        >
+                          {user.active
+                            ? <ToggleRight className="h-4 w-4 text-success" />
+                            : <ToggleLeft className="h-4 w-4 text-destructive" />
+                          }
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete user?</AlertDialogTitle>
+                              <AlertDialogDescription>This will permanently delete {user.email}. This action cannot be undone.</AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDelete(user.id)} className="bg-destructive">Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
+            </div>
+            <Pagination
+              page={page}
+              totalPages={users?.totalPages ?? 0}
+              size={size}
+              onPageChange={setPage}
+              onSizeChange={setSize}
+            />
           </CardContent>
         </Card>
       )}

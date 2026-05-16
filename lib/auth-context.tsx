@@ -8,8 +8,8 @@ interface AuthContextType {
   user: UserDto | null
   isLoading: boolean
   isAdmin: boolean
-  login: (email: string, password: string) => Promise<void>
-  register: (name: string | undefined, email: string, password: string) => Promise<void>
+  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>
+  register: (email: string, password: string) => Promise<void>
   logout: () => void
   refreshUser: () => Promise<void>
 }
@@ -42,14 +42,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshUser()
   }, [refreshUser])
 
-  const login = useCallback(async (email: string, password: string) => {
-    const res = await authApi.login({ email, password })
+  const login = useCallback(async (email: string, password: string, rememberMe?: boolean) => {
+    const res = await authApi.login({ email, password, rememberMe })
     localStorage.setItem("auth-token", res.token)
     setUser(res.user)
   }, [])
 
-  const register = useCallback(async (name: string | undefined, email: string, password: string) => {
-    await authApi.register({ name, email, password })
+  const register = useCallback(async (email: string, password: string) => {
+    await authApi.register({ email, password })
   }, [])
 
   const logout = useCallback(() => {
@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }, [])
 
-  const isAdmin = user?.authorities?.some((a) => a.name === "ADMIN") ?? false
+  const isAdmin = user?.authorities?.some((a) => a.name === "ROLE_ADMIN") ?? false
 
   return (
     <AuthContext.Provider value={{ user, isLoading, isAdmin, login, register, logout, refreshUser }}>
