@@ -60,6 +60,12 @@ export function getApiBaseUrl(): string {
   return "/api/v1"
 }
 
+export function getBackendOrigin(): string {
+  const baseUrl = getApiBaseUrl()
+  // Strip the /api/v1 suffix to get the origin for OAuth2 endpoints
+  return baseUrl.endsWith("/api/v1") ? baseUrl.slice(0, -7) : baseUrl
+}
+
 export function getShortBaseUrl(): string {
   if (process.env.NODE_ENV === "production") {
     return "https://hrva.cc"

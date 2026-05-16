@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Logo } from "@/components/logo"
 import { PageMeta } from "@/components/page-meta"
+import { getBackendOrigin } from "@/lib/utils"
 import { ArrowLeft } from "lucide-react"
 
 export default function LoginPage() {
@@ -115,7 +116,7 @@ export default function LoginPage() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <a
-                href="/oauth2/authorization/google"
+                href={`${getBackendOrigin()}/oauth2/authorization/google`}
                 className="inline-flex items-center justify-center gap-2 h-10 rounded-md border border-border/50 bg-background/50 text-sm font-medium hover:bg-muted/40 transition-colors"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
@@ -127,7 +128,7 @@ export default function LoginPage() {
                 Google
               </a>
               <a
-                href="/oauth2/authorization/github"
+                href={`${getBackendOrigin()}/oauth2/authorization/github`}
                 className="inline-flex items-center justify-center gap-2 h-10 rounded-md border border-border/50 bg-background/50 text-sm font-medium hover:bg-muted/40 transition-colors"
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
