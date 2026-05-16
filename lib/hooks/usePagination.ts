@@ -12,14 +12,14 @@ export function usePagination() {
 
   const page = parseInt(searchParams.get("page") ?? "0", 10)
   const size = parseInt(searchParams.get("size") ?? String(DEFAULT_SIZE), 10)
+  const sort = searchParams.get("sort") ?? "createDate"
+  const order = searchParams.get("order") ?? "desc"
 
   const setParams = useCallback(
     (updates: Record<string, string>) => {
       const params = new URLSearchParams(searchParams.toString())
       for (const [key, value] of Object.entries(updates)) {
-        if (key === "size" || key === "page") {
-          params.set(key, value)
-        }
+        params.set(key, value)
       }
       router.push(`${pathname}?${params.toString()}`)
     },
@@ -36,5 +36,18 @@ export function usePagination() {
     [setParams],
   )
 
-  return { page, size, setPage, setSize }
+  const toggleSort = useCallback(
+    (field: string) => {
+      const newOrder = sort === field && order === "asc" ? "desc" : "asc"
+      setParams({ sort: field, order: newOrder, page: "0" })
+    },
+    [sort, order, setParams],
+  )
+
+  const sortDir = useCallback(
+    (field: string) => sort === field ? order : null,
+    [sort, order],
+  )
+
+  return { page, size, sort, order, setPage, setSize, toggleSort, sortDir }
 }

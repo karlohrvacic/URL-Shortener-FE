@@ -69,10 +69,11 @@ export const urlApi = {
   },
   bulkCreate: (data: CreateUrlDto[]) =>
     request<UrlResponse[]>("POST", "/urls/bulk", data),
-  getMyUrls: (filters: UrlFilters = {}, page = 0, size = 20) => {
+  getMyUrls: (filters: UrlFilters = {}, page = 0, size = 20, sort?: string, order?: string) => {
     const params = new URLSearchParams()
     params.set("page", String(page))
     params.set("size", String(size))
+    if (sort) params.set("sort", `${sort},${order ?? "desc"}`)
     if (filters.search) params.set("search", filters.search)
     if (filters.active != null) params.set("active", String(filters.active))
     if (filters.expired) params.set("expired", "true")
@@ -80,8 +81,18 @@ export const urlApi = {
     if (filters.dateTo) params.set("dateTo", filters.dateTo)
     return request<Page<UrlResponse>>("GET", `/urls?${params}`)
   },
-  getAllUrls: (page = 0, size = 20) =>
-    request<Page<UrlResponse>>("GET", `/urls/all?page=${page}&size=${size}`),
+  getAllUrls: (filters: UrlFilters = {}, page = 0, size = 20, sort?: string, order?: string) => {
+    const params = new URLSearchParams()
+    params.set("page", String(page))
+    params.set("size", String(size))
+    if (sort) params.set("sort", `${sort},${order ?? "desc"}`)
+    if (filters.search) params.set("search", filters.search)
+    if (filters.active != null) params.set("active", String(filters.active))
+    if (filters.expired) params.set("expired", "true")
+    if (filters.dateFrom) params.set("dateFrom", filters.dateFrom)
+    if (filters.dateTo) params.set("dateTo", filters.dateTo)
+    return request<Page<UrlResponse>>("GET", `/urls/all?${params}`)
+  },
   getByShort: (short: string) =>
     request<UrlResponse>("GET", `/urls/${short}`),
   peek: (short: string) =>
@@ -94,6 +105,8 @@ export const urlApi = {
     request<UrlResponse>("PUT", `/urls/${id}`, data),
   deactivate: (id: number) =>
     request<UrlResponse>("PATCH", `/urls/${id}/deactivate`),
+  activate: (id: number) =>
+    request<UrlResponse>("PATCH", `/urls/${id}/activate`),
   delete: (id: number) =>
     request<void>("DELETE", `/urls/${id}`),
   exportCsv: async () => {
@@ -131,10 +144,11 @@ export const apiKeyApi = {
 export const userApi = {
   getMe: () =>
     request<UserDto>("GET", "/users/me"),
-  getAll: (filters: UserFilters = {}, page = 0, size = 20) => {
+  getAll: (filters: UserFilters = {}, page = 0, size = 20, sort?: string, order?: string) => {
     const params = new URLSearchParams()
     params.set("page", String(page))
     params.set("size", String(size))
+    if (sort) params.set("sort", `${sort},${order ?? "desc"}`)
     if (filters.search) params.set("search", filters.search)
     if (filters.active != null) params.set("active", String(filters.active))
     return request<Page<User>>("GET", `/users?${params}`)

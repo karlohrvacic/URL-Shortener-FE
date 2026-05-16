@@ -17,7 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { QRCodeSVG } from "qrcode.react"
-import { Copy, ExternalLink, Key, QrCode, Search, Trash2, ToggleRight, BarChart3, Plus, LinkIcon, Download } from "lucide-react"
+import { Copy, ExternalLink, Key, QrCode, Search, Trash2, ToggleRight, BarChart3, Plus, LinkIcon, Download, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { toast } from "sonner"
 import { formatDate, formatDateTime, formatRelativeDate, truncateUrl, formatShortUrl } from "@/lib/utils"
 import { urlApi } from "@/lib/api-client"
@@ -25,7 +25,7 @@ import { CreateUrlDialog } from "@/components/dashboard/create-url-dialog"
 import { PageMeta } from "@/components/page-meta"
 
 export default function DashboardPage() {
-  const { page, size, setPage, setSize } = usePagination()
+  const { page, size, sort, order, setPage, setSize, toggleSort, sortDir } = usePagination()
   const [search, setSearch] = useState("")
   const [activeFilter, setActiveFilter] = useState<string>("all")
   const [expiredFilter, setExpiredFilter] = useState(false)
@@ -36,7 +36,7 @@ export default function DashboardPage() {
     active: activeFilter === "all" ? undefined : activeFilter === "active",
     expired: expiredFilter || undefined,
   }
-  const { data: urls, isLoading, error } = useMyUrls(filters, page, size)
+  const { data: urls, isLoading, error } = useMyUrls(filters, page, size, sort, order)
   const deactivateUrl = useDeactivateUrl()
   const deleteUrl = useDeleteUrl()
   const { data: apiKeys } = useMyApiKeys()
@@ -197,9 +197,24 @@ export default function DashboardPage() {
                 <TableRow className="border-border/30 hover:bg-transparent">
                   <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10">Short URL</TableHead>
                   <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10 hidden md:table-cell">Long URL</TableHead>
-                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10">Visits</TableHead>
-                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10 hidden lg:table-cell">Created</TableHead>
-                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10 hidden lg:table-cell">Expires</TableHead>
+                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10 cursor-pointer select-none" onClick={() => toggleSort("visits")}>
+                    <div className="flex items-center gap-1">
+                      Visits
+                      {sortDir("visits") === "asc" ? <ArrowUp className="h-3 w-3" /> : sortDir("visits") === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUpDown className="h-3 w-3 text-muted-foreground/40" />}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10 hidden lg:table-cell cursor-pointer select-none" onClick={() => toggleSort("createDate")}>
+                    <div className="flex items-center gap-1">
+                      Created
+                      {sortDir("createDate") === "asc" ? <ArrowUp className="h-3 w-3" /> : sortDir("createDate") === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUpDown className="h-3 w-3 text-muted-foreground/40" />}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10 hidden lg:table-cell cursor-pointer select-none" onClick={() => toggleSort("expirationDate")}>
+                    <div className="flex items-center gap-1">
+                      Expires
+                      {sortDir("expirationDate") === "asc" ? <ArrowUp className="h-3 w-3" /> : sortDir("expirationDate") === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUpDown className="h-3 w-3 text-muted-foreground/40" />}
+                    </div>
+                  </TableHead>
                   <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10">Status</TableHead>
                   <TableHead className="text-right text-xs font-medium text-muted-foreground tracking-wide uppercase h-10">Actions</TableHead>
                 </TableRow>

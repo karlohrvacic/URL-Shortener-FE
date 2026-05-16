@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { FeatureCard } from "@/components/feature-card"
 import { CountUp } from "@/components/count-up"
+import { EasterEggKonami } from "@/components/easter-egg-konami"
 import { Logo } from "@/components/logo"
 import {
   LinkIcon, BarChart3, Shield, Copy, Check, ExternalLink,
@@ -81,6 +82,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <EasterEggKonami />
       {/* ── Nav ── */}
       <header className="fixed top-0 inset-x-0 z-50 h-16 border-b border-border/50 bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/40">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">

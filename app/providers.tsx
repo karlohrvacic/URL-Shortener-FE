@@ -3,7 +3,7 @@
 import { ThemeProvider } from "next-themes"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { AuthProvider } from "@/lib/auth-context"
-import { useState, type ReactNode } from "react"
+import { useState, useEffect, type ReactNode } from "react"
 
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -17,6 +17,14 @@ export function Providers({ children }: { children: ReactNode }) {
         },
       })
   )
+
+  useEffect(() => {
+    console.log(
+      "%c🦆 hrva.cc — shaped by you.%c\n🔮 try /fortune  🥚 try /egg",
+      "color: #a67c00; font-size: 16px; font-weight: bold;",
+      "color: #6b7280; font-size: 12px;"
+    )
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>

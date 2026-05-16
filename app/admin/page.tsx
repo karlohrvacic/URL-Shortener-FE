@@ -14,13 +14,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Users, Edit, Trash2, ToggleLeft, ToggleRight, Shield, Search } from "lucide-react"
+import { Users, Edit, Trash2, ToggleLeft, ToggleRight, Shield, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { toast } from "sonner"
 import { formatDate, formatDateTime } from "@/lib/utils"
 import { PageMeta } from "@/components/page-meta"
 
 export default function AdminUsersPage() {
-  const { page, size, setPage, setSize } = usePagination()
+  const { page, size, sort, order, setPage, setSize, toggleSort, sortDir } = usePagination()
   const [search, setSearch] = useState("")
   const [activeFilter, setActiveFilter] = useState<string>("all")
   useEffect(() => { setPage(0) }, [search, activeFilter])
@@ -29,7 +29,7 @@ export default function AdminUsersPage() {
     search: search || undefined,
     active: activeFilter === "all" ? undefined : activeFilter === "active",
   }
-  const { data: users, isLoading, error } = useAllUsers(filters, page, size)
+  const { data: users, isLoading, error } = useAllUsers(filters, page, size, sort, order)
   const updateUser = useUpdateUser()
   const deleteUser = useDeleteUser()
   const [editUser, setEditUser] = useState<User | null>(null)
@@ -177,12 +177,32 @@ export default function AdminUsersPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="hidden lg:table-cell">ID</TableHead>
-                  <TableHead>Email</TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("email")}>
+                    <div className="flex items-center gap-1">
+                      Email
+                      {sortDir("email") === "asc" ? <ArrowUp className="h-3 w-3" /> : sortDir("email") === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUpDown className="h-3 w-3 text-muted-foreground/40" />}
+                    </div>
+                  </TableHead>
                   <TableHead>Provider</TableHead>
                   <TableHead className="hidden lg:table-cell">Slots</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead className="hidden lg:table-cell">Last Login</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("createDate")}>
+                    <div className="flex items-center gap-1">
+                      Created
+                      {sortDir("createDate") === "asc" ? <ArrowUp className="h-3 w-3" /> : sortDir("createDate") === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUpDown className="h-3 w-3 text-muted-foreground/40" />}
+                    </div>
+                  </TableHead>
+                  <TableHead className="hidden lg:table-cell cursor-pointer select-none" onClick={() => toggleSort("lastLogin")}>
+                    <div className="flex items-center gap-1">
+                      Last Login
+                      {sortDir("lastLogin") === "asc" ? <ArrowUp className="h-3 w-3" /> : sortDir("lastLogin") === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUpDown className="h-3 w-3 text-muted-foreground/40" />}
+                    </div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none" onClick={() => toggleSort("active")}>
+                    <div className="flex items-center gap-1">
+                      Status
+                      {sortDir("active") === "asc" ? <ArrowUp className="h-3 w-3" /> : sortDir("active") === "desc" ? <ArrowDown className="h-3 w-3" /> : <ArrowUpDown className="h-3 w-3 text-muted-foreground/40" />}
+                    </div>
+                  </TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>

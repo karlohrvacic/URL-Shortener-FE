@@ -4,10 +4,10 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { userApi } from "@/lib/api-client"
 import type { UserUpdateDto, UserFilters } from "@/lib/types"
 
-export function useAllUsers(filters: UserFilters = {}, page = 0, size = 20) {
+export function useAllUsers(filters: UserFilters = {}, page = 0, size = 20, sort = "id", order = "asc") {
   return useQuery({
-    queryKey: ["users", "all", filters, page, size],
-    queryFn: () => userApi.getAll(filters, page, size),
+    queryKey: ["users", "all", filters, page, size, sort, order],
+    queryFn: () => userApi.getAll(filters, page, size, sort, order),
   })
 }
 

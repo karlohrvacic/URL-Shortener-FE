@@ -199,8 +199,12 @@ export default function ChangelogPage() {
           {/* Footer note */}
           {data && (
             <div className="text-center mt-16 text-xs text-muted-foreground space-y-1">
-              <p className="font-mono">146 tests · {data.releases.length} releases · 1 URL shortener</p>
-              <p>hrva.cc — Short links, shaped by you.</p>
+              <p className="font-mono">149 tests · {data.releases.length} releases · 1 URL shortener</p>
+              <p className="group cursor-default">
+                hrva.cc —
+                <span className="inline-block transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">&#x1F648;</span>
+                {" "}shaped by you.
+              </p>
             </div>
           )}
         </div>
