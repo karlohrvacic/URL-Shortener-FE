@@ -165,4 +165,4 @@ The local backend (`localhost:8080`) has an updated API that differs significant
 - **Auth token stored without "Bearer" prefix** — the backend expects the raw token string in the `Authorization` header
 - **No middleware-based route protection** — dashboard/admin check auth in a client `useEffect`, creating a flash of unauthenticated content
 - **`@/*` maps to root** — unlike the common Next.js pattern of mapping to `src/*`
-- **pnpm/npm**: lockfile is `package-lock.json` (npm), not pnpm
+- **pnpm/npm**: lockfile is `package-lock.json` (npm), not pnpm 
