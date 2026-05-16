@@ -194,3 +194,16 @@ export interface RecentUrlItem {
   visits: number
   ownerEmail?: string
 }
+
+export interface UrlFilters {
+  search?: string
+  active?: boolean
+  expired?: boolean
+  dateFrom?: string
+  dateTo?: string
+}
+
+export interface UserFilters {
+  search?: string
+  active?: boolean
+}

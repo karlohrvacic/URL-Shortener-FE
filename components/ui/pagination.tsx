@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 interface PaginationProps {
   page: number
   totalPages: number
+  totalElements?: number
   size: number
   onPageChange: (page: number) => void
   onSizeChange: (size: number) => void
@@ -13,12 +14,19 @@ interface PaginationProps {
 
 const PAGE_SIZES = [10, 20, 50, 100]
 
-export function Pagination({ page, totalPages, size, onPageChange, onSizeChange }: PaginationProps) {
-  if (totalPages <= 1) return null
+export function Pagination({ page, totalPages, totalElements, size, onPageChange, onSizeChange }: PaginationProps) {
+  const firstItem = totalElements ? page * size + 1 : 0
+  const lastItem = totalElements ? Math.min((page + 1) * size, totalElements) : 0
 
   return (
     <div className="flex items-center justify-between px-4 py-3 border-t border-border/30">
       <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        {totalElements != null && (
+          <span className="tabular-nums">
+            {firstItem}–{lastItem} of {totalElements}
+          </span>
+        )}
+        <span className="text-muted-foreground/40">|</span>
         <span>Rows per page:</span>
         <select
           value={size}
@@ -32,9 +40,11 @@ export function Pagination({ page, totalPages, size, onPageChange, onSizeChange 
       </div>
 
       <div className="flex items-center gap-1.5">
-        <span className="text-xs text-muted-foreground mr-1">
-          Page {page + 1} of {totalPages}
-        </span>
+        {totalPages > 0 && (
+          <span className="text-xs text-muted-foreground mr-1">
+            Page {page + 1} of {totalPages}
+          </span>
+        )}
         <Button
           variant="outline"
           size="icon"

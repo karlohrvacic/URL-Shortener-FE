@@ -1,5 +1,5 @@
 import { getApiBaseUrl } from "./utils"
-import type { UrlResponse, ApiKeyResponse, UserDto, User, PeekUrl, CreateUrlDto, UrlUpdateDto, ApiKeyUpdateDto, UserUpdateDto, UpdatePasswordDto, LinkPreviewResponse, Page, AdminStatsResponse } from "./types"
+import type { UrlResponse, ApiKeyResponse, UserDto, User, PeekUrl, CreateUrlDto, UrlUpdateDto, ApiKeyUpdateDto, UserUpdateDto, UpdatePasswordDto, LinkPreviewResponse, Page, AdminStatsResponse, UrlFilters, UserFilters } from "./types"
 
 class ApiError extends Error {
   status: number
@@ -69,8 +69,17 @@ export const urlApi = {
   },
   bulkCreate: (data: CreateUrlDto[]) =>
     request<UrlResponse[]>("POST", "/urls/bulk", data),
-  getMyUrls: (page = 0, size = 20) =>
-    request<Page<UrlResponse>>("GET", `/urls?page=${page}&size=${size}`),
+  getMyUrls: (filters: UrlFilters = {}, page = 0, size = 20) => {
+    const params = new URLSearchParams()
+    params.set("page", String(page))
+    params.set("size", String(size))
+    if (filters.search) params.set("search", filters.search)
+    if (filters.active != null) params.set("active", String(filters.active))
+    if (filters.expired) params.set("expired", "true")
+    if (filters.dateFrom) params.set("dateFrom", filters.dateFrom)
+    if (filters.dateTo) params.set("dateTo", filters.dateTo)
+    return request<Page<UrlResponse>>("GET", `/urls?${params}`)
+  },
   getAllUrls: (page = 0, size = 20) =>
     request<Page<UrlResponse>>("GET", `/urls/all?page=${page}&size=${size}`),
   getByShort: (short: string) =>
@@ -122,8 +131,14 @@ export const apiKeyApi = {
 export const userApi = {
   getMe: () =>
     request<UserDto>("GET", "/users/me"),
-  getAll: (page = 0, size = 20) =>
-    request<Page<User>>("GET", `/users?page=${page}&size=${size}`),
+  getAll: (filters: UserFilters = {}, page = 0, size = 20) => {
+    const params = new URLSearchParams()
+    params.set("page", String(page))
+    params.set("size", String(size))
+    if (filters.search) params.set("search", filters.search)
+    if (filters.active != null) params.set("active", String(filters.active))
+    return request<Page<User>>("GET", `/users?${params}`)
+  },
   update: (id: number, data: UserUpdateDto) =>
     request<User>("PUT", `/users/${id}`, data),
   updatePassword: (data: UpdatePasswordDto) =>

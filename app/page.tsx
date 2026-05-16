@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { FeatureCard } from "@/components/feature-card"
+import { CountUp } from "@/components/count-up"
 import { Logo } from "@/components/logo"
 import {
   LinkIcon, BarChart3, Shield, Copy, Check, ExternalLink,
@@ -29,6 +30,7 @@ export default function HomePage() {
   const [expirationDate, setExpirationDate] = useState("")
   const [result, setResult] = useState<UrlResponse | null>(null)
   const [copied, setCopied] = useState(false)
+  const [pulsing, setPulsing] = useState(false)
 
   const createUrl = useCreateUrl()
   const { user, logout } = useAuth()
@@ -57,7 +59,9 @@ export default function HomePage() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
     setCopied(true)
+    setPulsing(true)
     setTimeout(() => setCopied(false), 2000)
+    setTimeout(() => setPulsing(false), 400)
     toast.success("Copied to clipboard!")
   }
 
@@ -71,7 +75,7 @@ export default function HomePage() {
   ]
 
   // Stats for logged-in user
-  const totalUrls = recentUrls?.content?.length ?? 0
+  const totalUrls = recentUrls?.totalElements ?? 0
   const totalVisits = recentUrls?.content?.reduce((sum, u) => sum + u.visits, 0) ?? 0
   const latestUrls = recentUrls?.content?.slice(0, 5) ?? []
 
@@ -139,14 +143,14 @@ export default function HomePage() {
                   </h1>
                 </div>
 
-                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4">
                   <div className="text-center">
-                    <span className="font-display text-2xl tabular-nums text-primary">{totalUrls}</span>
+                    <CountUp value={totalUrls} className="font-display text-2xl tabular-nums text-primary" />
                     <p className="text-[11px] text-muted-foreground tracking-wide uppercase mt-0.5">Links</p>
                   </div>
                   <div className="w-px h-10 bg-border/50" />
                   <div className="text-center">
-                    <span className="font-display text-2xl tabular-nums text-primary">{totalVisits.toLocaleString()}</span>
+                    <CountUp value={totalVisits} className="font-display text-2xl tabular-nums text-primary" />
                     <p className="text-[11px] text-muted-foreground tracking-wide uppercase mt-0.5">Visits</p>
                   </div>
                   <div className="w-px h-10 bg-border/50" />
@@ -217,7 +221,7 @@ export default function HomePage() {
                               <p className="text-xs text-muted-foreground truncate">{result.longUrl}</p>
                             </div>
                             <div className="flex items-center gap-1 ml-3 shrink-0">
-                              <button onClick={() => copyToClipboard(shortUrlDisplay)} className="p-1.5 hover:bg-muted rounded transition-colors">
+                              <button onClick={() => copyToClipboard(shortUrlDisplay)} className={`p-1.5 hover:bg-muted rounded transition-colors ${pulsing ? "animate-copy-pulse" : ""}`}>
                                 {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                               </button>
                               <a href={result.longUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-muted rounded transition-colors">
@@ -353,7 +357,7 @@ export default function HomePage() {
                               <p className="text-xs text-muted-foreground truncate mt-0.5">{result.longUrl}</p>
                             </div>
                             <div className="flex items-center gap-1 ml-4 shrink-0">
-                              <Button variant="ghost" size="icon" onClick={() => copyToClipboard(shortUrlDisplay)} className="h-8 w-8">
+                              <Button variant="ghost" size="icon" onClick={() => copyToClipboard(shortUrlDisplay)} className={`h-8 w-8 ${pulsing ? "animate-copy-pulse" : ""}`}>
                                 {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                               </Button>
                               <a href={result.longUrl} target="_blank" rel="noopener noreferrer">
@@ -509,6 +513,9 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
             <Logo showText href="/" />
             <div className="flex items-center gap-6">
+              <Link href="/changelog" className="hover:text-foreground transition-colors">
+                Changelog
+              </Link>
               <Link href="/validate" className="hover:text-foreground transition-colors">
                 Validate
               </Link>

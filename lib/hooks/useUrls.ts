@@ -2,12 +2,12 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { urlApi } from "@/lib/api-client"
-import type { CreateUrlDto, UrlUpdateDto, UrlResponse, Page } from "@/lib/types"
+import type { CreateUrlDto, UrlUpdateDto, UrlResponse, Page, UrlFilters } from "@/lib/types"
 
-export function useMyUrls(page = 0, size = 20) {
+export function useMyUrls(filters: UrlFilters = {}, page = 0, size = 20) {
   return useQuery({
-    queryKey: ["urls", "my", page, size],
-    queryFn: () => urlApi.getMyUrls(page, size),
+    queryKey: ["urls", "my", filters, page, size],
+    queryFn: () => urlApi.getMyUrls(filters, page, size),
   })
 }
 

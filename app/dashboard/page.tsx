@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useMyUrls, useDeactivateUrl, useDeleteUrl } from "@/lib/hooks/useUrls"
 import { usePagination } from "@/lib/hooks/usePagination"
 import { useMyApiKeys } from "@/lib/hooks/useApiKeys"
 import { Pagination } from "@/components/ui/pagination"
-import type { UrlResponse } from "@/lib/types"
+import type { UrlResponse, UrlFilters } from "@/lib/types"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
@@ -16,26 +17,40 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { QRCodeSVG } from "qrcode.react"
-import { Copy, ExternalLink, Key, QrCode, Trash2, ToggleLeft, BarChart3, Plus, LinkIcon, Download } from "lucide-react"
+import { Copy, ExternalLink, Key, QrCode, Search, Trash2, ToggleRight, BarChart3, Plus, LinkIcon, Download } from "lucide-react"
 import { toast } from "sonner"
 import { formatDate, formatDateTime, formatRelativeDate, truncateUrl, formatShortUrl } from "@/lib/utils"
 import { urlApi } from "@/lib/api-client"
 import { CreateUrlDialog } from "@/components/dashboard/create-url-dialog"
-import { UrlAnalytics } from "@/components/dashboard/url-analytics"
 import { PageMeta } from "@/components/page-meta"
 
 export default function DashboardPage() {
   const { page, size, setPage, setSize } = usePagination()
-  const { data: urls, isLoading, error } = useMyUrls(page, size)
+  const [search, setSearch] = useState("")
+  const [activeFilter, setActiveFilter] = useState<string>("all")
+  const [expiredFilter, setExpiredFilter] = useState(false)
+  useEffect(() => { setPage(0) }, [search, activeFilter, expiredFilter])
+  const filterKey = `${search}-${activeFilter}-${expiredFilter}`
+  const filters: UrlFilters = {
+    search: search || undefined,
+    active: activeFilter === "all" ? undefined : activeFilter === "active",
+    expired: expiredFilter || undefined,
+  }
+  const { data: urls, isLoading, error } = useMyUrls(filters, page, size)
   const deactivateUrl = useDeactivateUrl()
   const deleteUrl = useDeleteUrl()
   const { data: apiKeys } = useMyApiKeys()
   const totalKeys = apiKeys?.length ?? 0
   const activeKeys = apiKeys?.filter(k => k.active).length ?? 0
   const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [copyPulseId, setCopyPulseId] = useState<number | null>(null)
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = (text: string, id?: number) => {
     navigator.clipboard.writeText(text)
+    if (id != null) {
+      setCopyPulseId(id)
+      setTimeout(() => setCopyPulseId(null), 400)
+    }
     toast.success("Copied!")
   }
 
@@ -103,6 +118,37 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative flex-1 min-w-[200px] max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search URLs..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-9 pl-9 text-sm"
+          />
+        </div>
+        <select
+          value={activeFilter}
+          onChange={(e) => setActiveFilter(e.target.value)}
+          className="h-9 rounded-md border border-input bg-background px-3 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+        >
+          <option value="all">All status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer whitespace-nowrap">
+          <input
+            type="checkbox"
+            checked={expiredFilter}
+            onChange={(e) => setExpiredFilter(e.target.checked)}
+            className="rounded border-input"
+          />
+          Expired only
+        </label>
+      </div>
+
       {/* Loading */}
       {isLoading ? (
         <Card className="border-border/40">
@@ -143,7 +189,7 @@ export default function DashboardPage() {
         </Card>
       ) : (
         /* URL Table */
-        <Card className="border-border/40 overflow-hidden">
+        <Card key={filterKey} className="border-border/40 overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
             <Table>
@@ -159,11 +205,11 @@ export default function DashboardPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {urls.content.map((url: UrlResponse) => (
-                  <TableRow key={url.id} className="border-border/20 hover:bg-muted/30 transition-colors">
+                {urls.content.map((url: UrlResponse, i: number) => (
+                  <TableRow key={url.id} className="border-border/20 hover:bg-muted/30 transition-colors animate-fade-in" style={{ animationDelay: `${i * 40}ms` }}>
                     <TableCell>
                       <button
-                        onClick={() => copyToClipboard(formatShortUrl(url.shortUrl))}
+                        onClick={() => copyToClipboard(formatShortUrl(url.shortUrl), url.id)}
                         className="text-primary hover:underline font-medium text-sm text-left"
                       >
                         /{url.shortUrl}
@@ -203,8 +249,8 @@ export default function DashboardPage() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
-                              onClick={() => copyToClipboard(formatShortUrl(url.shortUrl))}
-                              className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
+                              onClick={() => copyToClipboard(formatShortUrl(url.shortUrl), url.id)}
+                              className={`p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground ${copyPulseId === url.id ? "animate-copy-pulse text-primary" : ""}`}
                             >
                               <Copy className="h-3.5 w-3.5" />
                             </button>
@@ -279,25 +325,6 @@ export default function DashboardPage() {
                           </Dialog>
                         </Tooltip>
 
-                        <Tooltip>
-                          <Dialog>
-                            <TooltipTrigger asChild>
-                              <DialogTrigger asChild>
-                                <button className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground">
-                                  <BarChart3 className="h-3.5 w-3.5" />
-                                </button>
-                              </DialogTrigger>
-                            </TooltipTrigger>
-                            <TooltipContent side="top" className="text-[11px]">View analytics</TooltipContent>
-                            <DialogContent className="max-w-2xl bg-card border-border/50">
-                              <DialogHeader>
-                                <DialogTitle className="font-display text-lg">Analytics — /{url.shortUrl}</DialogTitle>
-                              </DialogHeader>
-                              <UrlAnalytics url={url} />
-                            </DialogContent>
-                          </Dialog>
-                        </Tooltip>
-
                         {url.active && (
                           <Tooltip>
                             <AlertDialog>
@@ -307,7 +334,7 @@ export default function DashboardPage() {
                                     className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                                     disabled={deactivateUrl.isPending}
                                   >
-                                    <ToggleLeft className="h-3.5 w-3.5" />
+                                    <ToggleRight className="h-3.5 w-3.5" />
                                   </button>
                                 </AlertDialogTrigger>
                               </TooltipTrigger>
@@ -366,6 +393,7 @@ export default function DashboardPage() {
             <Pagination
               page={page}
               totalPages={urls?.totalPages ?? 0}
+              totalElements={urls?.totalElements}
               size={size}
               onPageChange={setPage}
               onSizeChange={setSize}

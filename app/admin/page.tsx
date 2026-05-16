@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAllUsers, useUpdateUser, useDeleteUser } from "@/lib/hooks/useUsers"
 import { usePagination } from "@/lib/hooks/usePagination"
 import { Pagination } from "@/components/ui/pagination"
-import type { User } from "@/lib/types"
+import type { User, UserFilters } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -14,14 +14,22 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Users, Edit, Trash2, ToggleLeft, ToggleRight, Shield } from "lucide-react"
+import { Users, Edit, Trash2, ToggleLeft, ToggleRight, Shield, Search } from "lucide-react"
 import { toast } from "sonner"
 import { formatDate, formatDateTime } from "@/lib/utils"
 import { PageMeta } from "@/components/page-meta"
 
 export default function AdminUsersPage() {
   const { page, size, setPage, setSize } = usePagination()
-  const { data: users, isLoading, error } = useAllUsers(page, size)
+  const [search, setSearch] = useState("")
+  const [activeFilter, setActiveFilter] = useState<string>("all")
+  useEffect(() => { setPage(0) }, [search, activeFilter])
+  const filterKey = `${search}-${activeFilter}`
+  const filters: UserFilters = {
+    search: search || undefined,
+    active: activeFilter === "all" ? undefined : activeFilter === "active",
+  }
+  const { data: users, isLoading, error } = useAllUsers(filters, page, size)
   const updateUser = useUpdateUser()
   const deleteUser = useDeleteUser()
   const [editUser, setEditUser] = useState<User | null>(null)
@@ -117,6 +125,28 @@ export default function AdminUsersPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-3 mb-4">
+        <div className="relative flex-1 min-w-[200px] max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search users..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-9 pl-9 text-sm"
+          />
+        </div>
+        <select
+          value={activeFilter}
+          onChange={(e) => setActiveFilter(e.target.value)}
+          className="h-9 rounded-md border border-input bg-background px-3 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+        >
+          <option value="all">All status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
       {isLoading ? (
         <Card>
           <CardContent className="p-6 space-y-4">
@@ -140,7 +170,7 @@ export default function AdminUsersPage() {
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card key={filterKey}>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
             <Table>
@@ -157,8 +187,8 @@ export default function AdminUsersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.content?.map((user: User) => (
-                  <TableRow key={user.id}>
+                {users.content?.map((user: User, i: number) => (
+                  <TableRow key={user.id} className="animate-fade-in" style={{ animationDelay: `${i * 30}ms` }}>
                     <TableCell className="text-sm text-muted-foreground hidden lg:table-cell">{user.id}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>
@@ -218,6 +248,7 @@ export default function AdminUsersPage() {
             <Pagination
               page={page}
               totalPages={users?.totalPages ?? 0}
+              totalElements={users?.totalElements}
               size={size}
               onPageChange={setPage}
               onSizeChange={setSize}

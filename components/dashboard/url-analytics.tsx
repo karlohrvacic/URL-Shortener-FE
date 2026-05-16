@@ -4,38 +4,16 @@ import type { UrlResponse } from "@/lib/types"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { formatDate } from "@/lib/utils"
-import { Eye, Target, Calendar, Activity } from "lucide-react"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import { Eye, Target, Calendar, LinkIcon, ExternalLink } from "lucide-react"
 
 interface UrlAnalyticsProps {
   url: UrlResponse
 }
 
-function generateVisitHistory(totalVisits: number, createdDate: string) {
-  const created = new Date(createdDate)
-  const now = new Date()
-  const daysSinceCreation = Math.max(1, Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24)))
-  const points = Math.min(daysSinceCreation, 30)
-  if (totalVisits === 0) {
-    return Array.from({ length: points }, (_, i) => ({
-      date: new Date(created.getTime() + (now.getTime() - created.getTime()) * i / points).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-      visits: 0,
-    }))
-  }
-  const data = []
-  for (let i = 0; i < points; i++) {
-    const date = new Date(created)
-    date.setDate(date.getDate() + Math.floor((daysSinceCreation / points) * i))
-    data.push({
-      date: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-      visits: Math.max(0, Math.floor((totalVisits / points) + (Math.random() - 0.5) * (totalVisits / points) * 0.5)),
-    })
-  }
-  return data
-}
-
 export function UrlAnalytics({ url }: UrlAnalyticsProps) {
-  const visitData = generateVisitHistory(url.visits, url.createDate)
+  const created = new Date(url.createDate)
+  const daysSinceCreation = Math.max(1, Math.floor((Date.now() - created.getTime()) / (1000 * 60 * 60 * 24)))
+  const dailyAvg = daysSinceCreation > 0 ? (url.visits / daysSinceCreation).toFixed(1) : "0"
   const visitPercent = url.visitLimit > 0 ? Math.min(100, (url.visits / url.visitLimit) * 100) : 0
 
   return (
@@ -69,46 +47,38 @@ export function UrlAnalytics({ url }: UrlAnalyticsProps) {
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <Activity className="h-8 w-8 text-primary" />
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">N/A</p>
-              <p className="text-xs text-muted-foreground">Last Accessed</p>
+          <CardContent className="p-4 flex items-center gap-3 min-w-0">
+            <LinkIcon className="h-8 w-8 text-primary shrink-0" />
+            <div className="min-w-0">
+              <p className="text-sm font-medium truncate" title={url.longUrl}>
+                {url.longUrl}
+              </p>
+              <p className="text-xs text-muted-foreground">Destination</p>
             </div>
+            <a href={url.longUrl} target="_blank" rel="noopener noreferrer" className="shrink-0 ml-auto">
+              <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+            </a>
           </CardContent>
         </Card>
       </div>
 
-      {url.visitLimit > 0 && (
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm">
-            <span>Visit limit usage</span>
-            <span>{url.visits} / {url.visitLimit} ({Math.round(visitPercent)}%)</span>
-          </div>
-          <Progress value={visitPercent} />
+      <div className="space-y-2">
+        <div className="flex justify-between text-sm">
+          <span>Visit limit usage</span>
+          <span>
+            {url.visits} / {url.visitLimit > 0 ? url.visitLimit : "\u221E"}
+            {url.visitLimit > 0 ? ` (${Math.round(visitPercent)}%)` : ""}
+          </span>
+        </div>
+        <Progress value={url.visitLimit > 0 ? visitPercent : 0} />
+      </div>
+
+      {url.visits > 0 && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span className="tabular-nums">{dailyAvg}</span>
+          <span>visits/day over {daysSinceCreation} day{daysSinceCreation > 1 ? "s" : ""}</span>
         </div>
       )}
-
-      <div>
-        <h4 className="text-sm font-medium mb-3">Visits over time</h4>
-        <div className="h-48">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={visitData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="date" fontSize={11} stroke="hsl(var(--muted-foreground))" />
-              <YAxis fontSize={11} stroke="hsl(var(--muted-foreground))" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--background))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "8px",
-                }}
-              />
-              <Line type="monotone" dataKey="visits" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
     </div>
   )
 }
