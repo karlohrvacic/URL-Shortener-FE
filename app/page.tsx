@@ -13,8 +13,8 @@ import { FeatureCard } from "@/components/feature-card"
 import { Logo } from "@/components/logo"
 import {
   LinkIcon, BarChart3, Shield, Copy, Check, ExternalLink,
-  Clock, Zap, Globe, BookOpen, ChevronDown, ChevronUp,
-  ArrowRight, Plus, Sparkles, LogOut,
+  Clock, Zap, Globe, BookOpen, ChevronDown,
+  ArrowRight, Plus, Sparkles, LogOut, Activity,
 } from "lucide-react"
 import { QRCodeSVG } from "qrcode.react"
 import { toast } from "sonner"
@@ -29,7 +29,7 @@ export default function HomePage() {
   const [expirationDate, setExpirationDate] = useState("")
   const [result, setResult] = useState<UrlResponse | null>(null)
   const [copied, setCopied] = useState(false)
-  const [showOptions, setShowOptions] = useState(false)
+
   const createUrl = useCreateUrl()
   const { user, logout } = useAuth()
   const { data: recentUrls } = useMyUrls()
@@ -82,34 +82,35 @@ export default function HomePage() {
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
           <Logo />
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <ThemeToggle />
             {user ? (
               <>
                 <Link href="/dashboard">
-                  <Button variant="outline" size="sm" className="h-9 gap-1.5">
+                  <Button variant="outline" size="sm" className="h-8 gap-1 px-2.5 sm:h-9 sm:px-3 sm:gap-1.5">
                     <BarChart3 className="h-3.5 w-3.5" />
-                    Dashboard
+                    <span className="hidden sm:inline">Dashboard</span>
                   </Button>
                 </Link>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="h-9 gap-1.5 text-muted-foreground hover:text-foreground"
+                  className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 gap-1.5 text-muted-foreground hover:text-foreground"
                 >
                   <LogOut className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Log out</span>
                 </Button>
               </>
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="h-9 text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" size="sm" className="h-8 px-2.5 sm:h-9 sm:px-3 text-xs sm:text-sm text-muted-foreground hover:text-foreground">
                     Sign in
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm" className="h-9 bg-primary text-primary-foreground hover:brightness-110">
+                  <Button size="sm" className="h-8 px-3 sm:h-9 sm:px-4 text-xs sm:text-sm bg-primary text-primary-foreground hover:brightness-110">
                     Get started
                   </Button>
                 </Link>
@@ -121,7 +122,7 @@ export default function HomePage() {
 
       {user ? (
         /* ── LOGGED-IN EXPERIENCE ── */
-        <>
+        <div className="flex-1">
           <section className="relative pt-24 pb-12 overflow-hidden">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-primary/4 blur-[100px] pointer-events-none" />
 
@@ -188,17 +189,9 @@ export default function HomePage() {
                           </Button>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => setShowOptions(!showOptions)}
-                          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          <ChevronDown className={`h-3 w-3 transition-transform ${showOptions ? "rotate-180" : ""}`} />
-                          {showOptions ? "Hide" : "Show"} advanced options
-                        </button>
-
-                        {showOptions && (
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 animate-fade-in">
+                        <div className="border-t border-border/30 pt-4 mt-2">
+                          <p className="text-[11px] font-medium text-muted-foreground tracking-wide uppercase mb-3">Optional settings</p>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div className="space-y-1">
                               <label className="text-[11px] font-medium text-muted-foreground tracking-wide uppercase">Alias</label>
                               <Input placeholder="custom-link" value={customAlias} onChange={(e) => setCustomAlias(e.target.value)} className="h-9 text-sm bg-background/50 border-border/50" />
@@ -212,7 +205,7 @@ export default function HomePage() {
                               <Input type="datetime-local" value={expirationDate} onChange={(e) => setExpirationDate(e.target.value)} className="h-9 text-sm bg-background/50 border-border/50" />
                             </div>
                           </div>
-                        )}
+                        </div>
                       </form>
 
                       {/* Result inline */}
@@ -297,11 +290,10 @@ export default function HomePage() {
               </div>
             </div>
           </section>
-        </>
+        </div>
       ) : (
         /* ── PUBLIC LANDING ── */
-        <>
-          {/* Hero */}
+        <div className="flex-1">
           <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
             <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
@@ -320,8 +312,9 @@ export default function HomePage() {
                     <span className="text-gradient-amber">shaped by you</span>
                   </h1>
                   <p className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-                    Create short, trackable links that you control — with visit limits,
-                    expiration dates, and analytics at your fingertips.
+                    Shorten links in seconds.{" "}
+                    <Link href="/register" className="text-primary hover:underline font-medium">Sign up free</Link>{" "}
+                    for custom aliases, visit limits, expiration dates &amp; analytics.
                   </p>
                 </div>
 
@@ -350,31 +343,6 @@ export default function HomePage() {
                           </Button>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => setShowOptions(!showOptions)}
-                          className="flex items-center gap-1.5 mx-auto text-xs text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          {showOptions ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                          {showOptions ? "Hide" : "Show"} advanced options
-                        </button>
-
-                        {showOptions && (
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 animate-fade-in">
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-medium text-muted-foreground tracking-wide uppercase">Custom alias</label>
-                              <Input placeholder="my-custom-link" value={customAlias} onChange={(e) => setCustomAlias(e.target.value)} className="h-10 bg-background/50 border-border/50 text-sm" />
-                            </div>
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-medium text-muted-foreground tracking-wide uppercase">Visit limit</label>
-                              <Input type="number" placeholder="e.g. 100" value={visitLimit} onChange={(e) => setVisitLimit(e.target.value)} className="h-10 bg-background/50 border-border/50 text-sm" />
-                            </div>
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-medium text-muted-foreground tracking-wide uppercase">Expires at</label>
-                              <Input type="datetime-local" value={expirationDate} onChange={(e) => setExpirationDate(e.target.value)} className="h-10 bg-background/50 border-border/50 text-sm" />
-                            </div>
-                          </div>
-                        )}
                       </form>
 
                       {result && (
@@ -404,6 +372,13 @@ export default function HomePage() {
                               </div>
                             </div>
                             <p className="text-[11px] text-muted-foreground tracking-wide uppercase">Scan to visit</p>
+                          </div>
+
+                          <div className="pt-4 border-t border-border/30 text-center">
+                            <p className="text-xs text-muted-foreground">
+                              <Link href="/register" className="text-primary hover:underline font-medium">Create a free account</Link>{" "}
+                              to set custom aliases, visit limits, and track analytics.
+                            </p>
                           </div>
                         </div>
                       )}
@@ -499,7 +474,7 @@ export default function HomePage() {
           </section>
 
           {/* CTA */}
-          <section className="relative border-t border-border/50 py-24">
+          <section className="relative border-t border-border/50 py-24 overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-primary/3 blur-[100px] pointer-events-none" />
             <div className="container mx-auto px-4 text-center relative">
               <div className="max-w-lg mx-auto space-y-6">
@@ -522,7 +497,7 @@ export default function HomePage() {
               </div>
             </div>
           </section>
-        </>
+        </div>
       )}
 
       {/* ── Divider ── */}
@@ -540,6 +515,10 @@ export default function HomePage() {
               <a href="https://hrva.cc/swagger-ui/index.html" target="_blank" rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors flex items-center gap-1.5">
                 <BookOpen className="h-3 w-3" /> API
+              </a>
+              <a href="https://status.hrva.cc/status/url" target="_blank" rel="noopener noreferrer"
+                className="hover:text-foreground transition-colors flex items-center gap-1.5">
+                <Activity className="h-3 w-3" /> Status
               </a>
               <a href="https://github.com/karlohrvacic/url-shortener" target="_blank" rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors flex items-center gap-1.5">
