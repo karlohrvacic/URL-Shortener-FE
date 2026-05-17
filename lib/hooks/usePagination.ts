@@ -10,8 +10,8 @@ export function usePagination() {
   const router = useRouter()
   const pathname = usePathname()
 
-  const page = parseInt(searchParams.get("page") ?? "0", 10)
-  const size = parseInt(searchParams.get("size") ?? String(DEFAULT_SIZE), 10)
+  const page = Math.max(0, parseInt(searchParams.get("page") ?? "0", 10) || 0)
+  const size = parseInt(searchParams.get("size") ?? String(DEFAULT_SIZE), 10) || DEFAULT_SIZE
   const sort = searchParams.get("sort") ?? "createDate"
   const order = searchParams.get("order") ?? "desc"
 
