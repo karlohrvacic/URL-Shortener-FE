@@ -3,6 +3,9 @@
  * Renders a <script> tag with ld+json for rich search results,
  * AI-powered engines, and voice/answer engines.
  */
+const APP_URL = "https://app.hrva.cc"
+const BRAND_URL = "https://hrva.cc"
+
 export function JsonLd() {
   const jsonLd = {
     "@context": "https://schema.org",
@@ -10,7 +13,7 @@ export function JsonLd() {
       {
         "@type": "WebApplication",
         name: "hrva.cc",
-        url: "https://hrva.cc",
+        url: APP_URL,
         description:
           "Shorten URLs, track visits, and manage your links with control and clarity. Free URL shortener with analytics, expiration control, and safe browsing checks.",
         applicationCategory: "UtilityApplication",
@@ -28,8 +31,8 @@ export function JsonLd() {
       {
         "@type": "Organization",
         name: "hrva.cc",
-        url: "https://hrva.cc",
-        logo: "https://hrva.cc/favicon.svg",
+        url: BRAND_URL,
+        logo: `${APP_URL}/favicon.svg`,
         sameAs: [
           "https://github.com/karlohrvacic/url-shortener",
         ],

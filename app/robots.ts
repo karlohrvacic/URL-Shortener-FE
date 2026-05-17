@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/dashboard/", "/admin/", "/api/"],
+      disallow: ["/dashboard/", "/admin/", "/api/", "/egg"],
     },
-    sitemap: "https://hrva.cc/sitemap.xml",
+    sitemap: "https://app.hrva.cc/sitemap.xml",
   }
 }

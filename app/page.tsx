@@ -515,6 +515,9 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
             <Logo showText href="/" />
             <div className="flex items-center gap-6">
+              <Link href="/blog" className="hover:text-foreground transition-colors">
+                Blog
+              </Link>
               <Link href="/changelog" className="hover:text-foreground transition-colors">
                 Changelog
               </Link>

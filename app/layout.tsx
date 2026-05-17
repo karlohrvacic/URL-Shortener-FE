@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { DM_Serif_Display, Plus_Jakarta_Sans } from "next/font/google"
 import { Toaster } from "sonner"
 import "./globals.css"
@@ -16,7 +16,7 @@ const sans = Plus_Jakarta_Sans({
   variable: "--font-sans",
 })
 
-const baseUrl = "https://hrva.cc"
+const baseUrl = "https://app.hrva.cc"
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -81,6 +81,11 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
   },
   category: "technology",
+}
+
+export const viewport: Viewport = {
+  themeColor: "#0a0a0b",
+  colorScheme: "dark",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
