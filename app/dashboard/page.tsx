@@ -349,7 +349,7 @@ export default function DashboardPage() {
                                     className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                                     disabled={deactivateUrl.isPending}
                                   >
-                                    <ToggleRight className="h-3.5 w-3.5" />
+                                    <ToggleRight className="h-3.5 w-3.5 text-success" />
                                   </button>
                                 </AlertDialogTrigger>
                               </TooltipTrigger>

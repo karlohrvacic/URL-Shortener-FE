@@ -1,5 +1,5 @@
 import { getApiBaseUrl } from "./utils"
-import type { UrlResponse, ApiKeyResponse, UserDto, User, PeekUrl, CreateUrlDto, UrlUpdateDto, ApiKeyUpdateDto, UserUpdateDto, UpdatePasswordDto, LinkPreviewResponse, Page, AdminStatsResponse, UrlFilters, UserFilters } from "./types"
+import type { UrlResponse, ApiKeyResponse, UserDto, User, PeekUrl, CreateUrlDto, UrlUpdateDto, ApiKeyUpdateDto, UserUpdateDto, UpdatePasswordDto, LinkPreviewResponse, Page, AdminStatsResponse, UrlFilters, UserFilters, AuditLog, EmailLog } from "./types"
 
 class ApiError extends Error {
   status: number
@@ -46,7 +46,19 @@ async function request<T>(
 
   if (response.status === 204 || response.status === 202) return {} as T
 
-  return response.json()
+  const data = await response.json()
+
+  // Normalize Spring Page wrapper: some endpoints return
+  // {"content":[...],"page":{"totalPages":2,"totalElements":13}}
+  // instead of flat fields. Promote nested page fields to root.
+  if (data && data.page && data.page.totalPages != null) {
+    data.totalPages = data.page.totalPages
+    data.totalElements = data.page.totalElements
+    data.number = data.page.number ?? data.number
+    data.size = data.page.size ?? data.size
+  }
+
+  return data
 }
 
 // Auth
@@ -138,6 +150,8 @@ export const apiKeyApi = {
     request<ApiKeyResponse>("PUT", `/api-keys/${id}`, data),
   revoke: (id: number) =>
     request<ApiKeyResponse>("PATCH", `/api-keys/${id}/revoke`),
+  activate: (id: number) =>
+    request<ApiKeyResponse>("PATCH", `/api-keys/${id}/activate`),
 }
 
 // User
@@ -165,6 +179,14 @@ export const userApi = {
 export const adminApi = {
   getStats: () =>
     request<AdminStatsResponse>("GET", "/admin/stats"),
+  getAuditLog: (page = 0, size = 50) =>
+    request<Page<AuditLog>>("GET", `/admin/audit-log?page=${page}&size=${size}`),
+  getEmailLog: (page = 0, size = 50) =>
+    request<Page<EmailLog>>("GET", `/admin/email-log?page=${page}&size=${size}`),
+  getLoginAttempts: () =>
+    request<Record<string, number>>("GET", "/admin/login-attempts"),
+  clearLoginAttempts: () =>
+    request<void>("DELETE", "/admin/login-attempts"),
   exportUrlsCsv: async () => {
     const baseUrl = getApiBaseUrl()
     const token = localStorage.getItem("auth-token")

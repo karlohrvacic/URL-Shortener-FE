@@ -1,6 +1,6 @@
 "use client"
 
-import { useAllApiKeys, useRevokeApiKey, useUpdateApiKey } from "@/lib/hooks/useApiKeys"
+import { useAllApiKeys, useRevokeApiKey, useActivateApiKey, useUpdateApiKey } from "@/lib/hooks/useApiKeys"
 import { usePagination } from "@/lib/hooks/usePagination"
 import { Pagination } from "@/components/ui/pagination"
 import type { ApiKeyResponse } from "@/lib/types"
@@ -10,9 +10,10 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ToggleLeft, Key, Shield } from "lucide-react"
+import { ToggleRight, ToggleLeft, Key, Shield, Edit, RefreshCw } from "lucide-react"
 import { toast } from "sonner"
 import { formatDate, formatDateTime, maskApiKey } from "@/lib/utils"
 import { PageMeta } from "@/components/page-meta"
@@ -22,6 +23,7 @@ export default function AdminApiKeysPage() {
   const { page, size, setPage, setSize } = usePagination()
   const { data: apiKeys, isLoading, error } = useAllApiKeys(page, size)
   const revokeKey = useRevokeApiKey()
+  const activateKey = useActivateApiKey()
   const updateKey = useUpdateApiKey()
   const [editKey, setEditKey] = useState<ApiKeyResponse | null>(null)
   const [editLimit, setEditLimit] = useState("")
@@ -32,6 +34,15 @@ export default function AdminApiKeysPage() {
       toast.success("API key revoked")
     } catch (err: any) {
       toast.error(err.message || "Failed to revoke")
+    }
+  }
+
+  const handleActivate = async (id: number) => {
+    try {
+      await activateKey.mutateAsync(id)
+      toast.success("API key activated")
+    } catch (err: any) {
+      toast.error(err.message || "Failed to activate")
     }
   }
 
@@ -102,44 +113,63 @@ export default function AdminApiKeysPage() {
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card className="border-border/40 overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Key</TableHead>
-                  <TableHead className="hidden lg:table-cell">Owner</TableHead>
-                  <TableHead className="hidden lg:table-cell">Created</TableHead>
-                  <TableHead>Usage</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10">Key</TableHead>
+                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10 hidden lg:table-cell">Owner</TableHead>
+                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10 hidden lg:table-cell">Created</TableHead>
+                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10">Usage</TableHead>
+                  <TableHead className="text-xs font-medium text-muted-foreground tracking-wide uppercase h-10">Status</TableHead>
+                  <TableHead className="text-right text-xs font-medium text-muted-foreground tracking-wide uppercase h-10">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {apiKeys.content.map((key: ApiKeyResponse) => (
-                  <TableRow key={key.id}>
-                    <TableCell><code className="text-sm">{maskApiKey(key.key)}</code></TableCell>
+                {apiKeys.content.map((key: ApiKeyResponse, i: number) => (
+                  <TableRow key={key.id} className="border-border/20 animate-fade-in" style={{ animationDelay: `${i * 30}ms` }}>
+                    <TableCell><span className="text-xs font-mono">{maskApiKey(key.key)}</span></TableCell>
                     <TableCell className="text-sm hidden lg:table-cell">{key.ownerEmail || "\u2014"}</TableCell>
                     <TableCell className="text-sm text-muted-foreground hidden lg:table-cell" title={formatDateTime(key.createDate)}>{formatDate(key.createDate)}</TableCell>
-                    <TableCell className="text-sm">{key.apiCallsUsed} / {key.apiCallsLimit > 0 ? key.apiCallsLimit : "\u221E"}</TableCell>
+                    <TableCell className="text-sm">{key.apiCallsUsed}/{key.apiCallsLimit > 0 ? key.apiCallsLimit : "\u221E"}</TableCell>
                     <TableCell>
-                      <Badge variant={key.active ? "success" : "destructive"}>
+                      <Badge variant={key.active ? "success" : "destructive"} className="text-[10px] px-2 py-0.5">
                         {key.active ? "Active" : "Revoked"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="icon" onClick={() => {
-                          setEditKey(key)
-                          setEditLimit(key.apiCallsLimit.toString())
-                        }}>
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
-                        </Button>
-                        {key.active && (
-                          <Button variant="ghost" size="icon" onClick={() => handleRevoke(key.id)} disabled={revokeKey.isPending}>
-                            <ToggleLeft className="h-4 w-4" />
-                          </Button>
+                      <div className="flex items-center justify-end gap-0.5">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button onClick={() => { setEditKey(key); setEditLimit(key.apiCallsLimit.toString()) }}
+                              className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground">
+                              <Edit className="h-3.5 w-3.5" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="text-[11px]">Edit API key</TooltipContent>
+                        </Tooltip>
+                        {key.active ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button onClick={() => handleRevoke(key.id)} disabled={revokeKey.isPending}
+                                className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground">
+                                <ToggleRight className="h-3.5 w-3.5 text-success" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="text-[11px]">Revoke API key</TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button onClick={() => handleActivate(key.id)} disabled={activateKey.isPending}
+                                className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground">
+                                <ToggleLeft className="h-3.5 w-3.5 text-destructive" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="text-[11px]">Activate API key</TooltipContent>
+                          </Tooltip>
                         )}
                       </div>
                     </TableCell>
@@ -151,6 +181,7 @@ export default function AdminApiKeysPage() {
             <Pagination
               page={page}
               totalPages={apiKeys?.totalPages ?? 0}
+              totalElements={apiKeys?.totalElements}
               size={size}
               onPageChange={setPage}
               onSizeChange={setSize}

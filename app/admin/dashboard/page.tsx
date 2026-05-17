@@ -3,11 +3,14 @@
 import { useQuery } from "@tanstack/react-query"
 import { adminApi } from "@/lib/api-client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { PageMeta } from "@/components/page-meta"
-import { Users, LinkIcon, Shield, Activity, Clock, Database, HardDrive, Cpu, Server, AlertCircle, CheckCircle2, Zap, BarChart3, Layers } from "lucide-react"
-import { formatDate, formatDateTime, formatShortUrl, truncateUrl } from "@/lib/utils"
+import { Users, LinkIcon, Shield, Activity, Clock, Database, HardDrive, Cpu, Server, AlertCircle, CheckCircle2, Zap, BarChart3, Layers, ShieldAlert } from "lucide-react"
+import { formatDate, formatDateTime, formatShortUrl, truncateUrl, getApiBaseUrl } from "@/lib/utils"
+import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
 export default function AdminDashboardPage() {
@@ -49,6 +52,7 @@ export default function AdminDashboardPage() {
   const systemItems = [
     { icon: Server, label: "App Version", value: `v${stats.appVersion}` },
     { icon: Clock, label: "Uptime", value: stats.uptime },
+    { icon: BarChart3, label: "Requests", value: stats.requestsCount.toLocaleString() },
     { icon: Cpu, label: "Java", value: stats.javaVersion },
     { icon: HardDrive, label: "Server Time", value: new Date(stats.serverTime).toLocaleString() },
   ]
@@ -131,10 +135,10 @@ export default function AdminDashboardPage() {
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
               <BarChart3 className="h-4 w-4 text-primary" />
-              <span className="text-[11px] text-muted-foreground tracking-wide uppercase">Requests</span>
+              <span className="text-[11px] text-muted-foreground tracking-wide uppercase">Redirect</span>
             </div>
-            <p className="font-display text-2xl text-primary">{stats.requestsCount.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Since restart</p>
+            <p className="font-display text-2xl text-primary">{stats.redirectAvgMs ?? "—"}<span className="text-sm text-muted-foreground font-normal"> ms</span></p>
+            <p className="text-xs text-muted-foreground mt-0.5">avg · max {stats.redirectMaxMs ?? "—"}ms · {stats.redirectCount?.toLocaleString() ?? 0} redirects</p>
           </CardContent>
         </Card>
         <Card className="border-border/50">
@@ -209,6 +213,19 @@ export default function AdminDashboardPage() {
         </Card>
       </div>
 
+      {/* Rate Limits */}
+      <Card className="border-border/50">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-semibold tracking-tight flex items-center gap-2">
+            <ShieldAlert className="h-4 w-4 text-primary" />
+            Login Rate Limits
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LoginRateLimits />
+        </CardContent>
+      </Card>
+
       {/* Recent URLs */}
       <Card className="border-border/50">
         <CardHeader className="pb-3">
@@ -244,6 +261,57 @@ export default function AdminDashboardPage() {
           </div>
         </CardContent>
       </Card>
+    </div>
+  )
+}
+
+function LoginRateLimits() {
+  const { data: attempts, isLoading, refetch } = useQuery<Record<string, number>>({
+    queryKey: ["admin", "login-attempts"],
+    queryFn: () => adminApi.getLoginAttempts(),
+    refetchInterval: 10_000,
+  })
+
+  const handleClear = async () => {
+    try {
+      await adminApi.clearLoginAttempts()
+      toast.success("Rate limits cleared")
+      refetch()
+    } catch (err: any) {
+      toast.error(err.message || "Failed to clear")
+    }
+  }
+
+  const entries = attempts ? Object.entries(attempts) : []
+
+  if (isLoading) {
+    return <Skeleton className="h-20 w-full" />
+  }
+
+  return (
+    <div className="space-y-3">
+      {entries.length === 0 ? (
+        <p className="text-sm text-muted-foreground text-center py-4">No active rate limits</p>
+      ) : (
+        <div className="space-y-1.5">
+          {entries.map(([ip, count]) => (
+            <div key={ip} className="flex items-center justify-between py-1.5 px-3 rounded-md bg-muted/30">
+              <span className="text-xs font-mono">{ip}</span>
+              <Badge
+                variant={count >= 10 ? "destructive" : count >= 5 ? "secondary" : "outline"}
+                className="text-[10px] px-2"
+              >
+                {count} attempt{count !== 1 ? "s" : ""}
+              </Badge>
+            </div>
+          ))}
+        </div>
+      )}
+      {entries.length > 0 && (
+        <Button variant="outline" size="sm" onClick={handleClear} className="h-8 text-xs border-border/50">
+          Clear all
+        </Button>
+      )}
     </div>
   )
 }

@@ -184,6 +184,9 @@ export interface AdminStatsResponse {
   jvmMemoryUsed: string
   jvmMemoryMax: string
   requestsCount: number
+  redirectAvgMs?: string
+  redirectMaxMs?: string
+  redirectCount?: number
 }
 
 export interface RecentUrlItem {
@@ -206,4 +209,24 @@ export interface UrlFilters {
 export interface UserFilters {
   search?: string
   active?: boolean
+}
+
+export interface AuditLog {
+  id: number
+  performedBy: string
+  action: string
+  targetType: string
+  targetIdentifier: string
+  details: string
+  performedAt: string
+}
+
+export interface EmailLog {
+  id: number
+  recipient: string
+  subject: string
+  status: string
+  errorMessage: string | null
+  sentAt: string | null
+  createdAt: string
 }

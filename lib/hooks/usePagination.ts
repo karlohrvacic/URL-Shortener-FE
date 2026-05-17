@@ -1,51 +1,53 @@
 "use client"
 
-import { useSearchParams, useRouter, usePathname } from "next/navigation"
-import { useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 
 const DEFAULT_SIZE = 20
 
 export function usePagination() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
+  const [page, setPageState] = useState(0)
+  const [size, setSizeState] = useState(DEFAULT_SIZE)
+  const [sort, setSortState] = useState("createDate")
+  const [order, setOrderState] = useState("desc")
 
-  const page = Math.max(0, parseInt(searchParams.get("page") ?? "0", 10) || 0)
-  const size = parseInt(searchParams.get("size") ?? String(DEFAULT_SIZE), 10) || DEFAULT_SIZE
-  const sort = searchParams.get("sort") ?? "createDate"
-  const order = searchParams.get("order") ?? "desc"
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setPageState(Math.max(0, parseInt(params.get("page") ?? "0", 10) || 0))
+    setSizeState(parseInt(params.get("size") ?? String(DEFAULT_SIZE), 10) || DEFAULT_SIZE)
+    setSortState(params.get("sort") ?? "createDate")
+    setOrderState(params.get("order") ?? "desc")
+  }, [])
 
-  const setParams = useCallback(
-    (updates: Record<string, string>) => {
-      const params = new URLSearchParams(searchParams.toString())
-      for (const [key, value] of Object.entries(updates)) {
-        params.set(key, value)
-      }
-      router.push(`${pathname}?${params.toString()}`)
-    },
-    [searchParams, router, pathname],
-  )
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    params.set("page", String(page))
+    params.set("size", String(size))
+    params.set("sort", sort)
+    params.set("order", order)
+    window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`)
+  }, [page, size, sort, order])
 
-  const setPage = useCallback(
-    (p: number) => setParams({ page: String(p) }),
-    [setParams],
-  )
+  const setPage = useCallback((p: number) => {
+    setPageState(Math.max(0, p))
+  }, [])
 
-  const setSize = useCallback(
-    (s: number) => setParams({ size: String(s), page: "0" }),
-    [setParams],
-  )
+  const setSize = useCallback((s: number) => {
+    setSizeState(s)
+    setPageState(0)
+  }, [])
 
   const toggleSort = useCallback(
     (field: string) => {
       const newOrder = sort === field && order === "asc" ? "desc" : "asc"
-      setParams({ sort: field, order: newOrder, page: "0" })
+      setSortState(field)
+      setOrderState(newOrder)
+      setPageState(0)
     },
-    [sort, order, setParams],
+    [sort, order],
   )
 
   const sortDir = useCallback(
-    (field: string) => sort === field ? order : null,
+    (field: string) => (sort === field ? order : null),
     [sort, order],
   )
 

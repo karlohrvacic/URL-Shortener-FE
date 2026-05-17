@@ -40,6 +40,37 @@ export default function AdminUrlsPage() {
   const [editUrl, setEditUrl] = useState<UrlResponse | null>(null)
   const [editVisitLimit, setEditVisitLimit] = useState("")
   const [editExpiration, setEditExpiration] = useState("")
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
+
+  const toggleSelect = (id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const selectAll = () => {
+    if (selectedIds.size === (urls?.content?.length ?? 0)) {
+      setSelectedIds(new Set())
+    } else {
+      setSelectedIds(new Set(urls?.content?.map((u) => u.id) ?? []))
+    }
+  }
+
+  const batchAction = async (action: "activate" | "deactivate" | "delete") => {
+    const fn = action === "activate" ? activateUrl.mutateAsync : action === "deactivate" ? deactivateUrl.mutateAsync : deleteUrl.mutateAsync
+    const label = action === "activate" ? "Activated" : action === "deactivate" ? "Deactivated" : "Deleted"
+    const results = await Promise.allSettled([...selectedIds].map((id) => fn(id)))
+    const succeeded = results.filter((r) => r.status === "fulfilled").length
+    const failed = results.filter((r) => r.status === "rejected").length
+    if (succeeded > 0) toast.success(`${label} ${succeeded} URL${succeeded > 1 ? "s" : ""}`)
+    if (failed > 0) toast.error(`Failed to ${action} ${failed} URL${failed > 1 ? "s" : ""}`)
+    setSelectedIds(new Set())
+  }
+
+  const allSelected = urls?.content?.length === selectedIds.size && selectedIds.size > 0
 
   const handleDeactivate = async (id: number) => {
     try {
@@ -142,6 +173,34 @@ export default function AdminUrlsPage() {
         </label>
       </div>
 
+      {/* Bulk actions */}
+      {selectedIds.size > 0 && (
+        <div className="flex items-center gap-2 px-4 py-2 bg-muted/50 rounded-lg border border-border/30">
+          <span className="text-xs text-muted-foreground mr-1">{selectedIds.size} selected</span>
+          <Button size="sm" variant="outline" className="h-7 text-xs border-border/40" onClick={() => batchAction("activate")}>
+            Activate
+          </Button>
+          <Button size="sm" variant="outline" className="h-7 text-xs border-border/40" onClick={() => batchAction("deactivate")}>
+            Deactivate
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button size="sm" variant="destructive" className="h-7 text-xs">Delete</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete {selectedIds.size} URL{selectedIds.size > 1 ? "s" : ""}?</AlertDialogTitle>
+                <AlertDialogDescription>This will permanently delete the selected URLs.</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => batchAction("delete")} className="bg-destructive">Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      )}
+
       {isLoading ? (
         <Card>
           <CardContent className="p-6 space-y-4">
@@ -171,6 +230,14 @@ export default function AdminUrlsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-10">
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={selectAll}
+                      className="rounded border-input"
+                    />
+                  </TableHead>
                   <TableHead>Short URL</TableHead>
                   <TableHead className="hidden lg:table-cell">Long URL</TableHead>
                   <TableHead className="hidden lg:table-cell">Owner</TableHead>
@@ -193,6 +260,14 @@ export default function AdminUrlsPage() {
               <TableBody>
                 {urls.content.map((url: UrlResponse, i: number) => (
                   <TableRow key={url.id} className="animate-fade-in" style={{ animationDelay: `${i * 30}ms` }}>
+                    <TableCell className="w-10">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(url.id)}
+                        onChange={() => toggleSelect(url.id)}
+                        className="rounded border-input"
+                      />
+                    </TableCell>
                     <TableCell><span className="text-primary font-medium">/{url.shortUrl}</span></TableCell>
                     <TableCell className="max-w-[200px] hidden lg:table-cell">
                       <span className="truncate block" title={url.longUrl}>{truncateUrl(url.longUrl, 40)}</span>
@@ -215,7 +290,7 @@ export default function AdminUrlsPage() {
                                 disabled={deactivateUrl.isPending}
                                 className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                               >
-                                <ToggleRight className="h-3.5 w-3.5" />
+                                <ToggleRight className="h-3.5 w-3.5 text-success" />
                               </button>
                             </TooltipTrigger>
                             <TooltipContent side="top" className="text-[11px]">Deactivate</TooltipContent>
@@ -228,7 +303,7 @@ export default function AdminUrlsPage() {
                                 disabled={activateUrl.isPending}
                                 className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                               >
-                                <ToggleLeft className="h-3.5 w-3.5" />
+                                <ToggleLeft className="h-3.5 w-3.5 text-destructive" />
                               </button>
                             </TooltipTrigger>
                             <TooltipContent side="top" className="text-[11px]">Activate</TooltipContent>

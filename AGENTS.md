@@ -35,8 +35,17 @@ No test framework is set up.
 - `/` — Landing page (public URL shorten + logged-in experience)
 - `/login`, `/register`, `/reset-password/[token]` — Auth flows
 - `/validate/[short]` — Peek at a URL before visiting
+- `/fortune`, `/egg` — Easter eggs
+- `/changelog` — Release notes (fetches from backend `/api/changelog`)
 - `/dashboard/*` — Protected; user's URLs, API keys, settings
-- `/admin/*` — Protected + ADMIN role; user management, URL admin, API key admin
+- `/admin/*` — Protected + ADMIN role
+  - `/admin` — Users table
+  - `/admin/dashboard` — Stats, metrics, login rate limits
+  - `/admin/urls` — All URLs with bulk actions (checkbox multi-select)
+  - `/admin/api-keys` — All API keys
+  - `/admin/health` — System health (DB, Redis, SMTP, SafeBrowsing)
+  - `/admin/audit-log` — Admin action audit trail
+  - `/admin/email-log` — Email delivery log
 
 `@/*` path alias maps to **project root** (e.g. `@/lib/api-client` → `lib/api-client.ts`).
 
@@ -55,13 +64,16 @@ lib/          — Shared logic
 ```
 
 ### API Client (`lib/api-client.ts`)
-- Custom `request<T>(method, path, body?)` wrapping `fetch`
+- `request<T>(method, path, body?, headers?)` — fetch wrapper with auth token injection
 - Reads `localStorage.getItem("auth-token")` — sends raw token as `Authorization` header (no "Bearer " prefix)
 - `ApiError` class exposes `.status` and `.message`
 - API base URL switches by env:
-  - **Dev**: `http://localhost:8080/api/v1`
+  - **Dev**: `/api/v1`
   - **Prod**: `https://hrva.cc/api/v1`
-- All endpoints are under `/api/v1/...` server-side (hardcoded in `utils.ts`)
+- **`urlApi`** — URL CRUD (create, list, peek, preview, QR, update, deactivate, delete, bulk, export)
+- **`userApi`** — User CRUD (me, list, update, password, delete)
+- **`adminApi`** — Admin operations (stats, export, audit log, email log, login attempts)
+- Endpoints returning paginated data accept `UrlFilters` / `UserFilters` for search/status/date filtering
 
 ### Auth (`lib/auth-context.tsx`)
 - React Context provider wrapping the tree under `Providers`
@@ -74,6 +86,8 @@ lib/          — Shared logic
 - Query client in `providers.tsx`: `staleTime: 30s`, `retry: 1`
 - Hooks in `lib/hooks/` follow pattern: `useXxx()` for queries, `useXxx()` for mutations
 - Mutations invalidate relevant query keys (`["urls"]`, `["apiKeys"]`, `["users"]`, `["me"]`)
+- Pagination via `hooks/usePagination.ts` — reads `page`, `size`, `sort`, `order` from URL search params
+- Sortable columns: click table headers to toggle asc/desc, resets to page 0
 
 ### Styling
 - Tailwind CSS with custom amber/brown CSS variable theme (`--primary: 38 92% 50%`)
@@ -156,6 +170,11 @@ The local backend (`localhost:8080`) has an updated API that differs significant
 | `GET /api/v1/urls/{short}/qr?size=300` | GET | Returns QR code as `image/png` bytes. Default 300×300. Use directly in `<img>` src via `urlApi.getQrCodeUrl(short)`. |
 | `GET /api/v1/urls/{short}/preview` | GET | Link preview: scrapes destination URL for OG/Twitter meta tags. Returns `LinkPreviewResponse { url, title?, description?, imageUrl? }`. Gracefully degrades (null fields) on timeout/error. |
 | `POST /api/v1/urls/bulk` | POST | Bulk create URLs. Body: `[ CreateUrlDto, ... ]`. Response: `[ UrlResponse, ... ]`. Requires auth (`ROLE_USER`). |
+| `GET /api/v1/admin/audit-log` | GET | Paginated admin audit trail. Roles: entries with action badges (deactivate=destructive, activate=default, update=secondary). |
+| `GET /api/v1/admin/email-log` | GET | Paginated email delivery log. Statuses: SENT=success, FAILED=destructive, SENDING=secondary. |
+| `GET /api/v1/admin/login-attempts` | GET | Map of IP → attempt count for active rate limits. |
+| `DELETE /api/v1/admin/login-attempts` | DELETE | Clear all login rate limits. |
+| `GET /api/changelog` | GET | Changelog JSON (all releases, sections, items). Public. |
 
 ---
 
@@ -165,4 +184,7 @@ The local backend (`localhost:8080`) has an updated API that differs significant
 - **Auth token stored without "Bearer" prefix** — the backend expects the raw token string in the `Authorization` header
 - **No middleware-based route protection** — dashboard/admin check auth in a client `useEffect`, creating a flash of unauthenticated content
 - **`@/*` maps to root** — unlike the common Next.js pattern of mapping to `src/*`
-- **pnpm/npm**: lockfile is `package-lock.json` (npm), not pnpm 
+- **pnpm/npm**: lockfile is `package-lock.json` (npm), not pnpm
+- **Changelog page** at `/changelog` is a client component — fetches changelog JSON from backend `/api/changelog`
+- **Easter eggs**: Konami code (↑↑↓↓←→←→BA) on landing page, `/fortune`, `/egg`, console message hint
+- **Animations**: `animate-copy-pulse` class, `CountUp` component for stat counters, staggered row entrance via `animate-fade-in` with inline delay, filter remount via `filterKey` 
