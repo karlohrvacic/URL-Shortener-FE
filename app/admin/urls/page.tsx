@@ -201,7 +201,7 @@ export default function AdminUrlsPage() {
                     <TableCell className="text-sm">{url.visits}{url.visitLimit > 0 ? ` / ${url.visitLimit}` : ""}</TableCell>
                     <TableCell className="text-sm text-muted-foreground hidden lg:table-cell" title={formatDateTime(url.createDate)}>{formatDate(url.createDate)}</TableCell>
                     <TableCell>
-                      <Badge variant={url.active ? "default" : "destructive"} className="text-[10px] px-2 py-0.5">
+                      <Badge variant={url.active ? "success" : "destructive"} className="text-[10px] px-2 py-0.5">
                         {url.active ? "Active" : "Revoked"}
                       </Badge>
                     </TableCell>

@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { PageMeta } from "@/components/page-meta"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 import { Users, LinkIcon, Shield, Activity, Clock, Database, HardDrive, Cpu, Server, AlertCircle, CheckCircle2, Zap, BarChart3, Layers } from "lucide-react"
 import { formatDate, formatDateTime, formatShortUrl, truncateUrl } from "@/lib/utils"
 import { cn } from "@/lib/utils"
@@ -46,13 +45,6 @@ export default function AdminDashboardPage() {
       </div>
     )
   }
-
-  const chartData = [
-    { name: "Users", value: stats.totalUsers },
-    { name: "URLs", value: stats.totalUrls },
-    { name: "Active URLs", value: stats.activeUrls },
-    { name: "API Keys", value: stats.totalApiKeys },
-  ]
 
   const systemItems = [
     { icon: Server, label: "App Version", value: `v${stats.appVersion}` },
@@ -157,37 +149,7 @@ export default function AdminDashboardPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Bar chart */}
-        <Card className="border-border/50">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-sm font-semibold tracking-tight flex items-center gap-2">
-              <BarChart className="h-4 w-4 text-primary" />
-              System overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="name" tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
-                  <YAxis tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }} />
-                  <Tooltip
-                    contentStyle={{
-                      background: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
-                      borderRadius: "8px",
-                      fontSize: "13px",
-                    }}
-                  />
-                  <Bar dataKey="value" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-
+      <div className="grid grid-cols-1 gap-6">
         {/* System info */}
         <Card className="border-border/50">
           <CardHeader className="pb-4">
@@ -196,51 +158,53 @@ export default function AdminDashboardPage() {
               System
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Database className="h-4 w-4 text-muted-foreground shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-muted-foreground">Database</p>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  {stats.databaseActive ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                  ) : (
-                    <AlertCircle className="h-3.5 w-3.5 text-destructive" />
-                  )}
-                  <span className={cn("text-xs font-medium", stats.databaseActive ? "text-success" : "text-destructive")}>
-                    {stats.databaseActive ? "Connected" : "Disconnected"}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Activity className="h-4 w-4 text-muted-foreground shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-muted-foreground">Cache (Redis)</p>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  {stats.cacheActive ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                  ) : (
-                    <AlertCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                  )}
-                  <span className={cn("text-xs font-medium", stats.cacheActive ? "text-success" : "text-muted-foreground")}>
-                    {stats.cacheActive ? "Active" : "Inactive"}
-                  </span>
-                </div>
-              </div>
-            </div>
-            {systemItems.map((item) => {
-              const Icon = item.icon
-              return (
-                <div key={item.label} className="flex items-center gap-3">
-                  <Icon className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-muted-foreground">{item.label}</p>
-                    <p className="text-xs font-medium truncate mt-0.5">{item.value}</p>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+              <div className="flex items-center gap-3">
+                <Database className="h-4 w-4 text-muted-foreground shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-muted-foreground">Database</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    {stats.databaseActive ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+                    ) : (
+                      <AlertCircle className="h-3.5 w-3.5 text-destructive" />
+                    )}
+                    <span className={cn("text-xs font-medium", stats.databaseActive ? "text-success" : "text-destructive")}>
+                      {stats.databaseActive ? "Connected" : "Disconnected"}
+                    </span>
                   </div>
                 </div>
-              )
-            })}
+              </div>
+              <div className="flex items-center gap-3">
+                <Activity className="h-4 w-4 text-muted-foreground shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-muted-foreground">Cache (Redis)</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    {stats.cacheActive ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+                    ) : (
+                      <AlertCircle className="h-3.5 w-3.5 text-foreground/40" />
+                    )}
+                    <span className={cn("text-xs font-medium", stats.cacheActive ? "text-success" : "text-foreground/40")}>
+                      {stats.cacheActive ? "Active" : "Inactive"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {systemItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <div key={item.label} className="flex items-center gap-3">
+                    <Icon className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-muted-foreground">{item.label}</p>
+                      <p className="text-xs font-medium truncate mt-0.5">{item.value}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </CardContent>
         </Card>
       </div>

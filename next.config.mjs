@@ -20,6 +20,10 @@ const nextConfig = {
           source: "/login/:path*",
           destination: "http://localhost:8080/login/:path*",
         },
+        {
+          source: "/api/changelog",
+          destination: "http://localhost:8080/api/changelog",
+        },
       ];
     }
     return [];

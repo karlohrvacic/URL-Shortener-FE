@@ -67,7 +67,7 @@ export default function ChangelogPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch("/api/v1/changelog")
+    fetch("/api/changelog")
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to load changelog (${res.status})`)
         return res.json()
