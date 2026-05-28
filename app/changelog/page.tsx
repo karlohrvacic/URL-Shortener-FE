@@ -14,6 +14,7 @@ import {
   BarChart3, Key, Clock, Users, Cloud, Database, Globe, AlertCircle,
 } from "lucide-react"
 import Link from "next/link"
+import { getBackendOrigin } from "@/lib/utils"
 
 interface ChangelogItem {
   title: string
@@ -67,7 +68,7 @@ export default function ChangelogPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch("/api/changelog")
+    fetch(`${getBackendOrigin()}/api/changelog`)
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to load changelog (${res.status})`)
         return res.json()
