@@ -4,10 +4,12 @@ import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Logo } from "@/components/logo"
+import { useAuth } from "@/lib/auth-context"
 
 export function AuthCallbackContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { refreshUser } = useAuth()
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -16,13 +18,15 @@ export function AuthCallbackContent() {
 
     if (token) {
       localStorage.setItem("auth-token", `Bearer ${token}`)
-      router.push("/dashboard")
+      refreshUser()
+        .then(() => router.push("/dashboard"))
+        .catch(() => setError("Authentication failed."))
     } else if (err) {
       setError(err === "no_email" ? "Could not retrieve email from provider." : "Authentication failed.")
     } else {
       setError("Invalid callback — no token received.")
     }
-  }, [searchParams, router])
+  }, [searchParams, router, refreshUser])
 
   if (error) {
     return (
