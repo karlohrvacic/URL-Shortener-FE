@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { StatusBadge } from "@/components/status-badge"
 import { Progress } from "@/components/ui/progress"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
@@ -252,12 +253,7 @@ export default function DashboardPage() {
                     <TableCell className="hidden lg:table-cell text-sm text-muted-foreground" title={formatDateTime(url.createDate)}>{formatDate(url.createDate)}</TableCell>
                     <TableCell className="hidden lg:table-cell text-sm">{formatRelativeDate(url.expirationDate)}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={url.active ? "success" : "destructive"}
-                        className="text-[11px] px-2 py-0.5 font-medium"
-                      >
-                        {url.active ? "Active" : "Revoked"}
-                      </Badge>
+                      <StatusBadge status={url.status} active={url.active} className="text-[11px] px-2 py-0.5 font-medium" />
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-0.5">

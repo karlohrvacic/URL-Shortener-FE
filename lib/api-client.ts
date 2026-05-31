@@ -173,6 +173,8 @@ export const userApi = {
     request<User>("PATCH", "/users/password", data),
   delete: (id: number) =>
     request<void>("DELETE", `/users/${id}`),
+  deleteMe: (data?: { password?: string }) =>
+    request<void>("DELETE", "/users/me", data),
 }
 
 // Admin

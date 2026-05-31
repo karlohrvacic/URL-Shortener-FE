@@ -6,6 +6,7 @@ import type { ApiKeyResponse } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { StatusBadge } from "@/components/status-badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
@@ -252,9 +253,7 @@ export default function ApiKeysPage() {
                       <TableCell className="hidden lg:table-cell text-sm">{key.expirationDate ? formatDate(key.expirationDate) : <span className="text-muted-foreground">Never</span>}</TableCell>
                       <TableCell className="text-sm">{key.apiCallsUsed} / {key.apiCallsLimit > 0 ? key.apiCallsLimit : "\u221E"}</TableCell>
                       <TableCell>
-                        <Badge variant={key.active ? "success" : "destructive"} className="text-[11px] px-2 py-0.5 font-medium">
-                          {key.active ? "Active" : "Revoked"}
-                        </Badge>
+                        <StatusBadge status={key.status} active={key.active} className="text-[11px] px-2 py-0.5 font-medium" />
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-0.5">

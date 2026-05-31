@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { StatusBadge } from "@/components/status-badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
@@ -276,9 +277,7 @@ export default function AdminUrlsPage() {
                     <TableCell className="text-sm">{url.visits}{url.visitLimit > 0 ? ` / ${url.visitLimit}` : ""}</TableCell>
                     <TableCell className="text-sm text-muted-foreground hidden lg:table-cell" title={formatDateTime(url.createDate)}>{formatDate(url.createDate)}</TableCell>
                     <TableCell>
-                      <Badge variant={url.active ? "success" : "destructive"} className="text-[10px] px-2 py-0.5">
-                        {url.active ? "Active" : "Revoked"}
-                      </Badge>
+                      <StatusBadge status={url.status} active={url.active} className="text-[10px] px-2 py-0.5" />
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-0.5">

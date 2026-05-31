@@ -9,17 +9,40 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { User, Lock } from "lucide-react"
+import { User, Lock, Trash2 } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { PageMeta } from "@/components/page-meta"
 
 export default function SettingsPage() {
   const { user, refreshUser, logout } = useAuth()
+  const router = useRouter()
   const [email, setEmail] = useState(user?.email || "")
   const [profileLoading, setProfileLoading] = useState(false)
   const [oldPassword, setOldPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [passwordLoading, setPasswordLoading] = useState(false)
+  const [deletePassword, setDeletePassword] = useState("")
+  const [deleteLoading, setDeleteLoading] = useState(false)
+
+  const isLocalAccount = !user?.authProvider || user.authProvider === "local"
+
+  const handleDeleteAccount = async () => {
+    if (!confirm("Permanently delete your account, all your URLs and API keys? This cannot be undone.")) {
+      return
+    }
+    setDeleteLoading(true)
+    try {
+      await userApi.deleteMe(isLocalAccount ? { password: deletePassword } : undefined)
+      toast.success("Your account has been deleted.")
+      logout()
+      router.push("/")
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete account")
+    } finally {
+      setDeleteLoading(false)
+    }
+  }
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -121,6 +144,40 @@ export default function SettingsPage() {
               {passwordLoading ? "Changing…" : "Change password"}
             </Button>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card className="border-destructive/40">
+        <CardHeader>
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-destructive/10">
+              <Trash2 className="h-4 w-4 text-destructive" />
+            </div>
+            <div>
+              <CardTitle className="text-base font-display tracking-tight">Delete account</CardTitle>
+              <CardDescription className="text-xs">Permanently delete your account, URLs and API keys. This cannot be undone.</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {isLocalAccount && (
+              <div className="space-y-1.5">
+                <Label htmlFor="deletePassword" className="text-xs font-medium text-muted-foreground tracking-wide uppercase">Confirm with your password</Label>
+                <Input id="deletePassword" type="password" value={deletePassword} onChange={(e) => setDeletePassword(e.target.value)} className="h-10 bg-background/50 border-border/50" />
+              </div>
+            )}
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              disabled={deleteLoading || (isLocalAccount && !deletePassword)}
+              onClick={handleDeleteAccount}
+              className="h-9 text-xs"
+            >
+              {deleteLoading ? "Deleting…" : "Delete my account"}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

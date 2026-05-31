@@ -25,6 +25,7 @@ export interface UserDto {
   authorities: Authorities[]
   createDate: string
   lastLogin: string
+  authProvider?: string
 }
 
 export interface Url {
@@ -54,6 +55,7 @@ export interface UrlResponse {
   visits: number
   visitLimit: number
   active: boolean
+  status?: string
   ownerEmail?: string
 }
 
@@ -77,6 +79,7 @@ export interface ApiKeyResponse {
   createDate: string
   expirationDate?: string
   active: boolean
+  status?: string
   ownerEmail?: string
 }
 
