@@ -1,5 +1,5 @@
 import { getApiBaseUrl } from "./utils"
-import type { UrlResponse, ApiKeyResponse, UserDto, User, PeekUrl, CreateUrlDto, UrlUpdateDto, ApiKeyUpdateDto, UserUpdateDto, UpdatePasswordDto, LinkPreviewResponse, Page, AdminStatsResponse, UrlFilters, UserFilters, AuditLog, EmailLog } from "./types"
+import type { UrlResponse, ApiKeyResponse, UserDto, User, PeekUrl, CreateUrlDto, UrlUpdateDto, ApiKeyUpdateDto, UserUpdateDto, UpdatePasswordDto, LinkPreviewResponse, Page, AdminStatsResponse, UrlFilters, UserFilters, AuditLog, EmailLog, AnalyticsOverview, UrlAnalytics } from "./types"
 
 class ApiError extends Error {
   status: number
@@ -63,14 +63,24 @@ async function request<T>(
 
 // Auth
 export const authApi = {
-  login: (data: { email: string; password: string; rememberMe?: boolean }) =>
-    request<{ token: string; user: UserDto }>("POST", "/auth/login", data),
+  login: (data: { email: string; password: string; rememberMe?: boolean; code?: string }) =>
+    request<{ token?: string; user?: UserDto; twoFactorRequired?: boolean }>("POST", "/auth/login", data),
+  setupTwoFactor: () =>
+    request<{ secret: string; otpauthUri: string }>("POST", "/auth/2fa/setup"),
+  enableTwoFactor: (code: string) =>
+    request<{ recoveryCodes: string[] }>("POST", "/auth/2fa/enable", { code }),
+  disableTwoFactor: (code: string) =>
+    request<void>("POST", "/auth/2fa/disable", { code }),
   register: (data: { email: string; password: string }) =>
     request<string>("POST", "/auth/register", data),
   requestPasswordReset: (data: { email: string }) =>
     request<void>("POST", "/auth/password-reset", data),
   resetPassword: (data: { token: string; email: string; password: string }) =>
     request<User>("POST", "/auth/password-reset/confirm", data),
+  verifyEmail: (token: string) =>
+    request<void>("POST", "/auth/verify-email/confirm", { token }),
+  resendVerification: (email: string) =>
+    request<void>("POST", "/auth/verify-email/resend", { email }),
 }
 
 // URL
@@ -91,8 +101,11 @@ export const urlApi = {
     if (filters.expired) params.set("expired", "true")
     if (filters.dateFrom) params.set("dateFrom", filters.dateFrom)
     if (filters.dateTo) params.set("dateTo", filters.dateTo)
+    if (filters.tag) params.set("tag", filters.tag)
     return request<Page<UrlResponse>>("GET", `/urls?${params}`)
   },
+  getMyTags: () =>
+    request<string[]>("GET", "/urls/tags"),
   getAllUrls: (filters: UrlFilters = {}, page = 0, size = 20, sort?: string, order?: string) => {
     const params = new URLSearchParams()
     params.set("page", String(page))
@@ -175,6 +188,30 @@ export const userApi = {
     request<void>("DELETE", `/users/${id}`),
   deleteMe: (data?: { password?: string }) =>
     request<void>("DELETE", "/users/me", data),
+  exportMyData: async () => {
+    const baseUrl = getApiBaseUrl()
+    const token = localStorage.getItem("auth-token")
+    const response = await fetch(`${baseUrl}/users/me/export`, {
+      headers: token ? { "Authorization": token } : {},
+    })
+    if (!response.ok) throw new Error("Failed to export data")
+    const data = await response.json()
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "my-data.json"
+    a.click()
+    URL.revokeObjectURL(url)
+  },
+}
+
+// Analytics
+export const analyticsApi = {
+  getOverview: () =>
+    request<AnalyticsOverview>("GET", "/analytics/overview"),
+  getUrlAnalytics: (id: number) =>
+    request<UrlAnalytics>("GET", `/analytics/urls/${id}`),
 }
 
 // Admin

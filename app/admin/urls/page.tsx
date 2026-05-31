@@ -41,6 +41,7 @@ export default function AdminUrlsPage() {
   const [editUrl, setEditUrl] = useState<UrlResponse | null>(null)
   const [editVisitLimit, setEditVisitLimit] = useState("")
   const [editExpiration, setEditExpiration] = useState("")
+  const [editTags, setEditTags] = useState("")
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
 
   const toggleSelect = (id: number) => {
@@ -104,6 +105,7 @@ export default function AdminUrlsPage() {
     setEditUrl(url)
     setEditVisitLimit(url.visitLimit?.toString() || "")
     setEditExpiration(url.expirationDate ? url.expirationDate.slice(0, 16) : "")
+    setEditTags(url.tags?.join(", ") || "")
   }
 
   const handleEditSave = async () => {
@@ -115,6 +117,7 @@ export default function AdminUrlsPage() {
           id: editUrl.id,
           visitLimit: editVisitLimit ? parseInt(editVisitLimit) : 0,
           expirationDate: editExpiration ? new Date(editExpiration).toISOString() : undefined,
+          tags: editTags.split(",").map((t) => t.trim()).filter(Boolean),
         },
       })
       toast.success("URL updated")
@@ -384,6 +387,15 @@ export default function AdminUrlsPage() {
                   type="datetime-local"
                   value={editExpiration}
                   onChange={(e) => setEditExpiration(e.target.value)}
+                  className="h-9 text-sm"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground tracking-wide uppercase">Tags (comma-separated)</label>
+                <Input
+                  placeholder="work, campaign"
+                  value={editTags}
+                  onChange={(e) => setEditTags(e.target.value)}
                   className="h-9 text-sm"
                 />
               </div>

@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { StatusBadge } from "@/components/status-badge"
+import { useQuery } from "@tanstack/react-query"
 import { Progress } from "@/components/ui/progress"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
@@ -23,6 +24,7 @@ import { toast } from "sonner"
 import { formatDate, formatDateTime, formatRelativeDate, truncateUrl, formatShortUrl } from "@/lib/utils"
 import { urlApi } from "@/lib/api-client"
 import { CreateUrlDialog } from "@/components/dashboard/create-url-dialog"
+import { UrlStatsDialog } from "@/components/url-stats-dialog"
 import { PageMeta } from "@/components/page-meta"
 
 export default function DashboardPage() {
@@ -30,13 +32,16 @@ export default function DashboardPage() {
   const [search, setSearch] = useState("")
   const [activeFilter, setActiveFilter] = useState<string>("all")
   const [expiredFilter, setExpiredFilter] = useState(false)
-  useEffect(() => { setPage(0) }, [search, activeFilter, expiredFilter])
-  const filterKey = `${search}-${activeFilter}-${expiredFilter}`
+  const [tagFilter, setTagFilter] = useState<string>("")
+  useEffect(() => { setPage(0) }, [search, activeFilter, expiredFilter, tagFilter])
+  const filterKey = `${search}-${activeFilter}-${expiredFilter}-${tagFilter}`
   const filters: UrlFilters = {
     search: search || undefined,
     active: activeFilter === "all" ? undefined : activeFilter === "active",
     expired: expiredFilter || undefined,
+    tag: tagFilter || undefined,
   }
+  const { data: myTags } = useQuery({ queryKey: ["urls", "tags"], queryFn: () => urlApi.getMyTags() })
   const { data: urls, isLoading, error } = useMyUrls(filters, page, size, sort, order)
   const deactivateUrl = useDeactivateUrl()
   const deleteUrl = useDeleteUrl()
@@ -45,6 +50,7 @@ export default function DashboardPage() {
   const activeKeys = apiKeys?.filter(k => k.active).length ?? 0
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [copyPulseId, setCopyPulseId] = useState<number | null>(null)
+  const [statsUrlId, setStatsUrlId] = useState<number | null>(null)
 
   const copyToClipboard = (text: string, id?: number) => {
     navigator.clipboard.writeText(text)
@@ -103,6 +109,7 @@ export default function DashboardPage() {
       </div>
 
       <CreateUrlDialog open={showCreateDialog} onOpenChange={setShowCreateDialog} />
+      <UrlStatsDialog urlId={statsUrlId} onClose={() => setStatsUrlId(null)} />
 
       {/* Stats */}
       <div className="flex items-center gap-4 text-sm">
@@ -139,6 +146,18 @@ export default function DashboardPage() {
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
+        {myTags && myTags.length > 0 && (
+          <select
+            value={tagFilter}
+            onChange={(e) => setTagFilter(e.target.value)}
+            className="h-9 rounded-md border border-input bg-background px-3 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+          >
+            <option value="">All tags</option>
+            {myTags.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        )}
         <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer whitespace-nowrap">
           <input
             type="checkbox"
@@ -235,6 +254,13 @@ export default function DashboardPage() {
                       <span className="text-sm text-muted-foreground truncate block" title={url.longUrl}>
                         {truncateUrl(url.longUrl, 40)}
                       </span>
+                      {url.tags && url.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {url.tags.map((t) => (
+                            <Badge key={t} variant="secondary" className="text-[10px] px-1.5 py-0 font-normal">{t}</Badge>
+                          ))}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -267,6 +293,18 @@ export default function DashboardPage() {
                             </button>
                           </TooltipTrigger>
                           <TooltipContent side="top" className="text-[11px]">Copy short URL</TooltipContent>
+                        </Tooltip>
+
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              onClick={() => setStatsUrlId(url.id)}
+                              className="p-1.5 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
+                            >
+                              <BarChart3 className="h-3.5 w-3.5" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="text-[11px]">View stats</TooltipContent>
                         </Tooltip>
 
                         <Tooltip>

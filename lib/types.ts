@@ -26,6 +26,7 @@ export interface UserDto {
   createDate: string
   lastLogin: string
   authProvider?: string
+  twoFactorEnabled?: boolean
 }
 
 export interface Url {
@@ -56,6 +57,7 @@ export interface UrlResponse {
   visitLimit: number
   active: boolean
   status?: string
+  tags?: string[]
   ownerEmail?: string
 }
 
@@ -81,6 +83,39 @@ export interface ApiKeyResponse {
   active: boolean
   status?: string
   ownerEmail?: string
+}
+
+export interface AnalyticsTopUrl {
+  id: number
+  shortUrl: string
+  longUrl: string
+  visits: number
+}
+
+export interface AnalyticsOverview {
+  totalUrls: number
+  activeUrls: number
+  expiredUrls: number
+  totalVisits: number
+  topUrls: AnalyticsTopUrl[]
+}
+
+export interface DailyCount {
+  date: string
+  count: number
+}
+
+export interface UrlAnalytics {
+  id: number
+  shortUrl: string
+  longUrl: string
+  status: string
+  visits: number
+  uniqueRecentVisitors: number
+  totalRecentClicks: number
+  lastAccessed?: string
+  createDate?: string
+  dailyNewVisitors: DailyCount[]
 }
 
 export interface PeekUrl {
@@ -111,12 +146,14 @@ export interface CreateUrlDto {
   shortUrl?: string
   visitLimit?: number
   expirationDate?: string
+  tags?: string[]
 }
 
 export interface UrlUpdateDto {
   id: number
   visitLimit?: number
   expirationDate?: string
+  tags?: string[]
 }
 
 export interface ApiKeyUpdateDto {
@@ -209,6 +246,7 @@ export interface UrlFilters {
   expired?: boolean
   dateFrom?: string
   dateTo?: string
+  tag?: string
 }
 
 export interface UserFilters {

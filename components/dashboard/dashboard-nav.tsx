@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Logo } from "@/components/logo"
-import { BarChart3, Key, Settings, Users, LinkIcon, Shield, LogOut, Activity, History, Mail } from "lucide-react"
+import { BarChart3, Key, Settings, Users, LinkIcon, Shield, LogOut, Activity, History, Mail, LineChart } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function DashboardNav() {
@@ -15,6 +15,7 @@ export function DashboardNav() {
 
   const navItems = [
     { href: "/dashboard", label: "URLs", icon: BarChart3 },
+    { href: "/dashboard/analytics", label: "Analytics", icon: LineChart },
     { href: "/dashboard/api-keys", label: "API Keys", icon: Key },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
   ]
