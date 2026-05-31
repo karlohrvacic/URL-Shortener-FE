@@ -17,6 +17,7 @@ import {
   LinkIcon, BarChart3, Shield, Copy, Check, ExternalLink,
   Clock, Zap, Globe, BookOpen, ChevronDown,
   ArrowRight, Plus, Sparkles, LogOut, Activity,
+  Lock, QrCode, Tags, KeyRound,
 } from "lucide-react"
 import { QRCodeSVG } from "qrcode.react"
 import { toast } from "sonner"
@@ -69,10 +70,14 @@ export default function HomePage() {
   const shortUrlDisplay = result ? formatShortUrl(result.shortUrl) : ""
 
   const features = [
-    { icon: <Zap className="h-5 w-5" />, title: "Lightning Fast", description: "Shorten URLs in milliseconds with our optimized edge service." },
-    { icon: <BarChart3 className="h-5 w-5" />, title: "Track Visits", description: "Monitor every click with real-time analytics on your links." },
-    { icon: <Clock className="h-5 w-5" />, title: "Expiration Control", description: "Set visit limits and expiration dates — total control." },
-    { icon: <Shield className="h-5 w-5" />, title: "Safe Browsing", description: "Every URL is checked against Google Safe Browsing." },
+    { icon: <Zap className="h-5 w-5" />, title: "Lightning Fast", description: "Redirects resolve in milliseconds, cached at the edge." },
+    { icon: <BarChart3 className="h-5 w-5" />, title: "Click Analytics", description: "Track visits and unique-visitor trends per link." },
+    { icon: <Lock className="h-5 w-5" />, title: "Password-Protected Links", description: "Lock any link behind a password — registered users." },
+    { icon: <QrCode className="h-5 w-5" />, title: "Custom QR Codes", description: "Style colors and size, download as PNG or SVG." },
+    { icon: <Tags className="h-5 w-5" />, title: "Tags & Organization", description: "Tag links and filter your dashboard instantly." },
+    { icon: <Clock className="h-5 w-5" />, title: "Expiration & Limits", description: "Set visit limits and expiry dates — total control." },
+    { icon: <Shield className="h-5 w-5" />, title: "2FA & Safe Browsing", description: "Two-factor login and Google Safe Browsing checks." },
+    { icon: <KeyRound className="h-5 w-5" />, title: "API Access", description: "Create and manage links programmatically with API keys." },
   ]
 
   // Stats for logged-in user

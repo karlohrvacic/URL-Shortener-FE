@@ -8,7 +8,7 @@ interface AuthContextType {
   user: UserDto | null
   isLoading: boolean
   isAdmin: boolean
-  login: (email: string, password: string, rememberMe?: boolean) => Promise<void>
+  login: (email: string, password: string, rememberMe?: boolean, code?: string) => Promise<{ twoFactorRequired: boolean }>
   register: (email: string, password: string) => Promise<void>
   logout: () => void
   refreshUser: () => Promise<void>
@@ -42,10 +42,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshUser()
   }, [refreshUser])
 
-  const login = useCallback(async (email: string, password: string, rememberMe?: boolean) => {
-    const res = await authApi.login({ email, password, rememberMe })
-    localStorage.setItem("auth-token", res.token)
-    setUser(res.user)
+  const login = useCallback(async (email: string, password: string, rememberMe?: boolean, code?: string) => {
+    const res = await authApi.login({ email, password, rememberMe, code })
+    if (res.twoFactorRequired) {
+      return { twoFactorRequired: true }
+    }
+    localStorage.setItem("auth-token", res.token!)
+    setUser(res.user!)
+    return { twoFactorRequired: false }
   }, [])
 
   const register = useCallback(async (email: string, password: string) => {

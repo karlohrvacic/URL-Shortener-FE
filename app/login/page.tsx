@@ -20,6 +20,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
+  const [code, setCode] = useState("")
+  const [twoFactorRequired, setTwoFactorRequired] = useState(false)
   const { login } = useAuth()
   const router = useRouter()
 
@@ -27,11 +29,24 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      await login(email, password, rememberMe)
+      const res = await login(email, password, rememberMe, twoFactorRequired ? code : undefined)
+      if (res.twoFactorRequired) {
+        setTwoFactorRequired(true)
+        toast.info("Enter the code from your authenticator app")
+        setLoading(false)
+        return
+      }
       toast.success("Welcome back!")
       router.push("/dashboard")
     } catch (err: any) {
-      toast.error(err.message || "Invalid credentials")
+      const message = err.message || "Invalid credentials"
+      if (message.toLowerCase().includes("verify")) {
+        toast.error(message, {
+          action: { label: "Resend", onClick: () => router.push("/verify-email/resend") },
+        })
+      } else {
+        toast.error(message)
+      }
     } finally {
       setLoading(false)
     }
@@ -93,6 +108,24 @@ export default function LoginPage() {
                   required
                 />
               </div>
+              {twoFactorRequired && (
+                <div className="space-y-1.5">
+                  <Label htmlFor="code" className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
+                    Authenticator code
+                  </Label>
+                  <Input
+                    id="code"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    placeholder="123456 or recovery code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    className="h-10 bg-background/50 border-border/50"
+                    autoFocus
+                    required
+                  />
+                </div>
+              )}
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -103,7 +136,7 @@ export default function LoginPage() {
                 <span className="text-xs text-muted-foreground">Remember me</span>
               </label>
               <Button type="submit" className="w-full h-10 bg-primary text-primary-foreground hover:brightness-110" disabled={loading}>
-                {loading ? "Signing in…" : "Sign in"}
+                {loading ? "Signing in…" : twoFactorRequired ? "Verify & sign in" : "Sign in"}
               </Button>
             </form>
             <div className="relative my-6">

@@ -9,9 +9,10 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { User, Lock, Trash2 } from "lucide-react"
+import { User, Lock, Trash2, Download } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { PageMeta } from "@/components/page-meta"
+import { TwoFactorCard } from "@/components/two-factor-card"
 
 export default function SettingsPage() {
   const { user, refreshUser, logout } = useAuth()
@@ -24,6 +25,19 @@ export default function SettingsPage() {
   const [passwordLoading, setPasswordLoading] = useState(false)
   const [deletePassword, setDeletePassword] = useState("")
   const [deleteLoading, setDeleteLoading] = useState(false)
+  const [exportLoading, setExportLoading] = useState(false)
+
+  const handleExport = async () => {
+    setExportLoading(true)
+    try {
+      await userApi.exportMyData()
+      toast.success("Your data has been downloaded.")
+    } catch (err: any) {
+      toast.error(err.message || "Failed to export data")
+    } finally {
+      setExportLoading(false)
+    }
+  }
 
   const isLocalAccount = !user?.authProvider || user.authProvider === "local"
 
@@ -144,6 +158,28 @@ export default function SettingsPage() {
               {passwordLoading ? "Changing…" : "Change password"}
             </Button>
           </form>
+        </CardContent>
+      </Card>
+
+      <TwoFactorCard />
+
+      <Card className="border-border/40">
+        <CardHeader>
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-secondary">
+              <Download className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-base font-display tracking-tight">Your data</CardTitle>
+              <CardDescription className="text-xs">Download all your data (profile, URLs, API keys, emails) as JSON</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Button type="button" variant="outline" size="sm" disabled={exportLoading} onClick={handleExport} className="h-9 text-xs border-border/50">
+            <Download className="h-4 w-4 mr-2" />
+            {exportLoading ? "Preparing…" : "Download my data"}
+          </Button>
         </CardContent>
       </Card>
 

@@ -32,7 +32,7 @@ export default function RegisterPage() {
     setLoading(true)
     try {
       await register(email, password)
-      toast.success("Account created! Please sign in.")
+      toast.success("Account created! Check your email to verify before signing in.")
       router.push("/login")
     } catch (err: any) {
       toast.error(err.message || "Registration failed")

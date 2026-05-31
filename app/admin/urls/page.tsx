@@ -41,6 +41,9 @@ export default function AdminUrlsPage() {
   const [editUrl, setEditUrl] = useState<UrlResponse | null>(null)
   const [editVisitLimit, setEditVisitLimit] = useState("")
   const [editExpiration, setEditExpiration] = useState("")
+  const [editTags, setEditTags] = useState("")
+  const [editPassword, setEditPassword] = useState("")
+  const [removePassword, setRemovePassword] = useState(false)
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
 
   const toggleSelect = (id: number) => {
@@ -104,6 +107,9 @@ export default function AdminUrlsPage() {
     setEditUrl(url)
     setEditVisitLimit(url.visitLimit?.toString() || "")
     setEditExpiration(url.expirationDate ? url.expirationDate.slice(0, 16) : "")
+    setEditTags(url.tags?.join(", ") || "")
+    setEditPassword("")
+    setRemovePassword(false)
   }
 
   const handleEditSave = async () => {
@@ -115,6 +121,8 @@ export default function AdminUrlsPage() {
           id: editUrl.id,
           visitLimit: editVisitLimit ? parseInt(editVisitLimit) : 0,
           expirationDate: editExpiration ? new Date(editExpiration).toISOString() : undefined,
+          tags: editTags.split(",").map((t) => t.trim()).filter(Boolean),
+          password: removePassword ? "" : (editPassword || undefined),
         },
       })
       toast.success("URL updated")
@@ -386,6 +394,35 @@ export default function AdminUrlsPage() {
                   onChange={(e) => setEditExpiration(e.target.value)}
                   className="h-9 text-sm"
                 />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground tracking-wide uppercase">Tags (comma-separated)</label>
+                <Input
+                  placeholder="work, campaign"
+                  value={editTags}
+                  onChange={(e) => setEditTags(e.target.value)}
+                  className="h-9 text-sm"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
+                  Password {editUrl?.passwordProtected && <span className="text-primary normal-case">(currently set)</span>}
+                </label>
+                <Input
+                  type="password"
+                  placeholder={editUrl?.passwordProtected ? "Enter new password to replace" : "Set a password"}
+                  value={editPassword}
+                  onChange={(e) => setEditPassword(e.target.value)}
+                  disabled={removePassword}
+                  className="h-9 text-sm"
+                  autoComplete="new-password"
+                />
+                {editUrl?.passwordProtected && (
+                  <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
+                    <input type="checkbox" checked={removePassword} onChange={(e) => setRemovePassword(e.target.checked)} className="h-3.5 w-3.5 accent-primary" />
+                    Remove password protection
+                  </label>
+                )}
               </div>
               <Button onClick={handleEditSave} disabled={updateUrl.isPending} className="w-full">
                 {updateUrl.isPending ? "Saving..." : "Save changes"}

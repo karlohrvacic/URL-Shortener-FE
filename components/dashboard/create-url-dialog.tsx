@@ -21,6 +21,8 @@ export function CreateUrlDialog({ open, onOpenChange }: CreateUrlDialogProps) {
   const [customAlias, setCustomAlias] = useState("")
   const [visitLimit, setVisitLimit] = useState("")
   const [expirationDate, setExpirationDate] = useState("")
+  const [tags, setTags] = useState("")
+  const [password, setPassword] = useState("")
   const [result, setResult] = useState<{ shortUrl: string; longUrl: string } | null>(null)
   const [copied, setCopied] = useState(false)
   const createUrl = useCreateUrl()
@@ -30,11 +32,14 @@ export function CreateUrlDialog({ open, onOpenChange }: CreateUrlDialogProps) {
     if (!longUrl) return
     const expDate = expirationDate ? new Date(expirationDate).toISOString() : undefined
     try {
+      const tagList = tags.split(",").map((t) => t.trim()).filter(Boolean)
       const url = await createUrl.mutateAsync({
         longUrl,
         shortUrl: customAlias || undefined,
         visitLimit: visitLimit ? parseInt(visitLimit) : undefined,
         expirationDate: expDate,
+        tags: tagList.length ? tagList : undefined,
+        password: password || undefined,
       })
       setResult({ shortUrl: url.shortUrl, longUrl: url.longUrl })
       toast.success("URL shortened!")
@@ -48,6 +53,8 @@ export function CreateUrlDialog({ open, onOpenChange }: CreateUrlDialogProps) {
     setCustomAlias("")
     setVisitLimit("")
     setExpirationDate("")
+    setTags("")
+    setPassword("")
     setResult(null)
     setCopied(false)
     onOpenChange(false)
@@ -73,6 +80,14 @@ export function CreateUrlDialog({ open, onOpenChange }: CreateUrlDialogProps) {
             <div className="space-y-2">
               <Label>Visit limit (optional)</Label>
               <Input type="number" placeholder="e.g. 100" value={visitLimit} onChange={(e) => setVisitLimit(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>Tags (optional, comma-separated)</Label>
+              <Input placeholder="work, campaign" value={tags} onChange={(e) => setTags(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label>Password (optional)</Label>
+              <Input type="password" placeholder="Protect this link" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
             </div>
             <div className="space-y-2">
               <Label>Expiration date (optional)</Label>
