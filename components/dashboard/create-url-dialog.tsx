@@ -102,7 +102,7 @@ export function CreateUrlDialog({ open, onOpenChange }: CreateUrlDialogProps) {
             <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
               <span className="text-sm font-medium">/{result.shortUrl}</span>
               <Button variant="ghost" size="icon" onClick={() => {
-                navigator.clipboard.writeText(`${window.location.origin}/${result.shortUrl}`)
+                navigator.clipboard.writeText(`${getShortBaseUrl()}/${result.shortUrl}`)
                 setCopied(true)
                 setTimeout(() => setCopied(false), 2000)
                 toast.success("Copied!")

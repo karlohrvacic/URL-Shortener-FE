@@ -49,8 +49,8 @@ export function QrCustomizer({ value, filename = "qr-code" }: QrCustomizerProps)
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <div ref={canvasWrapRef} className="rounded-lg p-3" style={{ background: transparent ? "transparent" : "#ffffff" }}>
-        <QRCodeCanvas value={value} size={size} fgColor={fgColor} bgColor={effectiveBg} level={level} marginSize={2} />
+      <div ref={canvasWrapRef} className="rounded-lg p-3 max-w-full overflow-hidden" style={{ background: transparent ? "transparent" : "#ffffff" }}>
+        <QRCodeCanvas value={value} size={size} fgColor={fgColor} bgColor={effectiveBg} level={level} marginSize={2} style={{ maxWidth: "100%", height: "auto" }} />
       </div>
       {/* hidden SVG mirror for vector export */}
       <div ref={svgWrapRef} className="hidden">
