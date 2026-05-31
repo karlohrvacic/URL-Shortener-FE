@@ -75,6 +75,7 @@ export default function AdminDashboardPage() {
             </div>
             <p className="font-display text-2xl text-primary">{stats.totalUsers.toLocaleString()}</p>
             <p className="text-xs text-muted-foreground mt-0.5">Users</p>
+            <p className="text-[11px] text-muted-foreground mt-1">+{stats.newUsers7d.toLocaleString()} this week · +{stats.newUsers30d.toLocaleString()} this month</p>
           </CardContent>
         </Card>
         <Card className="border-border/50">

@@ -169,6 +169,8 @@ export interface Page<T> {
 
 export interface AdminStatsResponse {
   totalUsers: number
+  newUsers7d: number
+  newUsers30d: number
   totalUrls: number
   activeUrls: number
   totalApiKeys: number

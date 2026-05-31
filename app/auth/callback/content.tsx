@@ -22,7 +22,11 @@ export function AuthCallbackContent() {
         .then(() => router.push("/dashboard"))
         .catch(() => setError("Authentication failed."))
     } else if (err) {
-      setError(err === "no_email" ? "Could not retrieve email from provider." : "Authentication failed.")
+      const messages: Record<string, string> = {
+        no_email: "Could not retrieve email from provider.",
+        account_inactive: "Your account is deactivated. Contact an administrator.",
+      }
+      setError(messages[err] ?? "Authentication failed.")
     } else {
       setError("Invalid callback — no token received.")
     }
