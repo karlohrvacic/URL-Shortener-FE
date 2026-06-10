@@ -137,6 +137,17 @@ export default function RegisterPage() {
                 Sign in
               </Link>
             </p>
+            <p className="text-center text-[11px] text-muted-foreground/70 mt-3">
+              By creating an account you agree to the{" "}
+              <Link href="/terms" className="hover:text-foreground underline underline-offset-2">
+                Terms of Use
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" className="hover:text-foreground underline underline-offset-2">
+                Privacy Policy
+              </Link>
+              .
+            </p>
           </CardContent>
         </Card>
       </div>

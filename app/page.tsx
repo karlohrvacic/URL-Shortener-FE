@@ -529,6 +529,12 @@ export default function HomePage() {
               <Link href="/validate" className="hover:text-foreground transition-colors">
                 Validate
               </Link>
+              <Link href="/privacy" className="hover:text-foreground transition-colors">
+                Privacy
+              </Link>
+              <Link href="/terms" className="hover:text-foreground transition-colors">
+                Terms
+              </Link>
               <a href="https://hrva.cc/swagger-ui/index.html" target="_blank" rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors flex items-center gap-1.5">
                 <BookOpen className="h-3 w-3" /> API
@@ -542,6 +548,13 @@ export default function HomePage() {
                 <Globe className="h-3 w-3" /> GitHub
               </a>
             </div>
+          </div>
+          <div className="mt-6 text-center text-[11px] text-muted-foreground/60">
+            © 2022–{new Date().getFullYear()} hrva.cc · A{" "}
+            <a href="https://hrva.cc" className="hover:text-foreground transition-colors">
+              HrvaLabs.net
+            </a>{" "}
+            project · All rights reserved
           </div>
         </div>
       </footer>
