@@ -551,8 +551,8 @@ export default function HomePage() {
           </div>
           <div className="mt-6 text-center text-[11px] text-muted-foreground/60">
             © 2022–{new Date().getFullYear()} hrva.cc · A{" "}
-            <a href="https://hrva.cc" className="hover:text-foreground transition-colors">
-              HrvaLabs.net
+            <a href="https://hrvalabs.net/" className="hover:text-foreground transition-colors">
+              HrvaLabs
             </a>{" "}
             project · All rights reserved
           </div>
