@@ -61,7 +61,7 @@ export default function PrivacyPage() {
             <h2>Who we are</h2>
             <p>
               hrva.cc is a non-commercial hobby project of{" "}
-              <a href="https://hrva.cc" target="_blank" rel="noopener noreferrer">HrvaLabs.net</a>,
+              <a href="https://hrvalabs.net/" target="_blank" rel="noopener noreferrer">HrvaLabs</a>,
               operated by Karlo Hrvačić, who is the data controller within the meaning of
               Art. 4(7) of the General Data Protection Regulation (GDPR). The service is provided
               free of charge and as is — see the <Link href="/terms">Terms of Use</Link>. For
