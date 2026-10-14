@@ -308,8 +308,8 @@ export default function HomePage() {
           <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
             <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
-            <div className="container mx-auto px-4 py-20 md:py-28">
-              <div className="max-w-3xl mx-auto text-center space-y-10">
+            <div className="container mx-auto min-w-0 px-4 py-20 md:py-28">
+              <div className="mx-auto w-full min-w-0 max-w-3xl space-y-10 text-center">
                 <div className="animate-fade-up">
                   <Badge variant="outline" className="text-xs px-3 py-1 tracking-wider uppercase border-primary/20 text-primary">
                     Free URL Shortener
@@ -317,7 +317,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="space-y-4 animate-fade-up delay-100">
-                  <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[1.1] tracking-tight">
+                  <h1 className="font-display text-[clamp(2.65rem,11.5vw,3.25rem)] sm:text-6xl md:text-7xl lg:text-8xl leading-[1.1] tracking-tight">
                     Short links,
                     <br />
                     <span className="text-gradient-amber">shaped by you</span>
@@ -334,7 +334,7 @@ export default function HomePage() {
                     <CardContent className="p-6 md:p-8">
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="flex flex-col sm:flex-row gap-3">
-                          <div className="relative flex-1">
+                          <div className="relative min-w-0 flex-1">
                             <LinkIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
                               placeholder="Paste your long URL here..."
@@ -493,7 +493,7 @@ export default function HomePage() {
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   Create an account to track analytics, manage all your links in one place, and unlock advanced features.
                 </p>
-                <div className="flex items-center justify-center gap-3 pt-2">
+                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                   <Link href="/register">
                     <Button size="lg" className="h-11 px-7 bg-primary text-primary-foreground hover:brightness-110">
                       Get started free
@@ -519,7 +519,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
             <Logo showText href="/" />
-            <div className="flex items-center gap-6">
+            <nav aria-label="Footer navigation" className="flex max-w-full flex-wrap items-center justify-center gap-x-5 gap-y-3 text-center md:justify-end">
               <Link href="/blog" className="hover:text-foreground transition-colors">
                 Blog
               </Link>
@@ -547,7 +547,7 @@ export default function HomePage() {
                 className="hover:text-foreground transition-colors flex items-center gap-1.5">
                 <Globe className="h-3 w-3" /> GitHub
               </a>
-            </div>
+            </nav>
           </div>
           <div className="mt-6 text-center text-[11px] text-muted-foreground/60">
             © 2022–{new Date().getFullYear()} hrva.cc · A{" "}
