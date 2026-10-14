@@ -61,7 +61,7 @@ export default function TermsPage() {
             <h2>The service</h2>
             <p>
               hrva.cc is a URL-shortening service and a hobby project of{" "}
-              <a href="https://hrva.cc" target="_blank" rel="noopener noreferrer">HrvaLabs.net</a>,
+              <a href="https://hrvalabs.net/" target="_blank" rel="noopener noreferrer">HrvaLabs</a>,
               operated by Karlo Hrvačić. It is offered free of charge, for personal and
               non-critical use. By using the service or creating an account you accept these
               terms.
