@@ -6,7 +6,9 @@ export const metadata: Metadata = {
   title: "Privacy Policy — hrva.cc",
   description:
     "How hrva.cc handles your data: what we collect, why, how long we keep it, and your rights under the GDPR.",
+  alternates: { canonical: "https://app.hrva.cc/privacy" },
   openGraph: {
+    url: "https://app.hrva.cc/privacy",
     title: "Privacy Policy — hrva.cc",
     description:
       "How hrva.cc handles your data: what we collect, why, how long we keep it, and your rights under the GDPR.",

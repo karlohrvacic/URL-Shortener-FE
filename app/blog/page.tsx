@@ -1,3 +1,12 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Updates and practical guides for hrva.cc URL shortener, link management, privacy and API integrations.",
+  alternates: { canonical: "https://app.hrva.cc/blog" },
+  openGraph: { url: "https://app.hrva.cc/blog" },
+}
+
 import { BlogPostCard } from "@/components/blog/blog-post-card"
 import { PageMeta } from "@/components/page-meta"
 import { blogPosts } from "@/content/blog/posts"

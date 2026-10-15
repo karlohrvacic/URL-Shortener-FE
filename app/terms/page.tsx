@@ -6,7 +6,9 @@ export const metadata: Metadata = {
   title: "Terms of Use — hrva.cc",
   description:
     "Terms of use for hrva.cc: a free, non-commercial URL shortener provided as is, without warranties.",
+  alternates: { canonical: "https://app.hrva.cc/terms" },
   openGraph: {
+    url: "https://app.hrva.cc/terms",
     title: "Terms of Use — hrva.cc",
     description:
       "Terms of use for hrva.cc: a free, non-commercial URL shortener provided as is, without warranties.",
